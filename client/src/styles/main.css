@@ -1,0 +1,48 @@
+.repl {
+    position: relative;
+    min-height: 100%;
+}
+
+.repl-history {      
+    max-height: 50em;
+    margin: 1em auto;
+    display: block;
+    overflow-y: auto;
+    text-align: left;
+    padding: 1em;
+}
+
+.repl-input {        
+    margin: 1em auto;
+    padding: 1em;
+}
+
+.repl-command-box {
+    width: 90%;
+    margin: 1em auto;
+    display: block;
+}
+
+button {
+    margin: 1em auto;
+    display: block;
+    padding: 0.5em 1em;
+    font-size: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+th {
+    background-color: #f2f2f2;
+    text-align: left;
+    padding: 0.8em;
+}
+
+td {
+    border-bottom: 1px solid #ddd;
+    padding: 0.8em;
+}

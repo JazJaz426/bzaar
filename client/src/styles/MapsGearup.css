@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+  }
+  
+  .left-panel {
+    flex: 1; /* Takes up remaining space */
+    margin-right: 20px; /* Adjust as needed */
+  }
+  
+  .right-panel {
+    flex: 1; /* Takes up remaining space */
+    margin-left: 20px; /* Adjust as needed */
+  }
+  
