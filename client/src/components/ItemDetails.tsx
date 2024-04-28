@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from './firebase.js';
 import { doc, getDoc, getDocs, collection, query, where } from 'firebase/firestore';
+import Layout from './Layout'; // Import Layout
+import { Section } from './MainPage'; // Import Section if needed for currentSection
+import ImageCarousel from './ImageCarousel';
 
 interface Item {
     id: string;
@@ -65,9 +68,10 @@ const ItemDetail = () => {
     }
 
     return (
+        <Layout currentSection={Section.VIEW_ITEM} onNavClick={() => {}}> {/* Adjust these props as needed */}
         <div>
           <h1>{item.title}</h1>
-          <img src={item.images[0]} alt={item.title} />
+          <ImageCarousel images={item.images} />
           <p>Description: {item.description}</p>
           <p>Category: {item.category} </p>
           <p>Price: ${item.price}</p>
@@ -76,6 +80,7 @@ const ItemDetail = () => {
           <p>Email: {seller ? seller.email : 'Email not available'}</p>
           <p>Address: {seller ? seller.address : 'Address not available'}</p>
         </div>
+        </Layout>
       );
 };
 

@@ -1,0 +1,30 @@
+.carousel-container {
+    position: relative;
+    width: 100%; /* Adjust based on your layout */
+}
+
+.carousel-image {
+    width: 100%;
+    height: auto;
+    display: block; /* Removes bottom margin/gap */
+}
+
+.left-arrow, .right-arrow {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%);
+    background-color: rgba(135, 82, 20, 0.851); /* Semi-transparent black */
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 24px;
+}
+
+.left-arrow {
+    left: 10px; /* Distance from the left edge */
+}
+
+.right-arrow {
+    right: 10px; /* Distance from the right edge */
+}
