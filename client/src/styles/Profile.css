@@ -1,0 +1,28 @@
+.profile-content {
+    width: auto;
+    height: 60vh;
+    padding: 8%;
+    box-sizing: border-box;
+    background-color: #E8E8E8;
+    border-radius: 25px;
+    margin-left: 20%;
+    margin-top: 10%;
+    position: relative; 
+  }
+  .user-name{
+    font-size: 50px;
+    color: #582601;
+    font-weight: bold;
+    margin-bottom: 10px;
+    position:absolute;
+    top: -17%;
+    left: 10%;
+  }
+  .email-section,
+  .address-section {
+    margin-top: 10%;
+    font-size: 30px;
+    margin-bottom: 20%;
+    text-align: left;
+    /* Add more styles here */
+  }

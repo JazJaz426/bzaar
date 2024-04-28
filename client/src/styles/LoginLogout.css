@@ -1,8 +1,9 @@
+.logout-box{
+    width: fit-content;
+    position: fixed;
+    right: 0;
+}
 .SignOut{
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
     padding: 10px;
     background-color: #803D3B;
     color: white;
@@ -15,4 +16,7 @@
     text-decoration: none;
     display: inline-block;
     transition: background-color 0.3s;
+}
+.SignOut:hover {
+    background-color: #E57C73;
 }

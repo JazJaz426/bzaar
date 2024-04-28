@@ -1,5 +1,8 @@
 import { useState } from "react";
 import "../styles/MainPage.css";
+import Items from "./Items";
+import Profile from "./Profile";
+// import Selling from "./Selling";
 enum Section {
     VIEW_ITEM= "VIEW_ITEM",
     SELLING= "SELLING",
@@ -9,30 +12,37 @@ enum Section {
 export default function MapsGearup() {
 const [section, setSection] = useState<Section>(Section.VIEW_ITEM);
 const [listView, setListView] =useState<boolean>(false);
+const handleNavClick = (section: Section, listView: boolean = false) => {
+  setSection(section);
+
+  setListView(listView);
+  
+};
   return (
-    <div>
-   
-    <div aria-label="Navigation Bar" className="navigation">
-    <p aria-label="Gearup Title" id='web-title'>BearZarr</p>
-      <div onClick={() => setSection(Section.VIEW_ITEM)}>
-      Discover
-      </div>
-      <div onClick={() => {
-        setSection(Section.VIEW_ITEM);
-        setListView(true);
-      }}>
-        Watch List
-      </div>
-      <div onClick={() => setSection(Section.SELLING)}>
-      My Selling
-      </div>
-      <div onClick={() => setSection(Section.PROFILE)}>
-        My Profile
-      </div>
+    <div className="mainpage">
+    <div className="sidebar">
+    <nav className="nav">
+        <ul>
+          <li className={section === Section.VIEW_ITEM && !listView ? 'active' : ''}>
+            <a href="#" onClick={() => handleNavClick(Section.VIEW_ITEM)}>Discover</a>
+          </li>
+          <li className={section === Section.VIEW_ITEM && listView ? 'active' : ''}>
+            <a href="#" onClick={() => handleNavClick(Section.VIEW_ITEM, true)}>Watch List</a>
+          </li>
+          <li className={section === Section.SELLING ? 'active' : ''}>
+            <a href="#" onClick={() => handleNavClick(Section.SELLING)}>My Selling</a>
+          </li>
+          <li className={section === Section.PROFILE ? 'active' : ''}>
+            <a href="#" onClick={() => handleNavClick(Section.PROFILE)}>My Profile</a>
+          </li>
+        </ul>
+      </nav>
     </div>
-    {/* {section === Section.DISCOVER ? <Discover /> : null}
-    {section === Section.SELLING ? <Selling /> : null}
-    {section === Section.PROFILE ? <Profile /> : null} */}
+    <div className="content">
+    {section === Section. VIEW_ITEM ? <Items /> : null}
+    {/* {section === Section.SELLING ? <Selling /> : null} */}
+    {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
+    </div>
   </div>
     
   );
