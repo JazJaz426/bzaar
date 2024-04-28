@@ -1,0 +1,12 @@
+[
+    {"user_id": "1", "name": "Alice Smith", "email": "alice@brown.edu", "address": "123 College St, Providence, RI"},
+    {"user_id": "2", "name": "Bob Johnson", "email": "bob@brown.edu", "address": "234 Ivy Rd, Providence, RI"},
+    {"user_id": "3", "name": "Carol Lee", "email": "carol@brown.edu", "address": "345 Elm St, Providence, RI"},
+    {"user_id": "4", "name": "David Kim", "email": "david@brown.edu", "address": "456 Maple Ave, Providence, RI"},
+    {"user_id": "5", "name": "Eva Long", "email": "eva@brown.edu", "address": "567 Oak Blvd, Providence, RI"},
+    {"user_id": "6", "name": "Frank Moore", "email": "frank@brown.edu", "address": "678 Pine St, Providence, RI"},
+    {"user_id": "7", "name": "Grace Park", "email": "grace@brown.edu", "address": "789 Birch Rd, Providence, RI"},
+    {"user_id": "8", "name": "Henry Tao", "email": "henry@brown.edu", "address": "890 Cedar Ln, Providence, RI"},
+    {"user_id": "9", "name": "Ivy Ho", "email": "ivy@brown.edu", "address": "901 Willow St, Providence, RI"},
+    {"user_id": "10", "name": "Jack Yu", "email": "jack@brown.edu", "address": "1012 Spruce Rd, Providence, RI"}
+  ]
