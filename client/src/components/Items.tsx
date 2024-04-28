@@ -32,6 +32,8 @@ const [data, setData] = useState<Item[]>([]);
       const querySnapshot = await getDocs(collectionRef);
       // Map through the documents and set data in state
       setData(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      console.log(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
     };
     // Call the function to fetch data
     fetchData();
@@ -47,7 +49,7 @@ const [data, setData] = useState<Item[]>([]);
             {data.map((item: any) => (
                 <div className="item-box">
                     <div className="item-image-box">
-                    <img src={item.image.get} alt="item" />
+                    <img src={item.images[0]} alt="item" />
                     </div>
                     <div className="item-info">
                         <div className="item-info-left">
