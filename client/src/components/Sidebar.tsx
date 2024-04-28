@@ -20,7 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, listView, onNavClick 
             <a href="#" onClick={() => onNavClick(Section.VIEW_ITEM, true)}>Watch List</a>
           </li>
           <li className={currentSection === Section.SELLING ? 'active' : ''}>
-            <a href="#" onClick={() => onNavClick(Section.SELLING)}>Listings</a>
+            <a href="#" onClick={() => onNavClick(Section.SELLING)}>My Listings</a>
           </li>
           <li className={currentSection === Section.PROFILE ? 'active' : ''}>
             <a href="#" onClick={() => onNavClick(Section.PROFILE)}>Profile</a>

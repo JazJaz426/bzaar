@@ -1,64 +1,142 @@
-.item-list{
+/* items.css */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Ensure the root element also takes full height */
+:root {
+    height: 100%;
+}
+
+/* Make sure the main container takes full height */
+.main-container {
+    min-height: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+:root {
+    --primary-color: #935218; /* Brown color, adjust as needed */
+    --text-color: #333;
+    --background-color: #fff;
+    --accent-color: #4CAF50; /* Green for available items */
+    --error-color: #FF5722; /* Red for sold or claimed items */
+}
+
+/* items.css */
+.search-box {
+    display: flex;
     justify-content: center;
-    margin-top: 5%;
+    align-items: center; /* Align items vertically */
+    margin: 20px 0;
+    padding: 10px;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-.item-box{
+
+.search-box input[type="text"] {
+    flex-grow: 1;
+    padding: 8px 15px;
+    font-size: 16px;
+    border: 2px solid var(--primary-color);
+    border-right: none; /* Remove right border to merge with button */
+    border-radius: 8px 0 0 8px;
+    outline: none;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.search-box button {
+    padding: 8px 15px;
+    font-size: 16px;
+    border: 2px solid var(--primary-color);
+    border-left: none; /* Remove left border to merge with input */
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-box button:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+.item-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 items per row */
+    gap: 20px; /* Increased gap for better spacing */
+    padding: 20px; /* Padding around the grid */
+    justify-content: center;
+    background-color: var(--background-color);
+}
+
+.link-style {
+    text-decoration: none;
+    color: var(--text-color); /* Ensures text color is consistent */
+}
+
+.item-box {
     display: flex;
     flex-direction: column;
-    justify-content: left;
-    width: 45%;
-    height: 40%;
-    margin-left: 5%;
-    margin-top: 5%;
+    background: var(--background-color); /* Light background for the item box */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Ensures nothing spills out */
+    transition: transform 0.3s ease; /* Smooth transform on hover */
 }
-.item-img-box{
-    width: 40%;
-    height: 40%;
-    padding: 8%;
-    box-sizing: border-box;
-    background-color: #E8E8E8;
-    border-radius: 25px;
-    position: relative; 
+
+.item-box:hover {
+    transform: translateY(-5px); /* Slight lift effect on hover */
 }
-.item-info{
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
+
+.item-image-box {
     width: 100%;
-    height: 40%;
-    margin-top: 5%;
-
-}
-.item-info-left{
+    height: auto; /* Adjust height automatically */
     display: flex;
-    flex-direction: column;
-    justify-content: left;
-    width: 50%;
-    height: 40%;
-    margin-left: 5%;
-    margin-top: 5%;
-}
-.item-name{
-font-size: 20px;
-color: #582601;
-margin-bottom: 10px;
-}
-.item-status{
-    font-size: 20px;
-    color: #582601;
-    font-weight: bold;
-}
-.item-price{
-    font-size: 20px;
-    margin-top: 10px;
+    justify-content: center; /* Center the image */
+    align-items: center;
+    overflow: hidden; /* Hide overflow */
 }
 
-.item-box img{
-    width: 80%;
-    height: 80%;
-    border-radius: 25px;
-    position: relative;
-    
+.item-image-box img {
+    width: 100%; /* Full width of the container */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Cover the container fully */
 }
+
+.item-info {
+    padding: 10px; /* Padding inside the item info box */
+    display: flex;
+    flex-direction: column; /* Stack info vertically */
+    justify-content: space-between; /* Space between price and details */
+}
+
+.item-info-left, .item-price {
+    padding: 5px 10px; /* Padding for text elements */
+}
+
+.item-name, .item-status, .item-price {
+    font-size: 16px; /* Adjusted for better readability */
+    margin: 5px 0; /* Margin for spacing */
+    font-family: 'Arial', sans-serif; /* Consistent font family */
+}
+
+.item-name {
+    font-weight: bold; /* Make font bold */
+    color: var(--primary-color); /* Primary color for emphasis */
+}
+
+.item-status {
+    font-weight: bold;
+    color: var(--accent-color); /* Dynamic color based on status */
+}
+
+.item-price {
+    font-weight: bold;
+    color: var(--text-color); /* Consistent text color */
+}
+

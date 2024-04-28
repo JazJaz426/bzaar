@@ -1,113 +1,61 @@
 import "../styles/items.css";
-import "../styles/main.css"
-// to be deleted
+import "../styles/main.css";
 import React, { useState, useEffect } from 'react';
-import {db} from "./firebase.js";
-import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase.js";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 
-interface ListProps {
-    // 1. a list of items to show
-
-}
+interface ListProps {}
 
 type Item = {
     id: string;
-    [key: string]: any; // This allows for any other properties that might come from the document
-  };
-  
-/**
- * @func Profile
- * @description 'return the user profile component '
- * @param props: ProfileProps
- */
+    title: string;
+    status: string;
+    price: string;
+    images: string[];
+};
+
 export default function Profile(props: ListProps) {
-const [data, setData] = useState<Item[]>([]);
-  console.log(data);
-  useEffect(() => {
-    // Function to fetch data
-    const fetchData = async () => {
-      // Create a reference to the collection you want to fetch
-      const collectionRef = collection(db, 'items'); // Replace with your collection name
-      // Fetch the snapshot
-      const querySnapshot = await getDocs(collectionRef);
-      // Map through the documents and set data in state
-      setData(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      console.log(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    const [data, setData] = useState<Item[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
-    };
-    // Call the function to fetch data
-    fetchData();
-  }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const collectionRef = collection(db, 'items');
+            const q = query(collectionRef, where("title", ">=", searchTerm), where("title", "<=", searchTerm + '\uf8ff'));
+            const querySnapshot = await getDocs(q);
+            setData(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as Item })));
+        };
 
-  return (
-    <div className="item-page">
-        <div className="search-box">
-            <input type="text" placeholder="Search for items..." />
-            <button>Search</button>
-        </div>
-        <div className="item-list">
-            {data.map((item: Item) => (
-                 <Link to={`/item-details/${item.id}`} key={item.id} style={{ textDecoration: 'none' }}> {/* Use Link to navigate */}
-                 <div className="item-box">
-                    <div className="item-image-box">
-                    <img src={item.images[0]} alt="item" />
-                    </div>
-                    <div className="item-info">
-                        <div className="item-info-left">
-                            <p className="item-name">{item.title}</p>
-                            <p className="item-status">{item.status}</p>
+        fetchData();
+    }, [searchTerm]);
+
+    return (
+        <div className="item-page">
+            <div className="search-box">
+                <input type="text" placeholder="Search for items..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                <button onClick={() => setSearchTerm('')}>Search</button>
+            </div>
+            <div className="item-list">
+                {data.map((item: Item) => (
+                    <Link to={`/item-details/${item.id}`} key={item.id} className="link-style">
+                        <div className="item-box">
+                            <div className="item-image-box">
+                                <img src={item.images[0]} alt={item.title} />
+                            </div>
+                            <div className="item-info">
+                                <div className="item-info-left">
+                                    <p className="item-name">{item.title}</p>
+                                    <p className="item-status" style={{ color: item.status === 'available' ? '#4CAF50' : '#FF5722' }}>
+                                        {item.status}
+                                    </p>
+                                </div>
+                                <p className="item-price">${item.price}</p>
+                            </div>
                         </div>
-                        <p className="item-price">{item.price}</p>
-                    </div>
-                </div>
-                </Link>
-            ))}
-            
-           
-            {/* <div className="item-box">
-                <div className="item-image-box">
-                <img src="https://images.pexels.com/photos/100582/pexels-photo-100582.jpeg?cs=srgb&dl=pexels-luftschnitzel-100582.jpg&fm=jpg" alt="item" />
-                </div>
-                <div className="item-info">
-                    <div className="item-info-left">
-                    <p className="item-name">Bike</p>
-                    <p className="item-status">Available</p>
-                    </div>
-                    <p className="item-price">$100</p>
-                </div>
+                    </Link>
+                ))}
             </div>
-            <div className="item-box">
-                <div className="item-image-box">
-                <img src="https://images.pexels.com/photos/100582/pexels-photo-100582.jpeg?cs=srgb&dl=pexels-luftschnitzel-100582.jpg&fm=jpg" alt="item" />
-                </div>
-                <div className="item-info">
-                    <p className="item-name">Bike</p>
-                    <p className="item-status">Available</p>
-                    <p className="item-price">$100</p>
-                </div>
-            </div>
-            <div className="item-box">
-                <div className="item-image-box">
-                <img src="https://images.pexels.com/photos/100582/pexels-photo-100582.jpeg?cs=srgb&dl=pexels-luftschnitzel-100582.jpg&fm=jpg" alt="item" />
-                </div>
-                <div className="item-info">
-                    <p className="item-name">Bike</p>
-                    <p className="item-status">Available</p>
-                    <p className="item-price">$100</p>
-                </div>
-            </div>
-            <div className="item-box">
-                <div className="item-image-box">
-                <img src="https://images.pexels.com/photos/100582/pexels-photo-100582.jpeg?cs=srgb&dl=pexels-luftschnitzel-100582.jpg&fm=jpg" alt="item" />
-                </div>
-                <div className="item-info">
-                    <p className="item-name">Bike</p>
-                    <p className="item-status">Available</p>
-                    <p className="item-price">$100</p>
-                </div>
-            </div> */}
         </div>
-      </div>
-  );
+    );
 }
