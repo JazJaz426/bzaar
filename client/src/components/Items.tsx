@@ -4,6 +4,7 @@ import "../styles/main.css"
 import React, { useState, useEffect } from 'react';
 import {db} from "./firebase.js";
 import { collection, getDocs } from "firebase/firestore";
+import { Link } from 'react-router-dom';
 
 interface ListProps {
     // 1. a list of items to show
@@ -46,8 +47,9 @@ const [data, setData] = useState<Item[]>([]);
             <button>Search</button>
         </div>
         <div className="item-list">
-            {data.map((item: any) => (
-                <div className="item-box">
+            {data.map((item: Item) => (
+                 <Link to={`/item-details/${item.id}`} key={item.id} style={{ textDecoration: 'none' }}> {/* Use Link to navigate */}
+                 <div className="item-box">
                     <div className="item-image-box">
                     <img src={item.images[0]} alt="item" />
                     </div>
@@ -59,6 +61,7 @@ const [data, setData] = useState<Item[]>([]);
                         <p className="item-price">{item.price}</p>
                     </div>
                 </div>
+                </Link>
             ))}
             
            

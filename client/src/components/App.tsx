@@ -1,10 +1,10 @@
 
 import "../styles/App.css";
-import MapsGearup from "./MapsGearup";
 import MainPage from "./MainPage";
+import ItemDetail from './ItemDetails';
 import AuthRoute from "./auth/AuthRoute";
-
-
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -20,7 +20,13 @@ const firebaseConfig = {
 function App() {
   return (
     <div className="App">
-      <AuthRoute gatedContent={<MainPage />} />
+      <Router>
+        <Routes>
+          <Route path="/" element={<AuthRoute gatedContent={<MainPage />} />} />
+          <Route path="/item-details/:id" element={<ItemDetail />} />
+          {/* Add more routes as needed */}
+        </Routes>
+      </Router>
     </div>
   );
 }
