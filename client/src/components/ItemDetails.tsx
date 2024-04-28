@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from './firebase.js';
 import { doc, getDoc, getDocs, collection, query, where } from 'firebase/firestore';
-import Layout from './Layout'; // Import Layout
-import { Section } from './MainPage'; // Import Section if needed for currentSection
+import Layout from './Layout';
+import { Section } from './MainPage';
 import ImageCarousel from './ImageCarousel';
+import '../styles/itemDetails.css'; // Assuming CSS module usage
 
 interface Item {
     id: string;
@@ -53,7 +54,7 @@ const ItemDetail = () => {
             const q = query(usersRef, where("user_id", "==", userId));
             const querySnapshot = await getDocs(q);
             if (!querySnapshot.empty) {
-                const userDoc = querySnapshot.docs[0]; // Assuming the user_id is unique and only one document is returned
+                const userDoc = querySnapshot.docs[0];
                 setSeller(userDoc.data() as User);
             } else {
                 console.log("No such user!");
@@ -64,24 +65,26 @@ const ItemDetail = () => {
     }, [id]);
 
     if (!item) {
-        return <div>Loading...</div>;
+        return <div className="loading">Loading...</div>;
     }
 
     return (
-        <Layout currentSection={Section.VIEW_ITEM} onNavClick={() => {}}> {/* Adjust these props as needed */}
-        <div>
-          <h1>{item.title}</h1>
-          <ImageCarousel images={item.images} />
-          <p>Description: {item.description}</p>
-          <p>Category: {item.category} </p>
-          <p>Price: ${item.price}</p>
-          <p>Status: {item.status}</p>
-          <p>Seller: {seller ? seller.name : 'Seller name not available'}</p>
-          <p>Email: {seller ? seller.email : 'Email not available'}</p>
-          <p>Address: {seller ? seller.address : 'Address not available'}</p>
-        </div>
+        <Layout currentSection={Section.VIEW_ITEM}>
+            <div className="itemDetailContainer">
+                <h1 className="title">{item.title}</h1>
+                <ImageCarousel images={item.images} />
+                <p className="description">Description: {item.description}</p>
+                <p>Category: {item.category}</p>
+                <p>Price: ${item.price}</p>
+                <p>Status: {item.status}</p>
+                <div className="sellerInfo">
+                    <p>Seller: {seller ? seller.name : 'Seller name not available'}</p>
+                    <p>Email: {seller ? seller.email : 'Email not available'}</p>
+                    <p>Address: {seller ? seller.address : 'Address not available'}</p>
+                </div>
+            </div>
         </Layout>
-      );
+    );
 };
 
 export default ItemDetail;

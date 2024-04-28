@@ -1,30 +1,33 @@
 .carousel-container {
     position: relative;
-    width: 100%; /* Adjust based on your layout */
+    width: 60%; /* Full width of the container */
+    max-width: 400px; /* Maximum width can be adjusted based on design requirements */
+    margin: auto; /* Center align the carousel */
 }
 
 .carousel-image {
     width: 100%;
-    height: auto;
-    display: block; /* Removes bottom margin/gap */
+    height: auto; /* Maintain aspect ratio */
+    display: block;
 }
 
 .left-arrow, .right-arrow {
     position: absolute;
-    top: 50%; /* Center vertically */
+    top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(135, 82, 20, 0.851); /* Semi-transparent black */
+    background-color: rgba(0, 0, 0, 0.5); /* Improved visibility */
     color: white;
     border: none;
     cursor: pointer;
     padding: 10px 20px;
     font-size: 24px;
+    z-index: 1000; /* Ensure arrows are above other elements */
 }
 
 .left-arrow {
-    left: 10px; /* Distance from the left edge */
+    left: 10px;
 }
 
 .right-arrow {
-    right: 10px; /* Distance from the right edge */
+    right: 10px; /* Consistent with left arrow */
 }

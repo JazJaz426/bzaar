@@ -2,10 +2,12 @@
     width: fit-content;
     position: fixed;
     right: 0;
+    margin: 10px;
 }
+
 .SignOut{
     padding: 10px;
-    background-color: #803D3B;
+    background-color: #935218;
     color: white;
     border: none;
     border-radius: 5px;
