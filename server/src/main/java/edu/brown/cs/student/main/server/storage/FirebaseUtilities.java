@@ -84,7 +84,7 @@ public class FirebaseUtilities implements StorageInterface {
     }
   }
 
-  /** Gather all pins for a given user */
+  /** Gather all pins for a given usba ser */
   @Override
   public List<Map<String, Object>> getCollection(String uid, String collection_id)
       throws InterruptedException, ExecutionException, IllegalArgumentException {
@@ -107,6 +107,20 @@ public class FirebaseUtilities implements StorageInterface {
     }
 
     return data;
+  }
+
+  @Override
+  public Map<String, Object> getUserDocumentByEmail(String email)
+      throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    CollectionReference usersRef = db.collection("users");
+    com.google.cloud.firestore.Query query = usersRef.whereEqualTo("email", email);
+    ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+    for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
+      return document.getData(); // Returns the first matching document's data
+    }
+    return null; // Return null if no document found
   }
 
   // clears the collections inside of a specific user.
