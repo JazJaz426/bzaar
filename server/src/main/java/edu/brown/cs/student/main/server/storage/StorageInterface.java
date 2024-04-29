@@ -11,8 +11,11 @@ public interface StorageInterface {
   void removeDocument(String uid, String collectionId, Map<String, Object> query)
       throws InterruptedException, ExecutionException;
 
-  List<Map<String, Object>> getCollection(String uid, String collection_id)
+  void clearUser(String uid) throws InterruptedException, ExecutionException;
+
+  Map<String, Object> getUserDocumentByEmail(String email)
       throws InterruptedException, ExecutionException;
 
-  void clearUser(String uid) throws InterruptedException, ExecutionException;
+  List<Map<String, Object>> getCollection(String uid, String collection_id)
+      throws InterruptedException, ExecutionException;
 }

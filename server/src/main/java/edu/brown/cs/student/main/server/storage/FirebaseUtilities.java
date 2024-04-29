@@ -22,10 +22,6 @@ import java.util.concurrent.ExecutionException;
 public class FirebaseUtilities implements StorageInterface {
 
   public FirebaseUtilities() throws IOException {
-    // TODO: FIRESTORE PART 0:
-    // Create /resources/ folder with firebase_config.json and
-    // add your admin SDK from Firebase. see:
-    // https://docs.google.com/document/d/10HuDtBWjkUoCaVj_A53IFm5torB_ws06fW3KYFZqKjc/edit?usp=sharing
     String workingDirectory = System.getProperty("user.dir");
     Path firebaseConfigPath =
         Paths.get(workingDirectory, "src", "main", "resources", "firebase_config.json");
@@ -88,7 +84,7 @@ public class FirebaseUtilities implements StorageInterface {
     }
   }
 
-  /** Gather all pins for a given user */
+  /** Gather all pins for a given usba ser */
   @Override
   public List<Map<String, Object>> getCollection(String uid, String collection_id)
       throws InterruptedException, ExecutionException, IllegalArgumentException {
@@ -101,7 +97,6 @@ public class FirebaseUtilities implements StorageInterface {
     Firestore db = FirestoreClient.getFirestore();
     // 1: Make the data payload to add to your collection
     CollectionReference dataRef = db.collection("users").document(uid).collection(collection_id);
-
     // 2: Get pin documents
     QuerySnapshot dataQuery = dataRef.get().get();
 
@@ -112,6 +107,20 @@ public class FirebaseUtilities implements StorageInterface {
     }
 
     return data;
+  }
+
+  @Override
+  public Map<String, Object> getUserDocumentByEmail(String email)
+      throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    CollectionReference usersRef = db.collection("users");
+    com.google.cloud.firestore.Query query = usersRef.whereEqualTo("email", email);
+    ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+    for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
+      return document.getData(); // Returns the first matching document's data
+    }
+    return null; // Return null if no document found
   }
 
   // clears the collections inside of a specific user.
