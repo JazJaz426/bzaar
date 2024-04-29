@@ -3,6 +3,7 @@ import "../styles/App.css";
 import MainPage from "./MainPage";
 import ItemDetail from './ItemDetails';
 import AuthRoute from "./auth/AuthRoute";
+import ItemForm from './ItemForm';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<AuthRoute gatedContent={<MainPage />} />} />
           <Route path="/item-details/:id" element={<ItemDetail />} />
+          <Route path="/post" element={<ItemForm />} />
           {/* Add more routes as needed */}
         </Routes>
       </Router>

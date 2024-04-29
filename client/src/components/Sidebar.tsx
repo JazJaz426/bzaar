@@ -1,6 +1,7 @@
 import React from 'react';
 import { Section } from './MainPage'; // Make sure to export Section from MainPage or better yet, move it to a common types file.
 import { Link } from 'react-router-dom';
+import '../styles/Sidebar.css';
 
 interface SidebarProps {
   currentSection: Section;
@@ -24,6 +25,9 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, listView, onNavClick 
           </li>
           <li className={currentSection === Section.PROFILE ? 'active' : ''}>
             <a href="#" onClick={() => onNavClick(Section.PROFILE)}>Profile</a>
+          </li>
+          <li>
+            <Link to="/post" className="post-button">Post</Link>
           </li>
         </ul>
       </nav>

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { db } from './firebase.js';
 import { doc, getDoc, getDocs, collection, query, where } from 'firebase/firestore';
 import Layout from './Layout';
-import { Section } from './MainPage';
+import { Section } from './MainPage'; 
 import ImageCarousel from './ImageCarousel';
 import '../styles/itemDetails.css'; // Assuming CSS module usage
 
