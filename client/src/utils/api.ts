@@ -81,9 +81,9 @@ export async function getItemDetails(itemId: string) {
   });
 }
 
-export async function getItemsByUser(uid: string = getLoginId() || "") {
+export async function getItemsByUser(userId: string) {
   return await queryAPI("getItems", {
-    uid: uid,
+    userId: userId,
   });
 }
 
