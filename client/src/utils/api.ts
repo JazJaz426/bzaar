@@ -53,3 +53,9 @@ export async function clearUser(uid: string = getLoginCookie() || "") {
     uid: uid,
   });
 }
+
+// queries for term project
+export async function getAllItems() {
+  return await queryAPI("getItems", {
+  });
+}

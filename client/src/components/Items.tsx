@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from "./firebase.js";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { Link } from 'react-router-dom';
+import { getAllItems } from "../utils/api";
 
 interface ListProps {}
 
@@ -18,14 +19,22 @@ type Item = {
 export default function Profile(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const fetchData =  () => {
+        getAllItems().then((data) => {
+            console.log('data is');
+            console.log(data.items);
+            setData(data.items.map((doc: Item) => ({ id: doc.id, ...doc })));
+        });
+    }
 
     useEffect(() => {
-        const fetchData = async () => {
-            const collectionRef = collection(db, 'items');
-            const q = query(collectionRef, where("title", ">=", searchTerm), where("title", "<=", searchTerm + '\uf8ff'));
-            const querySnapshot = await getDocs(q);
-            setData(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as Item })));
-        };
+
+        // async () => {
+        //     const collectionRef = collection(db, 'items');
+        //     const q = query(collectionRef, where("title", ">=", searchTerm), where("title", "<=", searchTerm + '\uf8ff'));
+        //     const querySnapshot = await getDocs(q);
+        //     setData(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as Item })));
+        // };
 
         fetchData();
     }, [searchTerm]);
