@@ -13,10 +13,11 @@ export default function Profile() {
     const fetchProfile = async () => {
         let data;
         try {
-            data = await getUserProfile(email);
-            setEmail(data.email);  // Assuming data has an email property directly
-            setName(data.name);
-            setAddress(data.address);
+            const userResponseMap = await getUserProfile(email);
+            const userData = userResponseMap.data
+            setEmail(userData.email);  // Assuming data has an email property directly
+            setName(userData.name);
+            setAddress(userData.address);
         } catch (error) {
             console.error('Failed to fetch profile data:', error);
             alert('Failed to fetch profile data.');
@@ -27,7 +28,6 @@ export default function Profile() {
   
 return (
   <div className="profile-content">
-    <div className="profile-info">
       <div className="profile-section">  {/* Updated class name */}
         <strong>My Email: </strong>
         <span>{email}</span>
@@ -41,6 +41,5 @@ return (
         <span>{address}</span>
       </div>
     </div>
-  </div>
 );
 }
