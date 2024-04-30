@@ -13,7 +13,7 @@ interface FormData {
 
 }
 const ItemForm = () => {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         title: '',
         price: '',
         status: 'available',
@@ -39,12 +39,24 @@ const ItemForm = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(formData);
+        const submissionData = new FormData();
+        submissionData.append('title', formData.title);
+        submissionData.append('price', formData.price);
+        submissionData.append('status', formData.status);
+        submissionData.append('condition', formData.condition);
+        submissionData.append('description', formData.description);
+        submissionData.append('category', formData.category);
+        if (formData.images) {
+            formData.images.forEach((file, index) => {
+                submissionData.append(`images[${index}]`, file);
+            });
+        }
         // const PostItem = async () => {
         let response;
         try {
             response = await fetch(`http://localhost:3232/postItem`, {
                 method: 'POST',
-                body: formData,
+                body: submissionData,
             });
             if (!response.ok) {
                 throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
