@@ -1,4 +1,4 @@
-import { getLoginCookie } from "./cookie";
+import { getLoginId } from "./cookie";
 import { LatLong } from "../components/Mapbox";
 
 const HOST = "http://localhost:3232";
@@ -29,7 +29,7 @@ export async function filtOver(keyword: String) {
 
 export async function addPin(pin: LatLong) {
   return await queryAPI("add-pin", {
-    uid: getLoginCookie() || "",
+    uid: getLoginId() || "",
     lat: pin.lat.toString(),
     lon: pin.long.toString(),
   });
@@ -37,7 +37,7 @@ export async function addPin(pin: LatLong) {
 
 export async function removePin(pin: LatLong) {
   return await queryAPI("rmv-pin", {
-    uid: getLoginCookie() || "",
+    uid: getLoginId() || "",
     lat: pin.lat.toString(),
     lon: pin.long.toString(),
   });
@@ -45,13 +45,27 @@ export async function removePin(pin: LatLong) {
 
 export async function getPins() {
   return await queryAPI("list-pins", {
-    uid: getLoginCookie() || "",
+    uid: getLoginId() || "",
   });
 }
 
-export async function clearUser(uid: string = getLoginCookie() || "") {
+export async function clearUser(uid: string = getLoginId() || "") {
   return await queryAPI("clear-user", {
     uid: uid,
+  });
+}
+
+// cookie uid is not the uid for current login user
+// have to retrieve profile by email
+export async function getUserProfile(email: string) {
+  return await queryAPI("getUserProfile", {
+    email: email,
+  });
+}
+
+export async function getSellerProfile(userId: string) {
+  return await queryAPI("getSellerProfile", {
+    userId: userId,
   });
 }
 
@@ -67,7 +81,7 @@ export async function getItemDetails(itemId: string) {
   });
 }
 
-export async function getItemsByUser(uid: string = getLoginCookie() || "") {
+export async function getItemsByUser(uid: string = getLoginId() || "") {
   return await queryAPI("getItems", {
     uid: uid,
   });

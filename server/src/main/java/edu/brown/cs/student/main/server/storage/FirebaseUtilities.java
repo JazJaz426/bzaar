@@ -162,14 +162,14 @@ public class FirebaseUtilities implements StorageInterface {
   public Map<String, Object> getUserDocumentById(String userId)
       throws InterruptedException, ExecutionException {
     Firestore db = FirestoreClient.getFirestore();
-    CollectionReference usersRef = db.collection("users");
-    com.google.cloud.firestore.Query query = usersRef.whereEqualTo("user_id", userId);
-    ApiFuture<QuerySnapshot> querySnapshot = query.get();
-
-    for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
-      return document.getData(); // Returns the first matching document's data
+    DocumentReference docRef = db.collection("users").document(userId);
+    ApiFuture<DocumentSnapshot> future = docRef.get();
+    DocumentSnapshot document = future.get();
+    if (document.exists()) {
+      return document.getData();
+    } else {
+      return null;
     }
-    return null; // Return null if no document found
   }
 
   // clears the collections inside of a specific user.

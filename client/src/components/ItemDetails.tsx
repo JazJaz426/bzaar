@@ -5,8 +5,8 @@ import { doc, getDoc, getDocs, collection, query, where } from 'firebase/firesto
 import Layout from './Layout';
 import { Section } from './MainPage'; 
 import ImageCarousel from './ImageCarousel';
+import { getItemDetails, getSellerProfile } from '../utils/api';
 import '../styles/itemDetails.css'; // Assuming CSS module usage
-import { getItemDetails } from '../utils/api';
 
 interface Item {
     id: string;
@@ -15,6 +15,7 @@ interface Item {
     images: string[];
     price: number;
     category: string,
+    condition: string,
     status: string;
     seller: string;
 }
@@ -32,43 +33,34 @@ const ItemDetail = () => {
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<Item | null>(null);
     const [seller, setSeller] = useState<User | null>(null);
-    const fetchSellerDetails = async (userId: string) => {
-        try {
-            const response = await fetch(`http://localhost:3232/getUserProfile?userId=${userId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) {
-                throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-            }
-            const data = await response.json();
-            setSeller(data);
-        } catch (error) {
-            console.error("Error fetching seller details:", error);
-        }
-    };
-    const fetchItemDetails = async () => {
-        if (!id) {
-            console.log("Document ID is undefined.");
-            return;
-        }
-        console.log('fetching item details, id is ', id);
-
-        getItemDetails(id).then((data) => {
-            console.log('data is');
-            console.log(data.itemDetails);
-            setItem(data.itemDetails);
-            fetchSellerDetails(data.itemDetails.seller);
-        });
-    };
 
     useEffect(() => {
+        const fetchItemDetails = async () => {
+            if (!id) {
+                console.log("Document ID is undefined.");
+                return;
+            }
+            try {
+                const itemResponseMap = await getItemDetails(id);
+                const itemData = itemResponseMap.data;
+                setItem(itemData)
+                if (itemData.seller) {
+                    fetchSellerDetails(itemData.seller);
+                }
+            } catch (error) {
+                console.error("Error fetching item details:", error);
+            }
+        };
 
-
-       
-
+        const fetchSellerDetails = async (userId: string) => {
+            try {
+                const sellerResponseMap = await getSellerProfile(userId); // Assuming getUserProfile can accept a userId
+                const sellerData = sellerResponseMap.data;
+                setSeller(sellerData);
+            } catch (error) {
+                console.error("Error fetching seller details:", error);
+            }
+        };
 
         fetchItemDetails();
     }, [id]);
@@ -86,6 +78,7 @@ const ItemDetail = () => {
                 <p>Category: {item.category}</p>
                 <p>Price: ${item.price}</p>
                 <p>Status: {item.status}</p>
+                <p>Condition: {item.condition}</p>
                 <div className="sellerInfo">
                     <p>Seller: {seller ? seller.name : 'Seller name not available'}</p>
                     <p>Email: {seller ? seller.email : 'Email not available'}</p>
