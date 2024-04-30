@@ -11,6 +11,7 @@ async function queryAPI(
   // e.g. { foo: "bar", hell: "o" } becomes "?foo=bar&hell=o"
   const paramsString = new URLSearchParams(query_params).toString();
   const url = `${HOST}/${endpoint}?${paramsString}`;
+  console.log('query api url is ', url);
   const response = await fetch(url);
   if (!response.ok) {
     console.error(response.status, response.statusText);
@@ -65,3 +66,10 @@ export async function getItemDetails(itemId: string) {
     itemId: itemId,
   });
 }
+
+export async function getItemsByUser(uid: string = getLoginCookie() || "") {
+  return await queryAPI("getItems", {
+    uid: uid,
+  });
+}
+

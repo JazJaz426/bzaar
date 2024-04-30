@@ -46,7 +46,18 @@ public class GetItemsHandler implements Route {
         responseMap.put("message", "Fail to get item: " + e.getMessage());
         return Utils.toMoshiJson(responseMap);
       }
-    } 
+    } else if (uid != null) {
+      try {
+        List<Map<String, Object>> items = this.firebaseUtilities.getItemsByUser(uid);
+        responseMap.put("status", 200);
+        responseMap.put("items", items);
+        return Utils.toMoshiJson(responseMap);
+      } catch (Exception e) {
+        responseMap.put("status", 500);
+        responseMap.put("message", "Fail to get items by user: " + e.getMessage());
+        return Utils.toMoshiJson(responseMap);
+      }
+    }
     return new NotImplementedException("not implemented");
 
 //    if (itemId == null || itemId.isEmpty()) {

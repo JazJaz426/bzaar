@@ -1,20 +1,12 @@
 import "../styles/items.css";
 import "../styles/main.css";
 import React, { useState, useEffect } from 'react';
-import { db } from "./firebase.js";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { Link } from 'react-router-dom';
 import { getAllItems } from "../utils/api";
+import { Item } from "../utils/schemas";
 
 interface ListProps {}
 
-type Item = {
-    id: string;
-    title: string;
-    status: string;
-    price: string;
-    images: string[];
-};
 
 export default function Profile(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
@@ -28,13 +20,6 @@ export default function Profile(props: ListProps) {
     }
 
     useEffect(() => {
-
-        // async () => {
-        //     const collectionRef = collection(db, 'items');
-        //     const q = query(collectionRef, where("title", ">=", searchTerm), where("title", "<=", searchTerm + '\uf8ff'));
-        //     const querySnapshot = await getDocs(q);
-        //     setData(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as Item })));
-        // };
 
         fetchData();
     }, [searchTerm]);
