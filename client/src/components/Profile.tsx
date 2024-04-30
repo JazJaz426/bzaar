@@ -1,32 +1,57 @@
+import React, { useState, useEffect } from 'react';
+import { getLoginCookie } from '../utils/cookie'; // Import the function to get cookie
 import "../styles/profile.css";
-import "../styles/main.css"
+import "../styles/main.css";
 
+export default function Profile() {
+  const [email, setEmail] = useState(localStorage.getItem('email'));
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
 
-interface ProfileProps {
-  // user email address
-  email_address: string;
-  // user pick up location
-  pick_up_location: string;
-}
-
-
-/**
- * @func Profile
- * @description 'return the user profile component '
- * @param props: ProfileProps
- */
-export default function Profile(props: ProfileProps) {
-  return (
-    <div className="profile-content">
-        <p className="user-name">Bruno Brown</p>
-        <div className="profile-info">
-        <div className="email-section">
-          <strong>My Email:</strong> <span>brownie_b@brown.edu</span>
-        </div>
-        <div className="address-section">
-          <strong>My Pickup Address:</strong> <span>Brown Street 100</span>
-        </div>
-        </div>
+  
+  useEffect(() => {
+    const fetchProfile = async () => {
+        let response;
+        try {
+            response = await fetch(`http://localhost:3232/getUserProfile?email=${email}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+            }
+            const data = await response.json();
+            setEmail(data.email);
+            setName(data.name);
+            setAddress(data.address);
+        } catch (error) {
+            console.error('Failed to fetch profile data:', error);
+            alert('Failed to fetch profile data.');
+        }
+    };
+    if (email) {
+        fetchProfile();
+    }
+}, [email]); // Dependency array
+  
+return (
+  <div className="profile-content">
+    <div className="profile-info">
+      <div className="profile-section">  {/* Updated class name */}
+        <strong>My Email: </strong>
+        <span>{email}</span>
       </div>
-  );
+      <div className="profile-section">  {/* Updated class name */}
+        <strong>My Name: </strong>
+        <span>{name}</span>
+      </div>
+      <div className="profile-section">  {/* Updated class name */}
+        <strong>My Address: </strong>
+        <span>{address}</span>
+      </div>
+    </div>
+  </div>
+);
 }

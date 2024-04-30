@@ -4,6 +4,7 @@ import static spark.Spark.after;
 import static spark.Spark.options;
 
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
+import edu.brown.cs.student.main.server.handlers.ViewItemsDetailsHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import spark.Spark;
 
@@ -70,11 +71,9 @@ public class Server {
     //       return "404 Not Found - The requested endpoint does not exist.";
     //     });
     try {
-      System.out.println("1234");
       FirebaseUtilities firebaseUtils = new FirebaseUtilities();
-      System.out.println(firebaseUtils);
       Spark.get("/getUserProfile", new GetUserProfileHandler(firebaseUtils));
-      System.out.println("1234");
+      Spark.get("/getItemDetails", new ViewItemsDetailsHandler(firebaseUtils));
       Spark.init();
       Spark.awaitInitialization();
       System.out.println("Server started at http://localhost:" + port);

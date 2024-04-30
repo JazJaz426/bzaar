@@ -44,12 +44,18 @@ public class GetUserProfileHandler implements Route {
     //   return "Internal Server Error";
     // }
     String email = request.queryParams("email");
-    if (email == null) {
+    String userId = request.queryParams("userId");
+    if (email == null && userId == null) {
       response.status(400);
-      return "User email is required";
+      return "User email or user ID is required";
     }
 
-    Map<String, Object> userProfile = storage.getUserDocumentByEmail(email);
+    Map<String, Object> userProfile = null;
+    if (email != null) {
+      userProfile = storage.getUserDocumentByEmail(email);
+    } else if (userId != null) {
+      userProfile = storage.getUserDocumentById(userId);
+    }
     if (userProfile == null) {
       response.status(404);
       return "User not found";

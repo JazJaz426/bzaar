@@ -33,31 +33,45 @@ const ItemDetail = () => {
 
     useEffect(() => {
         const fetchItem = async () => {
-            if (id === undefined) {
+            if (!id) {
                 console.log("Document ID is undefined.");
                 return;
             }
-            const docRef = doc(db, 'items', id);
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const itemData = docSnap.data() as Item;
-                setItem(itemData);
-                fetchSellerDetails(itemData.seller);
-            } else {
-                console.log("No such document!");
+            try {
+                const response = await fetch(`http://localhost:3232/getItemDetails?id=${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+                }
+                const data = await response.json();
+                setItem(data);
+                fetchSellerDetails(data.seller);
+                console.log(data.seller)
+            } catch (error) {
+                console.error("Error fetching item details:", error);
             }
         };
 
+       
         const fetchSellerDetails = async (userId: string) => {
-            const usersRef = collection(db, "users");
-            const q = query(usersRef, where("user_id", "==", userId));
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-                const userDoc = querySnapshot.docs[0];
-                setSeller(userDoc.data() as User);
-            } else {
-                console.log("No such user!");
+            try {
+                const response = await fetch(`http://localhost:3232/getUserProfile?userId=${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+                }
+                const data = await response.json();
+                setSeller(data);
+            } catch (error) {
+                console.error("Error fetching seller details:", error);
             }
         };
 

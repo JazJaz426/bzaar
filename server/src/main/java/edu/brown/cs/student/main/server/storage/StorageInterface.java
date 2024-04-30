@@ -16,6 +16,12 @@ public interface StorageInterface {
   Map<String, Object> getUserDocumentByEmail(String email)
       throws InterruptedException, ExecutionException;
 
+  Map<String, Object> getUserDocumentById(String userId)
+      throws InterruptedException, ExecutionException;
+
+  public Map<String, Object> getItemDetails(String itemId)
+      throws InterruptedException, ExecutionException;
+
   List<Map<String, Object>> getCollection(String uid, String collection_id)
       throws InterruptedException, ExecutionException;
 }

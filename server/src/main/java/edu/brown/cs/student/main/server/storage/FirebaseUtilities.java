@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -123,6 +124,20 @@ public class FirebaseUtilities implements StorageInterface {
     return null; // Return null if no document found
   }
 
+  @Override
+  public Map<String, Object> getUserDocumentById(String userId)
+      throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    CollectionReference usersRef = db.collection("users");
+    com.google.cloud.firestore.Query query = usersRef.whereEqualTo("user_id", userId);
+    ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+    for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
+      return document.getData(); // Returns the first matching document's data
+    }
+    return null; // Return null if no document found
+  }
+
   // clears the collections inside of a specific user.
   @Override
   public void clearUser(String uid) throws IllegalArgumentException {
@@ -170,6 +185,28 @@ public class FirebaseUtilities implements StorageInterface {
       // solution would involve batching the collection.get() call.
     } catch (Exception e) {
       System.err.println("Error deleting collection : " + e.getMessage());
+    }
+  }
+
+  /**
+   * Retrieves the details of a goods item by its item ID.
+   *
+   * @param itemId The ID of the goods item to retrieve.
+   * @return A map containing the goods details, or null if no such item exists.
+   * @throws InterruptedException If the thread is interrupted while waiting.
+   * @throws ExecutionException If an exception is thrown during the execution.
+   */
+  public Map<String, Object> getItemDetails(String itemId)
+      throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    DocumentReference docRef =
+        db.collection("items").document(itemId); // Assuming 'items' is the collection name
+    ApiFuture<DocumentSnapshot> future = docRef.get();
+    DocumentSnapshot document = future.get();
+    if (document.exists()) {
+      return document.getData();
+    } else {
+      return null;
     }
   }
 }
