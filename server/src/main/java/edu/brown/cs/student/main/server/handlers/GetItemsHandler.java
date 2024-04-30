@@ -21,7 +21,7 @@ public class GetItemsHandler implements Route {
   @Override
   public Object handle(Request request, Response response) throws Exception {
     // Extract itemId from request parameters
-    String itemId = request.queryParams("id");
+    String itemId = request.queryParams("itemId");
     String uid = request.queryParams("uid");
     Map<String, Object> responseMap = new HashMap<>();
     if (itemId == null && uid == null) {
@@ -35,7 +35,18 @@ public class GetItemsHandler implements Route {
         responseMap.put("message", "Fail to get all items: " + e.getMessage());
         return Utils.toMoshiJson(responseMap);
       }
-    }
+    } else if (itemId != null) {
+      try {
+        Map<String, Object> item = this.firebaseUtilities.getItemDetails(itemId);
+        responseMap.put("status", 200);
+        responseMap.put("itemDetails", item);
+        return Utils.toMoshiJson(responseMap);
+      } catch (Exception e) {
+        responseMap.put("status", 500);
+        responseMap.put("message", "Fail to get item: " + e.getMessage());
+        return Utils.toMoshiJson(responseMap);
+      }
+    } 
     return new NotImplementedException("not implemented");
 
 //    if (itemId == null || itemId.isEmpty()) {
