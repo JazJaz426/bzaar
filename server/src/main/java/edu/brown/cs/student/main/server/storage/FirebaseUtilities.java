@@ -10,11 +10,14 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.storage.Blob;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.cloud.StorageClient;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -147,6 +150,20 @@ public class FirebaseUtilities implements StorageInterface {
     return items;
   }
 
+  public class FirebaseUploadHelper {
+    public static String uploadFile(InputStream fileStream, String fileName) throws Exception {
+      Blob blob = StorageClient.getInstance().bucket().create(fileName, fileStream, "image/jpeg");
+      return blob.getMediaLink(); // URL to access the uploaded file
+    }
+  }
+
+  public class FirestoreHelper {
+    public static void saveItem(Item item) {
+      Firestore db = FirestoreClient.getFirestore();
+      db.collection("items").document().set(item);
+    }
+  }
+
   @Override
   public Map<String, Object> getUserDocumentByEmail(String email)
       throws InterruptedException, ExecutionException {
@@ -179,6 +196,7 @@ public class FirebaseUtilities implements StorageInterface {
   }
 
   // clears the collections inside of a specific user.
+
   @Override
   public void clearUser(String uid) throws IllegalArgumentException {
     if (uid == null) {

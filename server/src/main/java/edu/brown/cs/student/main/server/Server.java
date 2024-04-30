@@ -7,12 +7,16 @@ import edu.brown.cs.student.main.server.handlers.GetClaimListHandler;
 import edu.brown.cs.student.main.server.handlers.GetItemsHandler;
 import edu.brown.cs.student.main.server.handlers.GetSellerProfileHandler;
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
+<<<<<<< HEAD
 import edu.brown.cs.student.main.server.handlers.GetWatchListHandler;
 import edu.brown.cs.student.main.server.handlers.ModifyClaimListHandler;
 import edu.brown.cs.student.main.server.handlers.ModifyWatchListHandler;
 import edu.brown.cs.student.main.server.handlers.RecordUserActivityHandler;
 import edu.brown.cs.student.main.server.handlers.SearchItemsHandler;
 import edu.brown.cs.student.main.server.handlers.UpdateItemHandler;
+=======
+import edu.brown.cs.student.main.server.handlers.PostItemHandler;
+>>>>>>> 2d5ce39 (feat: post in progress)
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import spark.Spark;
 
@@ -62,6 +66,7 @@ public class Server {
       Spark.get("/modifyClaimList", new ModifyClaimListHandler(firebaseUtils));
       Spark.get("/getClaimList", new GetClaimListHandler(firebaseUtils));
       Spark.get("/searchItems", new SearchItemsHandler(firebaseUtils));
+      Spark.post("/postItem", new PostItemHandler(firebaseUtils));
       Spark.init();
       Spark.awaitInitialization();
       System.out.println("Server started at http://localhost:" + port);
