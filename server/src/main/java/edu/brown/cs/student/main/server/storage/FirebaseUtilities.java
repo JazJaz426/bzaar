@@ -109,7 +109,9 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
-  public List<Map<String, Object>> getCollection(String collection_id) throws InterruptedException, ExecutionException, IllegalArgumentException {
+
+  public List<Map<String, Object>> getCollection(String collection_id)
+      throws InterruptedException, ExecutionException, IllegalArgumentException {
     if (collection_id == null) {
       throw new IllegalArgumentException("getCollection: collection_id cannot be null");
     }
@@ -126,6 +128,7 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
+
   public List<Map<String, Object>> getItemsByUser(String userId)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
@@ -140,7 +143,7 @@ public class FirebaseUtilities implements StorageInterface {
     }
     return items;
   }
-  
+
   @Override
   public Map<String, Object> getUserDocumentByEmail(String email)
       throws InterruptedException, ExecutionException {
@@ -159,14 +162,14 @@ public class FirebaseUtilities implements StorageInterface {
   public Map<String, Object> getUserDocumentById(String userId)
       throws InterruptedException, ExecutionException {
     Firestore db = FirestoreClient.getFirestore();
-    CollectionReference usersRef = db.collection("users");
-    com.google.cloud.firestore.Query query = usersRef.whereEqualTo("user_id", userId);
-    ApiFuture<QuerySnapshot> querySnapshot = query.get();
-
-    for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
-      return document.getData(); // Returns the first matching document's data
+    DocumentReference docRef = db.collection("users").document(userId);
+    ApiFuture<DocumentSnapshot> future = docRef.get();
+    DocumentSnapshot document = future.get();
+    if (document.exists()) {
+      return document.getData();
+    } else {
+      return null;
     }
-    return null; // Return null if no document found
   }
 
   // clears the collections inside of a specific user.

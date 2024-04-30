@@ -1,29 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { getLoginCookie } from '../utils/cookie'; // Import the function to get cookie
+import { getUserProfile } from '../utils/api'; // Import the new function
+import { getLoginEmail } from '../utils/cookie';
 import "../styles/profile.css";
 import "../styles/main.css";
 
 export default function Profile() {
-  const [email, setEmail] = useState(localStorage.getItem('email'));
+  const [email, setEmail] = useState(getLoginEmail());
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
 
-  
   useEffect(() => {
     const fetchProfile = async () => {
-        let response;
+        let data;
         try {
-            response = await fetch(`http://localhost:3232/getUserProfile?email=${email}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) {
-                throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-            }
-            const data = await response.json();
-            setEmail(data.email);
+            data = await getUserProfile(email);
+            setEmail(data.email);  // Assuming data has an email property directly
             setName(data.name);
             setAddress(data.address);
         } catch (error) {
@@ -31,10 +22,8 @@ export default function Profile() {
             alert('Failed to fetch profile data.');
         }
     };
-    if (email) {
-        fetchProfile();
-    }
-}, [email]); // Dependency array
+    fetchProfile();
+  }, []);
   
 return (
   <div className="profile-content">

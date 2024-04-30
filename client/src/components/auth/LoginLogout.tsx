@@ -1,6 +1,6 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
-import { addLoginCookie, removeLoginCookie } from "../../utils/cookie";
+import { addLoginId, removeLoginId, addLoginEmail, removeLoginEmail } from "../../utils/cookie";
 import "../../styles/LoginLogout.css";
 export interface ILoginPageProps {
   loggedIn: boolean;
@@ -17,9 +17,8 @@ const Login: React.FunctionComponent<ILoginPageProps> = (props) => {
       // Check if the email ends with the allowed domain
       if (userEmail.endsWith("@brown.edu")) {
         // add unique user id as a cookie to the browser.
-        addLoginCookie(response.user.uid);
-        localStorage.setItem('email', userEmail);
-        localStorage.setItem('loggedIn', 'true');
+        addLoginId(response.user.uid);
+        addLoginEmail(userEmail);
         props.setLogin(true);
       } else {
         // User is not allowed, sign them out and show a message
@@ -47,9 +46,8 @@ const Login: React.FunctionComponent<ILoginPageProps> = (props) => {
 
 const Logout: React.FunctionComponent<ILoginPageProps> = (props) => {
   const signOut = () => {
-    removeLoginCookie();
-    localStorage.removeItem('userEmail');
-    localStorage.setItem('loggedIn', 'false');
+    removeLoginId();
+    removeLoginEmail();
     props.setLogin(false);
   };
 
