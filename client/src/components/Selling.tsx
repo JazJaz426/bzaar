@@ -3,6 +3,7 @@ import "../styles/main.css";
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getItemsByUser } from "../utils/api";
+import { getUserId } from '../utils/cookie';
 import { Item } from "../utils/schemas";
 import "../styles/items.css";
 import "../styles/main.css";
@@ -11,9 +12,7 @@ export default function Selling() {
     const [data, setData] = useState<Item[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const fetchData =  () => {
-        getItemsByUser().then((data) => {
-            console.log('data is');
-            console.log(data.items);
+        getItemsByUser(getUserId()).then((data) => {
             setData(data.items.map((doc: Item) => ({ id: doc.id, ...doc })));
         });
     }

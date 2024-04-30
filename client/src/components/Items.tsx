@@ -14,7 +14,6 @@ export default function Profile(props: ListProps) {
     const fetchData =  () => {
         getAllItems().then((data) => {
             console.log('data is');
-            console.log(data.items);
             setData(data.items.map((doc: Item) => ({ id: doc.id, ...doc })));
         });
     }

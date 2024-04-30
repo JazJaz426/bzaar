@@ -153,7 +153,10 @@ public class FirebaseUtilities implements StorageInterface {
     ApiFuture<QuerySnapshot> querySnapshot = query.get();
 
     for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
-      return document.getData(); // Returns the first matching document's data
+      Map<String, Object> userData = document.getData();
+      userData.put("userId", document.getId()); // Add the document ID as "userId"
+      return userData; // Returns the first matching document's data with the document ID included
+      // (should just be one document as email is unique)
     }
     return null; // Return null if no document found
   }
