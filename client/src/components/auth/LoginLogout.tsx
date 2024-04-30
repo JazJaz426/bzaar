@@ -14,12 +14,12 @@ const Login: React.FunctionComponent<ILoginPageProps> = (props) => {
     try {
       const response = await signInWithPopup(auth, new GoogleAuthProvider());
       const userEmail = response.user.email || "";
-
       // Check if the email ends with the allowed domain
       if (userEmail.endsWith("@brown.edu")) {
-        console.log(response.user.uid);
         // add unique user id as a cookie to the browser.
         addLoginCookie(response.user.uid);
+        localStorage.setItem('email', userEmail);
+        localStorage.setItem('loggedIn', 'true');
         props.setLogin(true);
       } else {
         // User is not allowed, sign them out and show a message
@@ -48,6 +48,8 @@ const Login: React.FunctionComponent<ILoginPageProps> = (props) => {
 const Logout: React.FunctionComponent<ILoginPageProps> = (props) => {
   const signOut = () => {
     removeLoginCookie();
+    localStorage.removeItem('userEmail');
+    localStorage.setItem('loggedIn', 'false');
     props.setLogin(false);
   };
 
