@@ -109,7 +109,9 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
-  public List<Map<String, Object>> getCollection(String collection_id) throws InterruptedException, ExecutionException, IllegalArgumentException {
+
+  public List<Map<String, Object>> getCollection(String collection_id)
+      throws InterruptedException, ExecutionException, IllegalArgumentException {
     if (collection_id == null) {
       throw new IllegalArgumentException("getCollection: collection_id cannot be null");
     }
@@ -126,6 +128,7 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
+
   public List<Map<String, Object>> getItemsByUser(String userId)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
@@ -140,7 +143,7 @@ public class FirebaseUtilities implements StorageInterface {
     }
     return items;
   }
-  
+
   @Override
   public Map<String, Object> getUserDocumentByEmail(String email)
       throws InterruptedException, ExecutionException {

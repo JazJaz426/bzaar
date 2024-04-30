@@ -1,6 +1,5 @@
 package edu.brown.cs.student.main.server.handlers;
 
-import com.google.gson.Gson;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +45,7 @@ public class GetItemsHandler implements Route {
         responseMap.put("message", "Fail to get item: " + e.getMessage());
         return Utils.toMoshiJson(responseMap);
       }
+    }
     } else if (uid != null) {
       try {
         List<Map<String, Object>> items = this.firebaseUtilities.getItemsByUser(uid);
@@ -60,26 +60,26 @@ public class GetItemsHandler implements Route {
     }
     return new NotImplementedException("not implemented");
 
-//    if (itemId == null || itemId.isEmpty()) {
-//      response.status(400); // Bad Request
-//      return "Item ID must be provided.";
-//    }
-//
-//    try {
-//      // Call FirebaseUtilities to get item details
-//      Map<String, Object> itemDetails = firebaseUtilities.getItemDetails(itemId);
-//      if (itemDetails != null) {
-//        response.status(200); // OK
-//        response.type("application/json");
-//        return new Gson().toJson(itemDetails);
-//      } else {
-//        response.status(404); // Not Found
-//        return "Item details not found for ID: " + itemId;
-//      }
-//    } catch (Exception e) {
-//      response.status(500); // Internal Server Error
-//      return "An error occurred: " + e.getMessage();
-//    }
+    //    if (itemId == null || itemId.isEmpty()) {
+    //      response.status(400); // Bad Request
+    //      return "Item ID must be provided.";
+    //    }
+    //
+    //    try {
+    //      // Call FirebaseUtilities to get item details
+    //      Map<String, Object> itemDetails = firebaseUtilities.getItemDetails(itemId);
+    //      if (itemDetails != null) {
+    //        response.status(200); // OK
+    //        response.type("application/json");
+    //        return new Gson().toJson(itemDetails);
+    //      } else {
+    //        response.status(404); // Not Found
+    //        return "Item details not found for ID: " + itemId;
+    //      }
+    //    } catch (Exception e) {
+    //      response.status(500); // Internal Server Error
+    //      return "An error occurred: " + e.getMessage();
+    //    }
 
   }
 }
