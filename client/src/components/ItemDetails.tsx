@@ -6,6 +6,7 @@ import Layout from './Layout';
 import { Section } from './MainPage'; 
 import ImageCarousel from './ImageCarousel';
 import '../styles/itemDetails.css'; // Assuming CSS module usage
+import { getItemDetails } from '../utils/api';
 
 interface Item {
     id: string;
@@ -26,56 +27,50 @@ interface User {
     user_id: string;
 }
 
+
 const ItemDetail = () => {
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<Item | null>(null);
     const [seller, setSeller] = useState<User | null>(null);
+    const fetchSellerDetails = async (userId: string) => {
+        try {
+            const response = await fetch(`http://localhost:3232/getUserProfile?userId=${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+            }
+            const data = await response.json();
+            setSeller(data);
+        } catch (error) {
+            console.error("Error fetching seller details:", error);
+        }
+    };
+    const fetchItemDetails = async () => {
+        if (!id) {
+            console.log("Document ID is undefined.");
+            return;
+        }
+        console.log('fetching item details, id is ', id);
+
+        getItemDetails(id).then((data) => {
+            console.log('data is');
+            console.log(data.itemDetails);
+            setItem(data.itemDetails);
+            fetchSellerDetails(data.itemDetails.seller);
+        });
+    };
 
     useEffect(() => {
-        const fetchItem = async () => {
-            if (!id) {
-                console.log("Document ID is undefined.");
-                return;
-            }
-            try {
-                const response = await fetch(`http://localhost:3232/getItemDetails?id=${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-                }
-                const data = await response.json();
-                setItem(data);
-                fetchSellerDetails(data.seller);
-                console.log(data.seller)
-            } catch (error) {
-                console.error("Error fetching item details:", error);
-            }
-        };
+
 
        
-        const fetchSellerDetails = async (userId: string) => {
-            try {
-                const response = await fetch(`http://localhost:3232/getUserProfile?userId=${userId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-                }
-                const data = await response.json();
-                setSeller(data);
-            } catch (error) {
-                console.error("Error fetching seller details:", error);
-            }
-        };
 
-        fetchItem();
+
+        fetchItemDetails();
     }, [id]);
 
     if (!item) {

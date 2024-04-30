@@ -117,8 +117,11 @@ public class FirebaseUtilities implements StorageInterface {
     CollectionReference dataRef = db.collection(collection_id);
     QuerySnapshot dataQuery = dataRef.get().get();
     List<Map<String, Object>> data = new ArrayList<>();
+
     for (QueryDocumentSnapshot doc : dataQuery.getDocuments()) {
-      data.add(doc.getData());
+      Map<String, Object> item = doc.getData();
+      item.put("id", doc.getId());
+      data.add(item);
     }
 
     return data;
