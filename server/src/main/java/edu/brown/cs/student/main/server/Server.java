@@ -3,8 +3,8 @@ package edu.brown.cs.student.main.server;
 import static spark.Spark.after;
 import static spark.Spark.options;
 
+import edu.brown.cs.student.main.server.handlers.GetItemsHandler;
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
-import edu.brown.cs.student.main.server.handlers.ViewItemsDetailsHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import spark.Spark;
 
@@ -73,7 +73,7 @@ public class Server {
     try {
       FirebaseUtilities firebaseUtils = new FirebaseUtilities();
       Spark.get("/getUserProfile", new GetUserProfileHandler(firebaseUtils));
-      Spark.get("/getItemDetails", new ViewItemsDetailsHandler(firebaseUtils));
+      Spark.get("/getItems", new GetItemsHandler(firebaseUtils));
       Spark.init();
       Spark.awaitInitialization();
       System.out.println("Server started at http://localhost:" + port);

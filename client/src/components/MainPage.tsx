@@ -4,7 +4,8 @@ import Items from "./Items";
 import Profile from "./Profile";
 import Sidebar from "./Sidebar";
 import Layout from "./Layout"; // Import Layout
-// import Selling from "./Selling";
+import Selling from "./Selling";
+
 export enum Section {
     VIEW_ITEM= "VIEW_ITEM",
     SELLING= "SELLING",
@@ -24,6 +25,7 @@ export default function MapsGearup() {
   return (
     <Layout currentSection={section} onNavClick={handleNavClick}>
       {section === Section.VIEW_ITEM ? <Items /> : null}
+      {section === Section.SELLING ? <Selling /> : null}
       {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
     </Layout>
   );

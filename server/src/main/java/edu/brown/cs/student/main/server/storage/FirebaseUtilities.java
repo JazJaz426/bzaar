@@ -109,6 +109,23 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
+  public List<Map<String, Object>> getCollection(String collection_id) throws InterruptedException, ExecutionException, IllegalArgumentException {
+    if (collection_id == null) {
+      throw new IllegalArgumentException("getCollection: collection_id cannot be null");
+    }
+    Firestore db = FirestoreClient.getFirestore();
+    CollectionReference dataRef = db.collection(collection_id);
+    QuerySnapshot dataQuery = dataRef.get().get();
+    List<Map<String, Object>> data = new ArrayList<>();
+
+    for (QueryDocumentSnapshot doc : dataQuery.getDocuments()) {
+      Map<String, Object> item = doc.getData();
+      item.put("id", doc.getId());
+      data.add(item);
+    }
+
+    return data;
+  }
 
   @Override
   public Map<String, Object> getUserDocumentByEmail(String email)
