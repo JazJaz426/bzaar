@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/ItemForm.css';
-
+import { getLoginId } from '../utils/cookie';
 import { collection, addDoc } from "firebase/firestore";
 interface FormData {
     title: string;
@@ -8,6 +8,7 @@ interface FormData {
     status: string;
     condition: string;
     description: string;
+    seller: string;
     images: File[] | null;
     category: string;
 
@@ -19,6 +20,7 @@ const ItemForm = () => {
         status: 'available',
         condition: '',
         description: '',
+        seller: '',
         images: [] as File[] | null,
         category: 'furniture'
     });
@@ -39,6 +41,8 @@ const ItemForm = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(formData);
+        console.log(getLoginId())
+        const seller = getLoginId();
         const submissionData = new FormData();
         submissionData.append('title', formData.title);
         submissionData.append('price', formData.price);
@@ -46,6 +50,12 @@ const ItemForm = () => {
         submissionData.append('condition', formData.condition);
         submissionData.append('description', formData.description);
         submissionData.append('category', formData.category);
+        if (seller) {
+            submissionData.append('seller', seller);
+        } else {
+            console.error("Seller ID is undefined.");
+            return; // Optionally halt the submission or handle appropriately
+        }
         if (formData.images) {
             formData.images.forEach((file, index) => {
                 submissionData.append(`images[${index}]`, file);

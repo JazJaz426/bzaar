@@ -28,7 +28,8 @@ public class PostItemHandler implements Route {
     ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
     try {
       List<FileItem> formItems = upload.parseRequest(request.raw());
-
+      System.out.println("getting a post request");
+      System.out.println(formItems);
       Item item = new Item(); // Assuming Item class exists
       List<String> imageUrls = new ArrayList<>();
 
@@ -36,14 +37,17 @@ public class PostItemHandler implements Route {
         if (!field.isFormField()) {
           String imageUrl =
               FirebaseUploadHelper.uploadFile(field.getInputStream(), field.getName());
+          System.out.println("Image URL: " + imageUrl);
           imageUrls.add(imageUrl);
         } else {
           // Process other form fields
           switch (field.getFieldName()) {
             case "title":
+              System.out.println("Title: " + field.getString());
               item.setTitle(field.getString());
               break;
             case "price":
+              System.out.println("Price: " + field.getString());
               if (field.getString().isEmpty()) {
                 responseMap.put("status", 500);
                 responseMap.put("message", "Fail to post item with missing parameters: ");
@@ -51,26 +55,37 @@ public class PostItemHandler implements Route {
               item.setPrice(Double.parseDouble(field.getString()));
               break;
             case "status":
+              System.out.println("Status: " + field.getString());
               item.setStatus(field.getString());
               break;
             case "condition":
+              System.out.println("Condition: " + field.getString());
               item.setCondition(field.getString());
               break;
             case "description":
+              System.out.println("Description: " + field.getString());
               item.setDescription(field.getString());
               break;
             case "category":
+              System.out.println("Category: " + field.getString());
               item.setCategory(field.getString());
+              break;
+            case "seller":
+              System.out.println("Seller: " + field.getString());
+              item.setSeller(field.getString());
               break;
           }
         }
       }
+
+      System.out.println("Image URLs: " + imageUrls);
+      item.setImages(imageUrls);
       if (item.checkAnyEmpty()) {
+        System.out.println("Missing parameters");
         responseMap.put("status", 500);
         responseMap.put("message", "Fail to post item with missing parameters: ");
         return Utils.toMoshiJson(responseMap);
       }
-      item.setImageUrls(imageUrls);
       FirestoreHelper.saveItem(item); // Save item details to Firestore
 
       //      return "Upload successful";
@@ -107,7 +122,8 @@ public class PostItemHandler implements Route {
       //          itemDescription,
       //          itemCondition,
       //          itemCategory);
-      //      responseMap.put("status", 200);
+      responseMap.put("status", 200);
+      responseMap.put("message", "Item posted successfully");
     } catch (Exception e) {
       // error likely occurred in the storage handler
       e.printStackTrace();

@@ -9,7 +9,8 @@ public class Item {
   private String condition;
   private String description;
   private String category;
-  private List<String> imageUrls;
+  private String seller;
+  private List<String> images;
 
   public void item() {
     this.title = "";
@@ -18,7 +19,8 @@ public class Item {
     this.condition = "";
     this.description = "";
     this.category = "";
-    this.imageUrls = null;
+    this.seller = "";
+    this.images = null;
   }
 
   public void item(
@@ -35,7 +37,8 @@ public class Item {
     this.condition = condition;
     this.description = description;
     this.category = category;
-    this.imageUrls = null;
+    this.seller = "";
+    this.images = null;
   }
 
   public String getTitle() {
@@ -87,11 +90,19 @@ public class Item {
   }
 
   public List<String> getImageUrls() {
-    return imageUrls;
+    return images;
   }
 
-  public void setImageUrls(List<String> imageUrls) {
-    this.imageUrls = imageUrls;
+  public void setImages(List<String> imageUrls) {
+    this.images = imageUrls;
+  }
+
+  public String getSeller() {
+    return seller;
+  }
+
+  public void setSeller(String seller) {
+    this.seller = seller;
   }
 
   public boolean checkAnyEmpty() {
@@ -99,7 +110,8 @@ public class Item {
         || this.status == null
         || this.condition == null
         || this.description == null
+        || this.seller == null
         || this.category == null
-        || this.imageUrls == null;
+        || this.images == null;
   }
 }

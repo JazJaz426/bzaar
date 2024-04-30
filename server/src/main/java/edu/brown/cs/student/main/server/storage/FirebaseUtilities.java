@@ -40,6 +40,7 @@ public class FirebaseUtilities implements StorageInterface {
     FirebaseOptions options =
         new FirebaseOptions.Builder()
             .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+            .setStorageBucket("term-project-fd27e.appspot.com")
             .build();
 
     FirebaseApp.initializeApp(options);
@@ -152,13 +153,17 @@ public class FirebaseUtilities implements StorageInterface {
 
   public class FirebaseUploadHelper {
     public static String uploadFile(InputStream fileStream, String fileName) throws Exception {
-      Blob blob = StorageClient.getInstance().bucket().create(fileName, fileStream, "image/jpeg");
+      Blob blob =
+          StorageClient.getInstance()
+              .bucket("term-project-fd27e.appspot.com")
+              .create(fileName, fileStream, "image/jpeg");
       return blob.getMediaLink(); // URL to access the uploaded file
     }
   }
 
   public class FirestoreHelper {
     public static void saveItem(Item item) {
+      System.out.println("Saving item to Firestore");
       Firestore db = FirestoreClient.getFirestore();
       db.collection("items").document().set(item);
     }
