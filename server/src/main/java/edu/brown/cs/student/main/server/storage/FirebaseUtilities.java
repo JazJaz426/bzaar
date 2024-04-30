@@ -126,7 +126,21 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
-
+  public List<Map<String, Object>> getItemsByUser(String userId)
+      throws ExecutionException, InterruptedException {
+    Firestore db = FirestoreClient.getFirestore();
+    CollectionReference itemsRef = db.collection("items");
+    com.google.cloud.firestore.Query query = itemsRef.whereEqualTo("seller", userId);
+    ApiFuture<QuerySnapshot> querySnapshot = query.get();
+    List<Map<String, Object>> items = new ArrayList<>();
+    for (QueryDocumentSnapshot doc : querySnapshot.get().getDocuments()) {
+      Map<String, Object> item = doc.getData();
+      item.put("id", doc.getId());
+      items.add(item);
+    }
+    return items;
+  }
+  
   @Override
   public Map<String, Object> getUserDocumentByEmail(String email)
       throws InterruptedException, ExecutionException {
