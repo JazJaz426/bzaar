@@ -11,7 +11,7 @@ import spark.Route;
 
 public class GetItemsHandler implements Route {
 
-  private FirebaseUtilities firebaseUtilities;
+  final private FirebaseUtilities firebaseUtilities;
 
   public GetItemsHandler(FirebaseUtilities firebaseUtilities) {
     this.firebaseUtilities = firebaseUtilities;
@@ -58,27 +58,6 @@ public class GetItemsHandler implements Route {
       }
     }
     return new NotImplementedException("not implemented");
-
-    //    if (itemId == null || itemId.isEmpty()) {
-    //      response.status(400); // Bad Request
-    //      return "Item ID must be provided.";
-    //    }
-    //
-    //    try {
-    //      // Call FirebaseUtilities to get item details
-    //      Map<String, Object> itemDetails = firebaseUtilities.getItemDetails(itemId);
-    //      if (itemDetails != null) {
-    //        response.status(200); // OK
-    //        response.type("application/json");
-    //        return new Gson().toJson(itemDetails);
-    //      } else {
-    //        response.status(404); // Not Found
-    //        return "Item details not found for ID: " + itemId;
-    //      }
-    //    } catch (Exception e) {
-    //      response.status(500); // Internal Server Error
-    //      return "An error occurred: " + e.getMessage();
-    //    }
 
   }
 }

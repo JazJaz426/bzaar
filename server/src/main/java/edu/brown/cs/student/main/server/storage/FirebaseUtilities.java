@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -246,4 +247,18 @@ public class FirebaseUtilities implements StorageInterface {
       return null;
     }
   }
+
+  public void recordUserActivity(String interactionType, String itemId, String userId) {
+    Firestore db = FirestoreClient.getFirestore();
+    CollectionReference collectionRef = db.collection("interactions");
+    Map<String, Object> data = new HashMap<>();
+    data.put("interactionType", interactionType);
+    data.put("itemId", itemId);
+    data.put("userId", userId);
+    collectionRef.document().set(data);
+
+
+  }
+
+
 }
