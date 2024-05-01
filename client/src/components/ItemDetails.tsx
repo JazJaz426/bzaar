@@ -12,6 +12,7 @@ import Items from './Items';
 import Selling from './Selling';
 import WatchList from './WatchList';
 import Profile from './Profile';
+import ClaimList from './ClaimList.js';
 
 interface Item {
     id: string;
@@ -45,12 +46,7 @@ const ItemDetail = () => {
 
     const fetchUserClaimList = async () => {
         const claimListData = await getClaimList(userId);
-        console.log("claimListData.claimlist:", claimListData.claimlist, 'userId:', userId);
-        console.log("item id", id)
         setUserClaimList([...claimListData.claimlist]);
-        console.log('after fetch user claim userClaimList: ', userClaimList, id)
-        // const isClaimed = claimListData.claimlist.includes(id);
-        // setIsClaimedByUser(isClaimed);
     };
 
     const fetchSellerDetails = async (userId: string) => {
@@ -82,10 +78,7 @@ const ItemDetail = () => {
         }
     };
 
-    console.log("the item is claimed by me", userClaimList.includes(id))
-
     useEffect(() => {
-        console.log("fetch user claim list")
         fetchUserClaimList().then(() => {
             fetchSellerDetails(userId).then(() => {
                 fetchItemDetails();
@@ -149,7 +142,6 @@ const ItemDetail = () => {
     if (!item) {
         return <div className="loading">Loading...</div>;
     }
-    console.log('is claimed by user', userClaimList.includes(id))
     return (
         <Layout currentSection={section} onNavClick={handleNavClick}>
             {section === Section.VIEW_ITEM_DETAILS && (
@@ -180,6 +172,7 @@ const ItemDetail = () => {
             {section === Section.VIEW_ITEM ? <Items /> : null}
             {section === Section.SELLING ? <Selling /> : null}
             {section === Section.WATCHLIST ? <WatchList /> : null}
+            {section === Section.CLAIMLIST ? <ClaimList /> : null}
             {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
         </Layout>
     );

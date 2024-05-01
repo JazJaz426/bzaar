@@ -2,30 +2,36 @@ import "../styles/items.css";
 import "../styles/main.css";
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllItems, getWatchList } from "../utils/api";
+import { getAllItems, getClaimList } from "../utils/api";
 import { Item } from "../utils/schemas";
 import { getUserId } from "../utils/cookie";
 import { ListProps } from "./Items";
 import { Section } from "./MainPage";
 
-export default function WatchList(props: ListProps) {
+export default function ClaimList(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
-    const [watchList, setWatchList] = useState<string[]>([]);
+    const [claimList, setClaimList] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const userId = getUserId(); // This should be dynamically set based on the logged-in user
 
+    console.log(userId)
     const fetchData = async () => {
-        const allItemsData = await getAllItems();
-        const watchListData = await getWatchList(userId);
-        // console.log('watchListData', watchListData);
-        // console.log('allItemsData', allItemsData);
-        setWatchList(watchListData.watchList);
-        setData(allItemsData.items.filter((item: Item) => watchListData.watchList.includes(item.id)));
+        try {
+            const allItemsData = await getAllItems();
+            const claimListData = await getClaimList(userId);
+            console.log('claimListData', claimListData);  // Log the claim list data
+            setClaimList(claimListData.claimlist);
+            setData(allItemsData.items.filter((item: Item) => claimListData.claimlist.includes(item.id)));
+            console.log('data', data);  // Log the filtered data
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     };
 
     useEffect(() => {
         fetchData();
     }, [searchTerm]);
+    console.log('userId', userId);
     return (
         <div className="item-page">
             <div className="item-list">
@@ -50,7 +56,7 @@ export default function WatchList(props: ListProps) {
                     ))
                 ) : (
                     <div className="centered-message">
-                        <p>No items in your watch list.</p>
+                        <p>No items in your claim list.</p>
                     </div>
                 )}
             </div>
