@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../styles/MainPage.css";
-import Items from "./Items";
+import SearchPage from "./SearchPage";
 import Discover from "./Discover";
 import Profile from "./Profile";
 import Sidebar from "./Sidebar";
@@ -11,7 +11,7 @@ import ClaimList from "./ClaimList";
 
 export enum Section {
     DISCOVER= "DISCOVER",
-    SEARCH="SEARCH",
+    SEARCHPAGE="SEARCHPAGE",
     SELLING= "SELLING",
     PROFILE= "PROFILE",
     CLAIMLIST= "CLAIMLIST",
@@ -31,7 +31,7 @@ export default function MainPage() {
   return (
     <Layout currentSection={section} onNavClick={handleNavClick}>
       {section === Section.DISCOVER ? <Discover section={section} setSection={setSection} /> : null}
-      {section === Section.SEARCH ? <Items section={section} setSection={setSection} /> : null}
+      {section === Section.SEARCHPAGE ? <SearchPage section={section} setSection={setSection} /> : null}
       {section === Section.SELLING ? <Selling section={section} setSection={setSection}/> : null}
       {section === Section.WATCHLIST ? <WatchList section={section} setSection={setSection} /> : null}
       {section === Section.CLAIMLIST ? <ClaimList section={section} setSection={setSection} /> : null}

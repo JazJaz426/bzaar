@@ -11,6 +11,7 @@ import AuthRoute from "./auth/AuthRoute";
 import ItemForm from './ItemForm';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SearchPage from "./SearchPage";
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -30,6 +31,7 @@ function App() {
         <Routes>
           <Route path="/" element={<AuthRoute gatedContent={<MainPage/>}/>} />
           <Route path="/discover" element={<MainPage />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/item-details/:id" element={<ItemDetail />} />
           <Route path="/my-listings" element={<Selling />} />
           <Route path="/post" element={<ItemForm />} />

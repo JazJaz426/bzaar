@@ -13,6 +13,8 @@ import Selling from './Selling';
 import WatchList from './WatchList';
 import Profile from './Profile';
 import ClaimList from './ClaimList.js';
+import Discover from './Discover.js';
+import SearchPage from './SearchPage.js';
 
 interface Item {
     id: string;
@@ -169,7 +171,8 @@ const ItemDetail = () => {
                         ) : null}
                     </div>
             )}
-            {section === Section.VIEW_ITEM ? <Items /> : null}
+            {section === Section.DISCOVER ? <Discover /> : null}
+            {section === Section.SEARCHPAGE ? <SearchPage /> : null}
             {section === Section.SELLING ? <Selling /> : null}
             {section === Section.WATCHLIST ? <WatchList /> : null}
             {section === Section.CLAIMLIST ? <ClaimList /> : null}
