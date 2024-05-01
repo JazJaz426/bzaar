@@ -3,6 +3,7 @@ import "../styles/App.css";
 import MainPage from "./MainPage";
 import ItemDetail from './ItemDetails';
 import WatchList from './WatchList';
+import ClaimList from './ClaimList';
 import Profile from './Profile';
 import Layout from './Layout';
 import Selling from './Selling';
@@ -34,6 +35,7 @@ function App() {
           <Route path="/post" element={<ItemForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/watchlist" element={<WatchList />} />
+          <Route path="/claimlist" element={<ClaimList />} />
           {/* Add more routes as needed */}
         </Routes>
       </Router>
