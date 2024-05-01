@@ -22,8 +22,8 @@ public class RecordUserActivityHandler implements Route {
     public Object handle(Request request, Response response) throws Exception {
         // Extract itemId from request parameters
         String interactiontType = request.queryParams("interaction_type");
-        String itemId = request.queryParams("item_id");
-        String userId = request.queryParams("user_id");
+        String itemId = request.queryParams("itemId");
+        String userId = request.queryParams("userId");
         Map<String, Object> responseMap = new HashMap<>();
         if (interactiontType == null || itemId == null || userId == null) {
             responseMap.put("status", 400);
