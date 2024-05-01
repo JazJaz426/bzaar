@@ -96,6 +96,7 @@ const ItemDetail = () => {
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<Item | null>(null);
     const [seller, setSeller] = useState<User | null>(null);
+    const [isClaimedByUser, setIsClaimedByUser] = useState(false);
 
     useEffect(() => {
         const fetchItemDetails = async () => {
@@ -130,11 +131,13 @@ const ItemDetail = () => {
 
     const handleClaimItem = async () => {
         if (item && id) {
+            const newStatus = item.status === 'claimed' ? 'available' : 'claimed';
             try {
                 const responseMap = await claimItem(id);
                 const responseStatus = responseMap.status;
                 if (responseStatus === 200) {
-                    setStatus('claimed');
+                    setStatus(newStatus);
+                    setIsClaimedByUser(newStatus === 'claimed');
                     try {
                         const logResponse = await logInteraction(getUserId(), id, "claimed");
                         if (logResponse.status === 200) {
@@ -187,7 +190,9 @@ const ItemDetail = () => {
                     <p>Email: {seller ? seller.email : 'Email not available'}</p>
                     <p>Address: {seller ? seller.address : 'Address not available'}</p>
                 </div>
-                <button onClick={handleClaimItem} className="claimButton">Claim</button>
+                <button onClick={handleClaimItem} className={`claimButton ${isClaimedByUser ? 'unclaimButton' : ''}`}>
+                    {isClaimedByUser ? 'Unclaim' : 'Claim'}
+                </button>
             </div>
         </Layout>
     );
