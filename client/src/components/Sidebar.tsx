@@ -17,13 +17,13 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, listView, onNavClick 
           <li className={currentSection === Section.VIEW_ITEM && !listView ? 'active' : ''}>
             <a href="#" onClick={() => onNavClick(Section.VIEW_ITEM)}>Discover</a>
           </li>
-          <li className={currentSection === Section.VIEW_ITEM && listView ? 'active' : ''}>
-            <a href="#" onClick={() => onNavClick(Section.VIEW_ITEM, true)}>Watch List</a>
+          <li className={currentSection === Section.WATCHLIST && listView ? 'active' : ''}>
+            <a href="#" onClick={() => onNavClick(Section.WATCHLIST, true)}>Watch List</a>
           </li>
-          <li className={currentSection === Section.SELLING ? 'active' : ''}>
+          <li className={currentSection === Section.SELLING && !listView ? 'active' : ''}>
             <a href="#" onClick={() => onNavClick(Section.SELLING)}>My Listings</a>
           </li>
-          <li className={currentSection === Section.PROFILE ? 'active' : ''}>
+          <li className={currentSection === Section.PROFILE && !listView ? 'active' : ''}>
             <a href="#" onClick={() => onNavClick(Section.PROFILE)}>Profile</a>
           </li>
           <li>

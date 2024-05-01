@@ -5,11 +5,13 @@ import Profile from "./Profile";
 import Sidebar from "./Sidebar";
 import Layout from "./Layout"; // Import Layout
 import Selling from "./Selling";
+import WatchList from "./WatchList";
 
 export enum Section {
     VIEW_ITEM= "VIEW_ITEM",
     SELLING= "SELLING",
     PROFILE= "PROFILE",
+    WATCHLIST= "WATCHLIST"
 }
 
 export default function MapsGearup() {
@@ -26,6 +28,7 @@ export default function MapsGearup() {
     <Layout currentSection={section} onNavClick={handleNavClick}>
       {section === Section.VIEW_ITEM ? <Items /> : null}
       {section === Section.SELLING ? <Selling /> : null}
+      {section === Section.WATCHLIST ? <WatchList /> : null}
       {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
     </Layout>
   );
