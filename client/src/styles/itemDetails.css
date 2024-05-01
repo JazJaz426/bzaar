@@ -27,3 +27,17 @@
     text-align: center;
     padding: 50px;
 }
+
+.claimButton {
+    padding: 10px 20px;
+    background-color: #cc7e1f; /* Green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.claimButton:hover {
+    background-color: #cc7e1f;
+}

@@ -306,4 +306,20 @@ public class FirebaseUtilities implements StorageInterface {
       return null;
     }
   }
+
+  public void updateItemStatus(String itemId, String status)
+      throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    DocumentReference itemRef = db.collection("items").document(itemId);
+    try {
+      ApiFuture<WriteResult> writeResult = itemRef.update("status", status);
+      // Wait for the future to complete and get the result
+      WriteResult result = writeResult.get();
+      // Optionally, log the update time for confirmation
+      System.out.println("Item updated successfully at: " + result.getUpdateTime());
+    } catch (InterruptedException | ExecutionException e) {
+      System.err.println("Failed to update item: " + e.getMessage());
+      throw e; // Rethrow the exception to handle it further up the call stack if necessary
+    }
+  }
 }

@@ -86,4 +86,10 @@ export async function getItemsByUser(userId: string) {
     userId: userId,
   });
 }
+export async function claimItem(itemId: string) {
+  return await queryAPI("claimItem", {
+    itemId: itemId
+  });
+}
+
 
