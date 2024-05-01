@@ -101,6 +101,8 @@ export async function logInteraction(userId: string, itemId: string, interaction
 }
 
 
+<<<<<<< Updated upstream
+=======
 export async function getWatchList(userId: string) {
   return await queryAPI("getWatchList", {
     userId: userId,
@@ -115,3 +117,17 @@ export async function modifyWatchList(userId: string, itemId: string, operation:
   });
 }
 
+export async function getClaimList(userId: string) {
+  return await queryAPI("getClaimList", {
+    userId: userId,
+  });
+}
+
+export async function modifyClaimList(userId: string, itemId: string, operation: string) {
+  return await queryAPI("modifyClaimList", {
+    userId: userId,
+    itemId: itemId,
+    operation: operation,
+  });
+}
+>>>>>>> Stashed changes
