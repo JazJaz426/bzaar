@@ -115,3 +115,16 @@ export async function modifyWatchList(userId: string, itemId: string, operation:
   });
 }
 
+export async function getClaimList(userId: string) {
+  return await queryAPI("getClaimList", {
+    userId: userId,
+  });
+}
+
+export async function modifyClaimList(userId: string, itemId: string, operation: string) {
+  return await queryAPI("modifyClaimList", {
+    userId: userId,
+    itemId: itemId,
+    operation: operation,
+  });
+}

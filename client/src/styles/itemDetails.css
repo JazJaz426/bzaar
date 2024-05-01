@@ -38,10 +38,6 @@
     margin-top: 20px;
 }
 
-.claimButton:hover {
-    background-color: #cc7e1f;
-}
-
 .unclaimButton {
     background-color: #f44336; /* Red color for unclaim button */
 }
