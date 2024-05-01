@@ -40,4 +40,10 @@
 
 .unclaimButton {
     background-color: #f44336; /* Red color for unclaim button */
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
 }

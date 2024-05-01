@@ -7,7 +7,7 @@ import {modifyWatchList, getWatchList, getAllItems} from "../utils/api";
 import { getUserId } from "../utils/cookie";
 import { Section } from "./MainPage";
 
-interface ListProps {
+export interface ListProps {
     section: Section;
     setSection: React.Dispatch<React.SetStateAction<Section>>
 }
