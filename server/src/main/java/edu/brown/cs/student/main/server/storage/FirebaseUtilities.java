@@ -302,7 +302,7 @@ public class FirebaseUtilities implements StorageInterface {
       List<String> watchList = (List<String>) document.get("watchList");
       return watchList != null ? watchList : new ArrayList<>();
     } else {
-      return null;
+      return new ArrayList<>();
     }
   }
 
