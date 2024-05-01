@@ -261,6 +261,53 @@ public class FirebaseUtilities implements StorageInterface {
   }
 
   /**
+   * Modifies a user's claim list by either adding or removing an item.
+   *
+   * @param itemId The ID of the item to modify in the claim list.
+   * @param userId The ID of the user whose claim list is being modified.
+   * @param operation Specifies whether to add or remove the item ("add" or "remove").
+   * @throws ExecutionException If an exception is thrown during the execution.
+   * @throws InterruptedException If the thread is interrupted while waiting.
+   */
+  public void modifyClaimList(String itemId, String userId, String operation)
+      throws ExecutionException, InterruptedException {
+    Firestore db = FirestoreClient.getFirestore();
+    DocumentReference userRef = db.collection("users").document(userId);
+    ApiFuture<WriteResult> future;
+    if ("add".equalsIgnoreCase(operation)) {
+      future = userRef.update("claimList", FieldValue.arrayUnion(itemId));
+    } else if ("del".equalsIgnoreCase(operation)) {
+      future = userRef.update("claimList", FieldValue.arrayRemove(itemId));
+    } else {
+      throw new IllegalArgumentException(
+          "Invalid operation: " + operation + ". Use 'add' or 'del'.");
+    }
+    future.get(); // Ensure the operation completes
+  }
+
+  /**
+   * Retrieves the claim list of a user by their user ID.
+   *
+   * @param userId The ID of the user whose claim list is to be retrieved.
+   * @return A List of item IDs in the user's claim list, or null if the user or claim list does not
+   *     exist.
+   * @throws ExecutionException If an exception is thrown during the execution.
+   * @throws InterruptedException If the thread is interrupted while waiting.
+   */
+  public List<String> getClaimList(String userId) throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    DocumentReference userRef = db.collection("users").document(userId);
+    ApiFuture<DocumentSnapshot> future = userRef.get();
+    DocumentSnapshot document = future.get();
+    if (document.exists()) {
+      List<String> claimList = (List<String>) document.get("claimList");
+      return claimList != null ? claimList : new ArrayList<>();
+    } else {
+      return new ArrayList<>();
+    }
+  }
+
+  /**
    * Modifies a user's watchlist by either adding or removing an item.
    *
    * @param itemId The ID of the item to modify in the watchlist.
