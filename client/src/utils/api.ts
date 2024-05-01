@@ -128,3 +128,9 @@ export async function modifyClaimList(userId: string, itemId: string, operation:
     operation: operation,
   });
 }
+
+export async function searchItems(keyword: string) {
+  return await queryAPI("searchItems", {
+    keyword: keyword
+  });
+}

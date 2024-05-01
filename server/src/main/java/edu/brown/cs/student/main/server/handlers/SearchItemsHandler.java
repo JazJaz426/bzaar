@@ -8,25 +8,25 @@ import spark.Response;
 import spark.Route;
 
 public class SearchItemsHandler implements Route {
-    private final FirebaseUtilities firebaseUtils;
+  private final FirebaseUtilities firebaseUtils;
 
-    public SearchItemsHandler(FirebaseUtilities firebaseUtils) {
-        this.firebaseUtils = firebaseUtils;
-    }
+  public SearchItemsHandler(FirebaseUtilities firebaseUtils) {
+    this.firebaseUtils = firebaseUtils;
+  }
 
-@Override
-public Object handle(Request request, Response response) {
+  @Override
+  public Object handle(Request request, Response response) {
     String keyword = request.queryParams("keyword");
     if (keyword == null || keyword.trim().isEmpty()) {
-        response.status(400);
-        return Utils.toMoshiJson(Map.of("status", 400, "error", "Keyword is required"));
+      response.status(400);
+      return Utils.toMoshiJson(Map.of("status", 400, "error", "Keyword is required"));
     }
     try {
-        List<Map<String, Object>> searchResults = firebaseUtils.searchItemsByKeyword(keyword);
-        return Utils.toMoshiJson(Map.of("status", 200, "items", searchResults));
+      List<Map<String, Object>> searchResults = firebaseUtils.searchItemsByKeyword(keyword);
+      return Utils.toMoshiJson(Map.of("status", 200, "items", searchResults));
     } catch (Exception e) {
-        response.status(500);
-        return Utils.toMoshiJson(Map.of("status", 500, "error", "Internal server error"));
+      response.status(500);
+      return Utils.toMoshiJson(Map.of("status", 500, "error", "Internal server error"));
     }
-}
+  }
 }
