@@ -373,4 +373,17 @@ public class FirebaseUtilities implements StorageInterface {
       throw e; // Rethrow the exception to handle it further up the call stack if necessary
     }
   }
+
+  public List<Map<String, Object>> searchItemsByKeyword(String keyword)
+      throws ExecutionException, InterruptedException {
+    Firestore db = FirestoreClient.getFirestore();
+    List<Map<String, Object>> Allitems = this.getCollection("items");
+    List<Map<String, Object>> items = new ArrayList<>();
+    for (Map<String, Object> item : Allitems) {
+      if (item.get("title").toString().toLowerCase().contains(keyword.toLowerCase())) {
+        items.add(item);
+      }
+    }
+    return items;
+  }
 }
