@@ -285,4 +285,25 @@ public class FirebaseUtilities implements StorageInterface {
     future.get(); // Ensure the operation completes
   }
 
+  /**
+   * Retrieves the watchlist of a user by their user ID.
+   *
+   * @param userId The ID of the user whose watchlist is to be retrieved.
+   * @return A List of item IDs in the user's watchlist, or null if the user or watchlist does not exist.
+   * @throws ExecutionException If an exception is thrown during the execution.
+   * @throws InterruptedException If the thread is interrupted while waiting.
+   */
+  public List<String> getWatchList(String userId) throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    DocumentReference userRef = db.collection("users").document(userId);
+    ApiFuture<DocumentSnapshot> future = userRef.get();
+    DocumentSnapshot document = future.get();
+    if (document.exists()) {
+      List<String> watchList = (List<String>) document.get("watchList");
+      return watchList != null ? watchList : new ArrayList<>();
+    } else {
+      return null;
+    }
+  }
+
 }
