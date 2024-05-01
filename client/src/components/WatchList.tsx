@@ -26,32 +26,34 @@ export default function WatchList(props: ListProps) {
     useEffect(() => {
         fetchData();
     }, [searchTerm]);
+    console.log('data.length', data.length);
     return (
         <div className="item-page">
             <div className="item-list">
-                {data.length > 0 ? (
-                    data.map((item: Item) => (
-                        <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
-                            <div className="item-box">
-                                <div className="item-image-box">
-                                    <img src={item.images[0]} alt={item.title} />
+                {data.map((item: Item) => (
+                    <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
+                        <div className="item-box">
+                            <div className="item-image-box">
+                                <img src={item.images[0]} alt={item.title} />
+                                                       </div>
+                            <div className="item-info">
+                                <div className="item-info-left">
+                                                                       <p className="item-name">{item.title}</p>
+                                    <p className="item-status" style={{ color: item.status === 'available' ? '#4CAF50' : '#FF5722' }}>
+                                        {item.status}
+                                    </p>
                                 </div>
-                                <div className="item-info">
-                                    <div className="item-info-left">
-                                        <p className="item-name">{item.title}</p>
-                                        <p className="item-status" style={{ color: item.status === 'available' ? '#4CAF50' : '#FF5722' }}>
-                                            {item.status}
-                                        </p>
-                                    </div>
-                                    <p className="item-price">${item.price}</p>
-                                </div>
+                                <p className="item-price">${item.price}</p>
                             </div>
-                        </Link>
-                    ))
-                ) : (
-                    <div className="centered-message">
-                        <p>No items in your watch list.</p>
-                    </div>
+                        </div>
+                    </Link>
+                ))}
+                {data.length === 0 && (
+                    // <Link to="#" className="link-style">
+                        <div className="centered-message">
+                            <p>No items in your claim list.</p>
+                        </div>
+                    // </Link>
                 )}
             </div>
         </div>
