@@ -2,7 +2,7 @@
 import "../styles/App.css";
 import MainPage from "./MainPage";
 import ItemDetail from './ItemDetails';
-import SellingItemDetail from './SellingItemDetails';
+import WatchList from './WatchList';
 import Profile from './Profile';
 import Layout from './Layout';
 import Selling from './Selling';
@@ -33,6 +33,7 @@ function App() {
           <Route path="/my-listings" element={<Selling />} />
           <Route path="/post" element={<ItemForm />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/watchlist" element={<WatchList />} />
           {/* Add more routes as needed */}
         </Routes>
       </Router>
