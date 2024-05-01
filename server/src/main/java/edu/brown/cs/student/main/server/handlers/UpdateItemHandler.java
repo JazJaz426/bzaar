@@ -6,7 +6,6 @@ import java.util.Map;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import { getUserId } from './utils/cookie';
 
 public class UpdateItemHandler implements Route {
   private FirebaseUtilities firebaseUtilities;

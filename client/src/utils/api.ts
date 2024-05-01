@@ -92,4 +92,12 @@ export async function claimItem(itemId: string) {
   });
 }
 
+export async function logInteraction(userId: string, itemId: string, interactionType: string) {
+  return await queryAPI("recordUserActivity", {
+    userId: userId,
+    itemId: itemId,
+    interactionType: interactionType
+  });
+}
+
 

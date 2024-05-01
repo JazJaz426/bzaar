@@ -20,7 +20,7 @@ public class RecordUserActivityHandler implements Route {
   @Override
   public Object handle(Request request, Response response) throws Exception {
     // Extract itemId from request parameters
-    String interactiontType = request.queryParams("interaction_type");
+    String interactiontType = request.queryParams("interactionType");
     String itemId = request.queryParams("itemId");
     String userId = request.queryParams("userId");
     Map<String, Object> responseMap = new HashMap<>();

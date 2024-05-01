@@ -5,8 +5,9 @@ import { doc, getDoc, getDocs, collection, query, where } from 'firebase/firesto
 import Layout from './Layout';
 import { Section } from './MainPage'; 
 import ImageCarousel from './ImageCarousel';
-import { getItemDetails, getSellerProfile, claimItem } from '../utils/api';
+import { getItemDetails, getSellerProfile, claimItem, logInteraction } from '../utils/api';
 import '../styles/itemDetails.css'; // Assuming CSS module usage
+import { getUserId } from '../utils/cookie.js';
 
 interface Item {
     id: string;
@@ -134,6 +135,18 @@ const ItemDetail = () => {
                 const responseStatus = responseMap.status;
                 if (responseStatus === 200) {
                     setStatus('claimed');
+                    try {
+                        const logResponse = await logInteraction(getUserId(), id, "claimed");
+                        if (logResponse.status === 200) {
+                            console.log('Item claimed and interaction logged successfully.');
+                        } else {
+                            // Handle non-200 status for logging interaction
+                            console.log('Item claimed, but failed to log interaction: ' + logResponse.message);
+                        }
+                    } catch (logError) {
+                        console.error('Error logging the interaction:', logError);
+                        console.log('Item claimed, but an error occurred while logging the interaction.');
+                    }
                 } else {
                     alert('Failed to update item status.');
                 }
