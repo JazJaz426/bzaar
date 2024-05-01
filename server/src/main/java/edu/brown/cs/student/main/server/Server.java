@@ -3,9 +3,12 @@ package edu.brown.cs.student.main.server;
 import static spark.Spark.after;
 import static spark.Spark.options;
 
+import edu.brown.cs.student.main.server.handlers.GetWatchListHandler;
+import edu.brown.cs.student.main.server.handlers.ModifyWatchListHandler;
 import edu.brown.cs.student.main.server.handlers.GetItemsHandler;
 import edu.brown.cs.student.main.server.handlers.GetSellerProfileHandler;
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
+import edu.brown.cs.student.main.server.handlers.RecordUserActivityHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import spark.Spark;
 
@@ -48,6 +51,9 @@ public class Server {
       Spark.get("/getUserProfile", new GetUserProfileHandler(firebaseUtils));
       Spark.get("/getSellerProfile", new GetSellerProfileHandler(firebaseUtils));
       Spark.get("/getItems", new GetItemsHandler(firebaseUtils));
+      Spark.get("/recordUserActivity", new RecordUserActivityHandler(firebaseUtils));
+      Spark.get("/modifyWatchList", new ModifyWatchListHandler(firebaseUtils));
+      Spark.get("/getWatchList", new GetWatchListHandler(firebaseUtils));
       Spark.init();
       Spark.awaitInitialization();
       System.out.println("Server started at http://localhost:" + port);
