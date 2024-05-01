@@ -87,3 +87,17 @@ export async function getItemsByUser(userId: string) {
   });
 }
 
+export async function getWatchList(userId: string) {
+  return await queryAPI("getWatchList", {
+    userId: userId,
+  });
+}
+
+export async function modifyWatchList(userId: string, itemId: string, operation: string) {
+  return await queryAPI("modifyWatchList", {
+    userId: userId,
+    itemId: itemId,
+    operation: operation,
+  });
+}
+
