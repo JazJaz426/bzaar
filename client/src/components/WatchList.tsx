@@ -51,7 +51,7 @@ export default function WatchList(props: ListProps) {
                 {data.length === 0 && (
                     // <Link to="#" className="link-style">
                         <div className="centered-message">
-                            <p>No items in your claim list.</p>
+                            <p>No items in your watch list.</p>
                         </div>
                     // </Link>
                 )}
