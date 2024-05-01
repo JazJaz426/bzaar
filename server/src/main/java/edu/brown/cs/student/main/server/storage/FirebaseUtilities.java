@@ -276,8 +276,12 @@ public class FirebaseUtilities implements StorageInterface {
     ApiFuture<WriteResult> future;
     if ("add".equalsIgnoreCase(operation)) {
       future = userRef.update("claimList", FieldValue.arrayUnion(itemId));
+      future.get();
+      updateItemStatus(itemId, "claimed");
     } else if ("del".equalsIgnoreCase(operation)) {
       future = userRef.update("claimList", FieldValue.arrayRemove(itemId));
+      future.get();
+      updateItemStatus(itemId, "available");
     } else {
       throw new IllegalArgumentException(
           "Invalid operation: " + operation + ". Use 'add' or 'del'.");
