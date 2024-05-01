@@ -166,24 +166,16 @@ const ItemDetail = () => {
                         <p>Email: {seller ? seller.email : 'Email not available'}</p>
                         <p>Address: {seller ? seller.address : 'Address not available'}</p>
                     </div>
-                    {/* <button onClick={handleClaimItem} className={`claimButton ${isClaimedByUser ? 'unclaimButton' : ''}`}>
-                        {isClaimedByUser ? 'Unclaim' : 'Claim'}
-                    </button> */}
-                    {/* {item.status == 'available' || isClaimedByUser ? (
-                        <button onClick={handleClaimItem} className={`claimButton ${isClaimedByUser ? 'unclaimButton' : ''}`}>
-                        {isClaimedByUser ? 'Unclaim' : 'Claim'}
-                        </button>
-                    ) : null} */}
-                {item.status === 'available' ? (
-                    <button onClick={handleClaimItem} className="claimButton">
-                        Claim
-                    </button>
-                ) : userClaimList.includes(id) ? (
-                    <button onClick={handleClaimItem} className="unclaimButton">
-                        Unclaim
-                    </button>
-                ) : null}
-                </div>
+                        {item.status === 'available' ? (
+                            <button onClick={handleClaimItem} className="claimButton">
+                                Claim
+                            </button>
+                        ) : userClaimList.includes(id) ? (
+                            <button onClick={handleClaimItem} className="unclaimButton">
+                                Unclaim
+                            </button>
+                        ) : null}
+                    </div>
             )}
             {section === Section.VIEW_ITEM ? <Items /> : null}
             {section === Section.SELLING ? <Selling /> : null}
