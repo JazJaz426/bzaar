@@ -3,11 +3,11 @@ package edu.brown.cs.student.main.server;
 import static spark.Spark.after;
 import static spark.Spark.options;
 
-import edu.brown.cs.student.main.server.handlers.GetWatchListHandler;
-import edu.brown.cs.student.main.server.handlers.ModifyWatchListHandler;
 import edu.brown.cs.student.main.server.handlers.GetItemsHandler;
 import edu.brown.cs.student.main.server.handlers.GetSellerProfileHandler;
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
+import edu.brown.cs.student.main.server.handlers.GetWatchListHandler;
+import edu.brown.cs.student.main.server.handlers.ModifyWatchListHandler;
 import edu.brown.cs.student.main.server.handlers.RecordUserActivityHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import spark.Spark;

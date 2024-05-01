@@ -8,30 +8,29 @@ import spark.Response;
 import spark.Route;
 
 public class GetWatchListHandler implements Route {
-    private final FirebaseUtilities firebaseUtils;
+  private final FirebaseUtilities firebaseUtils;
 
-    public GetWatchListHandler(FirebaseUtilities firebaseUtils) {
-        this.firebaseUtils = firebaseUtils;
+  public GetWatchListHandler(FirebaseUtilities firebaseUtils) {
+    this.firebaseUtils = firebaseUtils;
+  }
+
+  @Override
+  public Object handle(Request request, Response response) {
+    String userId = request.queryParams("userId");
+    if (userId == null || userId.trim().isEmpty()) {
+      response.status(400);
+      return Utils.toMoshiJson(Map.of("status", 400, "error", "User ID is required"));
     }
-
-    @Override
-    public Object handle(Request request, Response response) {
-        String userId = request.queryParams("userId");
-        if (userId == null || userId.trim().isEmpty()) {
-            response.status(400);
-            return Utils.toMoshiJson(Map.of("status", 400, "error", "User ID is required"));
-        }
-        try {
-            List<String> watchList = firebaseUtils.getWatchList(userId);
-            if (watchList == null) {
-                response.status(404);
-                return Utils.toMoshiJson(Map.of("status", 500, "error", "Watch list not found"));
-            }
-            return Utils.toMoshiJson(Map.of("status", 200, "watchList", watchList));
-        } catch (Exception e) {
-            response.status(500);
-            return Utils.toMoshiJson(Map.of("status", 500, "error", "Internal server error"));
-        }
-
+    try {
+      List<String> watchList = firebaseUtils.getWatchList(userId);
+      if (watchList == null) {
+        response.status(404);
+        return Utils.toMoshiJson(Map.of("status", 500, "error", "Watch list not found"));
+      }
+      return Utils.toMoshiJson(Map.of("status", 200, "watchList", watchList));
+    } catch (Exception e) {
+      response.status(500);
+      return Utils.toMoshiJson(Map.of("status", 500, "error", "Internal server error"));
     }
+  }
 }
