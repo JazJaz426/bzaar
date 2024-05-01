@@ -86,6 +86,20 @@ export async function getItemsByUser(userId: string) {
     userId: userId,
   });
 }
+export async function claimItem(itemId: string) {
+  return await queryAPI("claimItem", {
+    itemId: itemId
+  });
+}
+
+export async function logInteraction(userId: string, itemId: string, interactionType: string) {
+  return await queryAPI("recordUserActivity", {
+    userId: userId,
+    itemId: itemId,
+    interactionType: interactionType
+  });
+}
+
 
 export async function getWatchList(userId: string) {
   return await queryAPI("getWatchList", {

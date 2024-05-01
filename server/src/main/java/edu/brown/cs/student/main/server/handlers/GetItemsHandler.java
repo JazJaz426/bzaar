@@ -11,7 +11,7 @@ import spark.Route;
 
 public class GetItemsHandler implements Route {
 
-  final private FirebaseUtilities firebaseUtilities;
+  private final FirebaseUtilities firebaseUtilities;
 
   public GetItemsHandler(FirebaseUtilities firebaseUtilities) {
     this.firebaseUtilities = firebaseUtilities;
@@ -58,6 +58,5 @@ public class GetItemsHandler implements Route {
       }
     }
     return new NotImplementedException("not implemented");
-
   }
 }

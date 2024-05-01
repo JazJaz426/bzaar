@@ -258,7 +258,6 @@ public class FirebaseUtilities implements StorageInterface {
     data.put("itemId", itemId);
     data.put("userId", userId);
     collectionRef.document().set(data);
-
   }
 
   /**
@@ -280,7 +279,8 @@ public class FirebaseUtilities implements StorageInterface {
     } else if ("del".equalsIgnoreCase(operation)) {
       future = userRef.update("watchList", FieldValue.arrayRemove(itemId));
     } else {
-      throw new IllegalArgumentException("Invalid operation: " + operation + ". Use 'add' or 'del'.");
+      throw new IllegalArgumentException(
+          "Invalid operation: " + operation + ". Use 'add' or 'del'.");
     }
     future.get(); // Ensure the operation completes
   }
@@ -289,7 +289,8 @@ public class FirebaseUtilities implements StorageInterface {
    * Retrieves the watchlist of a user by their user ID.
    *
    * @param userId The ID of the user whose watchlist is to be retrieved.
-   * @return A List of item IDs in the user's watchlist, or null if the user or watchlist does not exist.
+   * @return A List of item IDs in the user's watchlist, or null if the user or watchlist does not
+   *     exist.
    * @throws ExecutionException If an exception is thrown during the execution.
    * @throws InterruptedException If the thread is interrupted while waiting.
    */
@@ -306,4 +307,19 @@ public class FirebaseUtilities implements StorageInterface {
     }
   }
 
+  public void updateItemStatus(String itemId, String status)
+      throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    DocumentReference itemRef = db.collection("items").document(itemId);
+    try {
+      ApiFuture<WriteResult> writeResult = itemRef.update("status", status);
+      // Wait for the future to complete and get the result
+      WriteResult result = writeResult.get();
+      // Optionally, log the update time for confirmation
+      System.out.println("Item updated successfully at: " + result.getUpdateTime());
+    } catch (InterruptedException | ExecutionException e) {
+      System.err.println("Failed to update item: " + e.getMessage());
+      throw e; // Rethrow the exception to handle it further up the call stack if necessary
+    }
+  }
 }
