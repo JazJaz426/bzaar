@@ -7,8 +7,10 @@ import { getUserId } from '../utils/cookie';
 import { Item } from "../utils/schemas";
 import "../styles/items.css";
 import "../styles/main.css";
+import { ListProps } from "./Items";
+import { Section } from "./MainPage";
 
-export default function Selling() {
+export default function Selling(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const fetchData =  () => {
@@ -30,7 +32,7 @@ export default function Selling() {
                     </div>
                 ) : (
                     data.map((item: Item) => (
-                        <Link to={`/item-details/${item.id}`} key={item.id} className="link-style">
+                        <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
                             <div className="item-box">
                                 <div className="item-image-box">
                                     <img src={item.images[0]} alt={item.title} />

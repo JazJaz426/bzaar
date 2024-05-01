@@ -5,14 +5,19 @@ import { Link } from 'react-router-dom';
 import { Item } from "../utils/schemas";
 import {modifyWatchList, getWatchList, getAllItems} from "../utils/api";
 import { getUserId } from "../utils/cookie";
+import { Section } from "./MainPage";
 
-interface ListProps {}
+interface ListProps {
+    section: Section;
+    setSection: React.Dispatch<React.SetStateAction<Section>>
+}
 
 
 export default function Items(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [watchList, setWatchList] = useState<string[]>([]);
+
 
     const fetchData = () => {
         getAllItems().then((data) => {
@@ -55,7 +60,7 @@ export default function Items(props: ListProps) {
             <div className="item-list">
                 {data.map((item: Item) => (
                     <div key={item.id} className="item-container">
-                        <Link to={`/item-details/${item.id}`} className="link-style">
+                        <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
                             <div className="item-box">
                                 <div className="item-image-box">
                                     <img src={item.images[0]} alt={item.title} />

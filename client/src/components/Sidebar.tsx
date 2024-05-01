@@ -17,7 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, listView, onNavClick 
           <li className={currentSection === Section.VIEW_ITEM && !listView ? 'active' : ''}>
             <a href="#" onClick={() => onNavClick(Section.VIEW_ITEM)}>Discover</a>
           </li>
-          <li className={currentSection === Section.WATCHLIST && listView ? 'active' : ''}>
+          <li className={currentSection === Section.WATCHLIST && !listView ? 'active' : ''}>
             <a href="#" onClick={() => onNavClick(Section.WATCHLIST, true)}>Watch List</a>
           </li>
           <li className={currentSection === Section.SELLING && !listView ? 'active' : ''}>
