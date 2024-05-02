@@ -31,14 +31,14 @@ public class PostItemHandler implements Route {
       System.out.println("getting a post request");
       System.out.println(formItems);
       Item item = new Item(); // Assuming Item class exists
-      List<String> imageUrls = new ArrayList<>();
+      List<String> images = new ArrayList<>();
 
       for (FileItem field : formItems) {
         if (!field.isFormField()) {
           String imageUrl =
               FirebaseUploadHelper.uploadFile(field.getInputStream(), field.getName());
           System.out.println("Image URL: " + imageUrl);
-          imageUrls.add(imageUrl);
+          images.add(imageUrl);
         } else {
           // Process other form fields
           switch (field.getFieldName()) {
@@ -78,8 +78,8 @@ public class PostItemHandler implements Route {
         }
       }
 
-      System.out.println("Image URLs: " + imageUrls);
-      item.setImages(imageUrls);
+      System.out.println("Image URLs: " + images);
+      item.setImages(images);
       if (item.checkAnyEmpty()) {
         System.out.println("Missing parameters");
         responseMap.put("status", 500);

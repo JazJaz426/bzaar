@@ -89,12 +89,12 @@ public class Item {
     this.category = category;
   }
 
-  public List<String> getImageUrls() {
+  public List<String> getImages() {
     return images;
   }
 
-  public void setImages(List<String> imageUrls) {
-    this.images = imageUrls;
+  public void setImages(List<String> images) {
+    this.images = images;
   }
 
   public String getSeller() {
