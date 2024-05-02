@@ -147,3 +147,9 @@ html, body {
     padding: 20px; /* Padding around the content */
     background-color: var(--background-color);
 }
+
+.watchlist-button {
+    background: none;
+    border: none;
+    padding: 0;
+}
