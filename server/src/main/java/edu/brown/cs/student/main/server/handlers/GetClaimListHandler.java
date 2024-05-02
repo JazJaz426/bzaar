@@ -30,7 +30,7 @@ public class GetClaimListHandler implements Route {
       return Utils.toMoshiJson(Map.of("status", 200, "claimlist", claimList));
     } catch (Exception e) {
       response.status(500);
-      return Utils.toMoshiJson(Map.of("status", 500, "error", "Internal server error"));
+      return Utils.toMoshiJson(Map.of("status", 500, "error", "Internal server error: " + e.getMessage()));
     }
   }
 }
