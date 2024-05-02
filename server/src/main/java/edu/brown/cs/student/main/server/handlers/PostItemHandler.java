@@ -16,6 +16,7 @@ import spark.Response;
 import spark.Route;
 
 public class PostItemHandler implements Route {
+
   private FirebaseUtilities firebaseUtilities;
 
   public PostItemHandler(FirebaseUtilities firebaseUtilities) {
@@ -37,6 +38,7 @@ public class PostItemHandler implements Route {
         if (!field.isFormField()) {
           String imageUrl =
               FirebaseUploadHelper.uploadFile(field.getInputStream(), field.getName());
+
           System.out.println("Image URL: " + imageUrl);
           images.add(imageUrl);
         } else {
@@ -87,41 +89,6 @@ public class PostItemHandler implements Route {
         return Utils.toMoshiJson(responseMap);
       }
       FirestoreHelper.saveItem(item); // Save item details to Firestore
-
-      //      return "Upload successful";
-      //      // Extract item data from request
-      //      String uid = request.queryParams("uid");
-      //      if (uid == null) {
-      //        responseMap.put("status", 500);
-      //        responseMap.put("message", "Fail to post item with no uid ");
-      //      }
-      //      String itemTitle = request.queryParams("title");
-      //      String itemStatus = "available"; // should be available by default
-      //      String itemPrice = request.queryParams("price");
-      //      String[] itemImages = request.queryParamsValues("images");
-      //      String itemDescription = request.queryParams("description");
-      //      String itemCondition = request.queryParams("condition");
-      //      String itemCategory = request.queryParams("category");
-      //      if (itemTitle == null
-      //          || itemPrice == null
-      //          || itemImages == null
-      //          || itemDescription == null
-      //          || itemCondition == null
-      //          || itemCategory == null) {
-      //        responseMap.put("status", 500);
-      //        responseMap.put("message", "Fail to post item with missing parameters: ");
-      //        return Utils.toMoshiJson(responseMap);
-      //      }
-      //
-      //      this.firebaseUtilities.postItem(
-      //          uid,
-      //          itemTitle,
-      //          itemStatus,
-      //          itemPrice,
-      //          itemImages,
-      //          itemDescription,
-      //          itemCondition,
-      //          itemCategory);
       responseMap.put("status", 200);
       responseMap.put("message", "Item posted successfully");
     } catch (Exception e) {

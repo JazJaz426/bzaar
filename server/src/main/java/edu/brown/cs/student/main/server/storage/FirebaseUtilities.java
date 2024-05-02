@@ -18,6 +18,7 @@ import com.google.firebase.cloud.StorageClient;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -152,12 +153,30 @@ public class FirebaseUtilities implements StorageInterface {
   }
 
   public class FirebaseUploadHelper {
+
     public static String uploadFile(InputStream fileStream, String fileName) throws Exception {
       Blob blob =
           StorageClient.getInstance()
               .bucket("term-project-fd27e.appspot.com")
               .create(fileName, fileStream, "image/jpeg");
-      return blob.getMediaLink(); // URL to access the uploaded file
+
+      // Retrieve the media link and clean it
+      URL url = new URL(blob.getMediaLink());
+      System.out.println("URL: " + url);
+      //      String cleanedUrl = cleanUrl(url);
+      return url.toString();
+      //      return cleanedUrl; // Return the cleaned URL
+    }
+
+    // A method to clean or modify the URL as needed
+    private static String cleanUrl(URL url) {
+      String path = url.getPath();
+      path = path.replace("/download", ""); // Remove download if needed
+
+      // Remove query parameters or modify as needed
+      String cleanPath = path.split("\\?")[0];
+
+      return url.getProtocol() + "://" + url.getHost() + cleanPath;
     }
   }
 
