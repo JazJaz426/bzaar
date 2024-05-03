@@ -45,7 +45,11 @@ public class GetItemsHandler implements Route {
         responseMap.put("message", "Fail to get item: " + e.getMessage());
         return Utils.toMoshiJson(responseMap);
       }
+<<<<<<< HEAD
     } else if (userId != null) {
+=======
+    } else if (uid != null) {
+>>>>>>> 640eb01 (feat: refactor return format and update fetch seller info)
       try {
         List<Map<String, Object>> items = this.firebaseUtilities.getItemsByUser(userId);
         responseMap.put("status", 200);

@@ -91,7 +91,7 @@ export async function claimItem(itemId: string) {
     itemId: itemId
   });
 }
-<<<<<<< HEAD
+
 
 export async function logInteraction(userId: string, itemId: string, interactionType: string) {
   return await queryAPI("recordUserActivity", {

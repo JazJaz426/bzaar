@@ -15,6 +15,8 @@ import Profile from './Profile';
 import ClaimList from './ClaimList.js';
 import Discover from './Discover.js';
 import SearchPage from './SearchPage.js';
+import { getItemDetails, getSellerProfile } from '../utils/api';
+import '../styles/itemDetails.css'; // Assuming CSS module usage
 
 interface Item {
     id: string;
