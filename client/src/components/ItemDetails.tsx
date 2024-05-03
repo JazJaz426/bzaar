@@ -15,6 +15,7 @@ import Profile from './Profile';
 import ClaimList from './ClaimList.js';
 import Discover from './Discover.js';
 import SearchPage from './SearchPage.js';
+import { showErrorPopup } from '../utils/popups';
 
 interface Item {
     id: string;

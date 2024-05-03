@@ -13,8 +13,9 @@ async function queryAPI(
   const url = `${HOST}/${endpoint}?${paramsString}`;
   console.log('query api url is ', url);
   const response = await fetch(url);
-  if (!response.ok) {
-    console.error(response.status, response.statusText);
+  const data = await response.json(); // Parse JSON from the response
+  if (data.status && data.status !== 200) {
+    throw new Error(` ${data.message}`);
   }
   return response.json();
 }
@@ -141,9 +142,9 @@ export async function postItem(formData: FormData) {
     method: "POST",
     body: formData,
   });
-  console.log('response is ', response);
-  if (!response.ok) {
-    console.error(response.status, response.statusText);
+  const data = await response.json(); // Parse JSON from the response
+  if (data.status && data.status !== 200) {
+    throw new Error(` ${data.message}`);
   }
   return response.json();
 }
