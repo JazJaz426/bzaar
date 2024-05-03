@@ -1,6 +1,6 @@
-export const showDeleteSuccessPopup = () => {
+export const messagePopup = (message: string) => {
     // Show an alert or modal dialog to inform the user that the delete operation was successful
-    alert('Item deleted successfully!');
+    alert(message);
 };
 
 export const showErrorPopup = (errorMessage: string) => {

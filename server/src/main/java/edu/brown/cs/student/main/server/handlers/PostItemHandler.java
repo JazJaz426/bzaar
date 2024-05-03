@@ -36,9 +36,14 @@ public class PostItemHandler implements Route {
 
       for (FileItem field : formItems) {
         if (!field.isFormField()) {
-          String imageUrl =
-              FirebaseUploadHelper.uploadFile(field.getInputStream(), field.getName());
-
+          String fileName = field.getName();
+          String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+          if (!fileExtension.equals(".jpg") && !fileExtension.equals(".jpeg")) {
+            responseMap.put("status", 500);
+            responseMap.put("message", "Please only upload jpg/jpeg images");
+            return Utils.toMoshiJson(responseMap);
+          }
+          String imageUrl = FirebaseUploadHelper.uploadFile(field.getInputStream(), fileName);
           System.out.println("Image URL: " + imageUrl);
           images.add(imageUrl);
         } else {
@@ -50,9 +55,11 @@ public class PostItemHandler implements Route {
               break;
             case "price":
               System.out.println("Price: " + field.getString());
-              if (field.getString().isEmpty()) {
+              // if price is not a number,  throw an exception
+              if (!field.getString().matches("\\d+(\\.\\d+)?")) {
                 responseMap.put("status", 500);
-                responseMap.put("message", "Fail to post item with missing parameters: ");
+                responseMap.put("message", "Price must be a number/missing price field");
+                return Utils.toMoshiJson(responseMap);
               }
               item.setPrice(Double.parseDouble(field.getString()));
               break;
@@ -79,8 +86,6 @@ public class PostItemHandler implements Route {
           }
         }
       }
-
-      System.out.println("Image URLs: " + images);
       item.setImages(images);
       if (item.checkAnyEmpty()) {
         System.out.println("Missing parameters");

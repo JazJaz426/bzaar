@@ -8,7 +8,7 @@ import Layout from "./Layout"; // Import Layout
 import Selling from "./Selling";
 import WatchList from "./WatchList";
 import ClaimList from "./ClaimList";
-
+import ItemForm from "./ItemForm";
 export enum Section {
     DISCOVER= "DISCOVER",
     SEARCHPAGE="SEARCHPAGE",
@@ -16,7 +16,8 @@ export enum Section {
     PROFILE= "PROFILE",
     CLAIMLIST= "CLAIMLIST",
     WATCHLIST= "WATCHLIST",
-    VIEW_ITEM_DETAILS= "VIEW_ITEM_DETAILS"
+    VIEW_ITEM_DETAILS= "VIEW_ITEM_DETAILS",
+    POST= "POST"
 }
 
 export default function MainPage() {
@@ -36,6 +37,7 @@ export default function MainPage() {
       {section === Section.WATCHLIST ? <WatchList section={section} setSection={setSection} /> : null}
       {section === Section.CLAIMLIST ? <ClaimList section={section} setSection={setSection} /> : null}
       {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
+      {section === Section.POST ? <ItemForm /> : null}
     </Layout>
   );
 }

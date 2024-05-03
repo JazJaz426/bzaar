@@ -1,4 +1,4 @@
-.post-button {
+#post-button {
     display: block;
     padding: 8px 16px;
     margin: 10px auto; /* Center the button horizontally */
@@ -12,7 +12,7 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds shadow for depth */
     transition: background-color 0.3s; /* Smooth transition for hover effect */
   }
-  
-  .post-button:hover {
+
+  #post-button:hover {
     background-color: #e69500; /* Darker shade for hover effect */
   }

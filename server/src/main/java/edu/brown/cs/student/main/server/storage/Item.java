@@ -107,11 +107,19 @@ public class Item {
 
   public boolean checkAnyEmpty() {
     return this.title == null
-        || this.status == null
+        || this.title.isEmpty()
         || this.condition == null
+        || this.condition.isEmpty()
+        || this.status == null
+        || this.status.isEmpty()
+        || this.condition == null
+        || this.condition.isEmpty()
         || this.description == null
+        || this.description.isEmpty()
         || this.seller == null
+        || this.seller.isEmpty()
         || this.category == null
+        || this.category.isEmpty()
         || this.images == null;
   }
 }

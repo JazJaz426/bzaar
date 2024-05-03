@@ -32,8 +32,9 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, listView, onNavClick 
           <li className={currentSection === Section.PROFILE && !listView ? 'active' : ''}>
             <a href="#" onClick={() => onNavClick(Section.PROFILE)}>Profile</a>
           </li>
-          <li>
-            <Link to="/post" className="post-button">Post</Link>
+          <li className={currentSection === Section.POST && !listView ? 'active' : ''}>
+            {/*<Link to="/post" className="post-button">Post</Link>*/}
+            <a href="#"  id="post-button" onClick={() => onNavClick(Section.POST)}>POST</a>
           </li>
         </ul>
       </nav>
