@@ -142,3 +142,9 @@ export async function postItem(formData: FormData) {
     body: formData,
   });
 }
+export async function deleteItem(itemId: string,userId: string) {
+  return await queryAPI("deleteItem", {
+    itemId: itemId,
+    userId: userId
+  });
+};

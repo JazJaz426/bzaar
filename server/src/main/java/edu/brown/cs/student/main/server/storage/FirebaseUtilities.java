@@ -525,4 +525,18 @@ public class FirebaseUtilities implements StorageInterface {
     }
     return items;
   }
+
+  public void deleteItem(String itemId, String userId)
+      throws ExecutionException, InterruptedException {
+    Firestore db = FirestoreClient.getFirestore();
+    DocumentReference itemRef = db.collection("items").document(itemId);
+    itemRef.delete();
+    // update watch list
+    DocumentReference userRef = db.collection("users").document(userId);
+    ApiFuture<DocumentSnapshot> future = userRef.get();
+    DocumentSnapshot itemDoc = itemRef.get().get();
+    userRef.update("watchList", FieldValue.arrayRemove(itemId));
+    // update sell list
+    userRef.update("sellList", FieldValue.arrayRemove(itemId));
+  }
 }
