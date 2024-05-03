@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import { db } from './firebase.js';
 import { doc, getDoc, getDocs, collection, query, where } from 'firebase/firestore';
 import Layout from './Layout';
-import { Section } from './MainPage'; 
+import { Section } from './MainPage';
 import ImageCarousel from './ImageCarousel';
 import { getItemDetails, getSellerProfile, claimItem, logInteraction, getClaimList, modifyClaimList } from '../utils/api';
 import '../styles/itemDetails.css'; // Assuming CSS module usage
@@ -79,6 +79,10 @@ const ItemDetail = () => {
             console.error("Error fetching item details:", error);
         }
     };
+    const navigate = useNavigate();
+    const handleReturn = () => {
+        navigate(-1); // This replaces history.goBack()
+    };
 
     useEffect(() => {
         fetchUserClaimList().then(() => {
@@ -88,7 +92,7 @@ const ItemDetail = () => {
         });
 
     }, [id, userId]);
-    
+
 
     const handleClaimItem = async () => {
         if (item && id) {
@@ -109,7 +113,7 @@ const ItemDetail = () => {
                     console.error(error);
                 });
             }
-    
+
             // Perform the claim operation
             try {
                 await claimItem(id);
@@ -146,14 +150,16 @@ const ItemDetail = () => {
     }
     return (
         <Layout currentSection={section} onNavClick={handleNavClick}>
+            <button onClick={handleReturn} className="returnButton">Return</button>
+
             {section === Section.VIEW_ITEM_DETAILS && (
                 <div className="itemDetailContainer">
                     <h1 className="title">{item.title}</h1>
                     <ImageCarousel images={item.images} />
                     <p className="description">Description: {item.description}</p >
-                    <p>Category: {item.category}</p >
-                    <p>Price: ${item.price}</p >
-                    <p>Status: {item.status}</p >
+                    <p className="category">Category: {item.category}</p >
+                    <p className="price">Price: ${item.price}</p >
+                    <p className="status">Status: {item.status}</p >
                     <p>Condition: {item.condition}</p >
                     <div className="sellerInfo">
                         <p>Seller: {seller ? seller.name : 'Seller name not available'}</p >
@@ -179,6 +185,6 @@ const ItemDetail = () => {
             {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
         </Layout>
     );
-}; 
+};
 
 export default ItemDetail;
