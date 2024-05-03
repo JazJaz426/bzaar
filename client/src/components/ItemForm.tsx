@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/ItemForm.css';
-import { getLoginId } from '../utils/cookie';
+import { getLoginId, getUserId } from '../utils/cookie';
 import { collection, addDoc } from "firebase/firestore";
 interface FormData {
     title: string;
@@ -42,7 +42,7 @@ const ItemForm = () => {
         e.preventDefault();
         console.log(formData);
         console.log(getLoginId())
-        const seller = getLoginId();
+        const seller = getUserId();
         const submissionData = new FormData();
         submissionData.append('title', formData.title);
         submissionData.append('price', formData.price);

@@ -13,7 +13,7 @@ export default function WatchList(props: ListProps) {
     const [watchList, setWatchList] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const userId = getUserId(); // This should be dynamically set based on the logged-in user
-
+    console.log('userId', userId);
     const fetchData = async () => {
         const allItemsData = await getAllItems();
         const watchListData = await getWatchList(userId);
