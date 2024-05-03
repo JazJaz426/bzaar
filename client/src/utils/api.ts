@@ -92,6 +92,7 @@ export async function claimItem(itemId: string) {
   });
 }
 
+
 export async function logInteraction(userId: string, itemId: string, interactionType: string) {
   return await queryAPI("recordUserActivity", {
     userId: userId,
@@ -132,5 +133,12 @@ export async function modifyClaimList(userId: string, itemId: string, operation:
 export async function searchItems(keyword: string) {
   return await queryAPI("searchItems", {
     keyword: keyword
+  });
+}
+
+export async function postItem(formData: FormData) {
+  return await fetch(`${HOST}/postItem`, {
+    method: "POST",
+    body: formData,
   });
 }

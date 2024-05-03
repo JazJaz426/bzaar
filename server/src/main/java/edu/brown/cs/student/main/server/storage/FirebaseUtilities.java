@@ -10,11 +10,15 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.storage.Blob;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.cloud.StorageClient;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,6 +41,7 @@ public class FirebaseUtilities implements StorageInterface {
     FirebaseOptions options =
         new FirebaseOptions.Builder()
             .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+            .setStorageBucket("term-project-fd27e.appspot.com")
             .build();
 
     FirebaseApp.initializeApp(options);
@@ -147,6 +152,42 @@ public class FirebaseUtilities implements StorageInterface {
     return items;
   }
 
+  public class FirebaseUploadHelper {
+
+    public static String uploadFile(InputStream fileStream, String fileName) throws Exception {
+      Blob blob =
+          StorageClient.getInstance()
+              .bucket("term-project-fd27e.appspot.com")
+              .create(fileName, fileStream, "image/jpeg");
+
+      // Retrieve the media link and clean it
+      URL url = new URL(blob.getMediaLink());
+      System.out.println("URL: " + url);
+      //      String cleanedUrl = cleanUrl(url);
+      return url.toString();
+      //      return cleanedUrl; // Return the cleaned URL
+    }
+
+    // A method to clean or modify the URL as needed
+    private static String cleanUrl(URL url) {
+      String path = url.getPath();
+      path = path.replace("/download", ""); // Remove download if needed
+
+      // Remove query parameters or modify as needed
+      String cleanPath = path.split("\\?")[0];
+
+      return url.getProtocol() + "://" + url.getHost() + cleanPath;
+    }
+  }
+
+  public class FirestoreHelper {
+    public static void saveItem(Item item) {
+      System.out.println("Saving item to Firestore");
+      Firestore db = FirestoreClient.getFirestore();
+      db.collection("items").document().set(item);
+    }
+  }
+
   @Override
   public Map<String, Object> getUserDocumentByEmail(String email)
       throws InterruptedException, ExecutionException {
@@ -179,6 +220,7 @@ public class FirebaseUtilities implements StorageInterface {
   }
 
   // clears the collections inside of a specific user.
+
   @Override
   public void clearUser(String uid) throws IllegalArgumentException {
     if (uid == null) {
@@ -303,12 +345,14 @@ public class FirebaseUtilities implements StorageInterface {
   /**
    * Fetches the list of claimed item IDs associated with a specific user.
    *
-   * This method retrieves the claim list from the database. If the user does not exist or the claim list is empty,
-   * it returns an empty list. It also ensures that all item IDs in the claim list are valid and currently exist in the database.
-   * If an item ID in the claim list does not exist, it is removed from the user's claim list in the database.
+   * <p>This method retrieves the claim list from the database. If the user does not exist or the
+   * claim list is empty, it returns an empty list. It also ensures that all item IDs in the claim
+   * list are valid and currently exist in the database. If an item ID in the claim list does not
+   * exist, it is removed from the user's claim list in the database.
    *
    * @param userId The unique identifier of the user whose claim list is being retrieved.
-   * @return A List containing the item IDs in the user's claim list. Returns an empty list if the user or the claim list does not exist.
+   * @return A List containing the item IDs in the user's claim list. Returns an empty list if the
+   *     user or the claim list does not exist.
    * @throws ExecutionException If an error occurs during the database read operation.
    * @throws InterruptedException If the operation is interrupted during execution.
    */
@@ -346,13 +390,15 @@ public class FirebaseUtilities implements StorageInterface {
   }
 
   /**
-   * Modifies a user's watchlist by either adding or removing an item, depending on the specified operation.
-   * The method first verifies the existence of the item in the database. If the operation is 'add' and the item does not exist,
-   * the method terminates without altering the watchlist.
-   * 
+   * Modifies a user's watchlist by either adding or removing an item, depending on the specified
+   * operation. The method first verifies the existence of the item in the database. If the
+   * operation is 'add' and the item does not exist, the method terminates without altering the
+   * watchlist.
+   *
    * @param itemId The ID of the item to be added or removed.
    * @param userId The ID of the user whose watchlist is to be modified.
-   * @param operation Specifies the type of modification ('add' to include the item, 'del' to exclude the item).
+   * @param operation Specifies the type of modification ('add' to include the item, 'del' to
+   *     exclude the item).
    * @throws ExecutionException If a failure occurs during the database access.
    * @throws InterruptedException If the thread running the operation is interrupted.
    */
@@ -386,12 +432,13 @@ public class FirebaseUtilities implements StorageInterface {
   }
 
   /**
-   * Fetches the watchlist of a specified user using their unique user ID.
-   * This method checks the existence of the user and their watchlist, and ensures all items in the watchlist still exist.
+   * Fetches the watchlist of a specified user using their unique user ID. This method checks the
+   * existence of the user and their watchlist, and ensures all items in the watchlist still exist.
    * Items that no longer exist are removed from the watchlist.
    *
    * @param userId The unique identifier of the user whose watchlist is being retrieved.
-   * @return A List containing the item IDs currently in the user's watchlist. Returns an empty list if the watchlist is empty or the user does not exist.
+   * @return A List containing the item IDs currently in the user's watchlist. Returns an empty list
+   *     if the watchlist is empty or the user does not exist.
    * @throws ExecutionException If an error occurs during the database operation.
    * @throws InterruptedException If the operation is interrupted.
    */
@@ -430,10 +477,11 @@ public class FirebaseUtilities implements StorageInterface {
 
   /**
    * Updates the status of an item in the database.
-   * 
+   *
    * @param itemId The unique identifier of the item to update.
    * @param status The new status to set for the item.
-   * @throws InterruptedException If the thread is interrupted while waiting for the database operation to complete.
+   * @throws InterruptedException If the thread is interrupted while waiting for the database
+   *     operation to complete.
    * @throws ExecutionException If an error occurs during the database operation.
    */
   public void updateItemStatus(String itemId, String status)
@@ -459,7 +507,7 @@ public class FirebaseUtilities implements StorageInterface {
 
   /**
    * Searches for items by a keyword in their title.
-   * 
+   *
    * @param keyword The keyword to search for in item titles.
    * @return A list of maps, each representing an item that contains the keyword in its title.
    * @throws ExecutionException If an error occurs during the database operation.

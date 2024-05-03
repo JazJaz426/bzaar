@@ -150,15 +150,15 @@ const ItemDetail = () => {
                 <div className="itemDetailContainer">
                     <h1 className="title">{item.title}</h1>
                     <ImageCarousel images={item.images} />
-                    <p className="description">Description: {item.description}</p>
-                    <p>Category: {item.category}</p>
-                    <p>Price: ${item.price}</p>
-                    <p>Status: {item.status}</p>
-                    <p>Condition: {item.condition}</p>
+                    <p className="description">Description: {item.description}</p >
+                    <p>Category: {item.category}</p >
+                    <p>Price: ${item.price}</p >
+                    <p>Status: {item.status}</p >
+                    <p>Condition: {item.condition}</p >
                     <div className="sellerInfo">
-                        <p>Seller: {seller ? seller.name : 'Seller name not available'}</p>
-                        <p>Email: {seller ? seller.email : 'Email not available'}</p>
-                        <p>Address: {seller ? seller.address : 'Address not available'}</p>
+                        <p>Seller: {seller ? seller.name : 'Seller name not available'}</p >
+                        <p>Email: {seller ? seller.email : 'Email not available'}</p >
+                        <p>Address: {seller ? seller.address : 'Address not available'}</p >
                     </div>
                         {item.status === 'available' ? (
                             <button onClick={handleClaimItem} className="claimButton">

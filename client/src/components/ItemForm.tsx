@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
 import '../styles/ItemForm.css';
-import { db } from './firebase.js'; // Import Firestore database
+import { getLoginId, getUserId } from '../utils/cookie';
 import { collection, addDoc } from "firebase/firestore";
+interface FormData {
+    title: string;
+    price: string;
+    status: string;
+    condition: string;
+    description: string;
+    seller: string;
+    images: File[] | null;
+    category: string;
 
+}
 const ItemForm = () => {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         title: '',
         price: '',
         status: 'available',
         condition: '',
         description: '',
-        image: null as File | null,
+        seller: '',
+        images: [] as File[] | null,
         category: 'furniture'
     });
 
@@ -21,20 +32,55 @@ const ItemForm = () => {
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setFormData({ ...formData, image: e.target.files[0] });
+            const imagesArray = Array.from(e.target.files);
+            setFormData({ ...formData, images: imagesArray });
         }
     };
 
     // create
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        try {
-            // Add the form data to the Firestore 'items' collection
-            const docRef = await addDoc(collection(db, "items"), formData);
-            console.log("Document written with ID: ", docRef.id);
-        } catch (e) {
-            console.error("Error adding document: ", e);
+        console.log(formData);
+        console.log(getLoginId())
+        const seller = getUserId();
+        const submissionData = new FormData();
+        submissionData.append('title', formData.title);
+        submissionData.append('price', formData.price);
+        submissionData.append('status', formData.status);
+        submissionData.append('condition', formData.condition);
+        submissionData.append('description', formData.description);
+        submissionData.append('category', formData.category);
+        if (seller) {
+            submissionData.append('seller', seller);
+        } else {
+            console.error("Seller ID is undefined.");
+            return; // Optionally halt the submission or handle appropriately
         }
+        if (formData.images) {
+            formData.images.forEach((file, index) => {
+                submissionData.append(`images[${index}]`, file);
+            });
+        }
+        // const PostItem = async () => {
+        let response;
+        try {
+            response = await fetch(`http://localhost:3232/postItem`, {
+                method: 'POST',
+                body: submissionData,
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+            }
+            const data = await response.json();
+            if (data.status === '500') {
+                console.error('Failed to fetch profile data:', data.message);
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.error('Failed to fetch profile data:', error);
+            alert('Failed to fetch profile data.');
+        }
+        // };
     };
     return (
         <div className="form-container">
@@ -49,7 +95,7 @@ const ItemForm = () => {
                 <input type="text" name="price" value={formData.price} onChange={handleChange} placeholder="Price" className="form-input" />
                 <input type="text" name="condition" value={formData.condition} onChange={handleChange} placeholder="Condition" className="form-input" />
                 <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="form-textarea"></textarea>
-                <input type="file" name="image" onChange={handleImageChange} className="form-input" />
+                <input type="file" name="image" onChange={handleImageChange} className="form-input" multiple />
                 <button type="submit" className="form-button">Save</button>
             </form>
         </div>

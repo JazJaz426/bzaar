@@ -17,7 +17,7 @@ export default function Discover(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
     const [watchList, setWatchList] = useState<string[]>([]);
 
-
+    console.log('userId', getUserId());
     const fetchData = () => {
         getAllItems().then((data) => {
             setData(data.items.map((doc: Item) => ({ id: doc.id, ...doc })));
