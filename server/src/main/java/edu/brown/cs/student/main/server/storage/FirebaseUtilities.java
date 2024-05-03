@@ -301,12 +301,11 @@ public class FirebaseUtilities implements StorageInterface {
     data.put("interactionType", interactionType);
     data.put("itemId", itemId);
     data.put("userId", userId);
-    data.put( "timestamp", new Date());
+    data.put("timestamp", new Date());
     DocumentReference addedDocRef = collectionRef.document();
     ApiFuture<WriteResult> writeResult = addedDocRef.set(data);
     writeResult.get(); // Ensure the write completes
     System.out.println("Added document with ID: " + addedDocRef.getId());
-    
   }
 
   /**
