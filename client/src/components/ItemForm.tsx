@@ -79,7 +79,7 @@ const ItemForm = () => {
                 form.reset();
             }
         }).catch((error)=>{
-            showErrorPopup("Failed to add item."+ error);
+            showErrorPopup("Failed to add item."+ error.message);
         })
         // };
     };

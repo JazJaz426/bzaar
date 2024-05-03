@@ -39,6 +39,7 @@ public class PostItemHandler implements Route {
           String fileName = field.getName();
           String fileExtension = fileName.substring(fileName.lastIndexOf("."));
           if (!fileExtension.equals(".jpg") && !fileExtension.equals(".jpeg")) {
+//            response.status(500);
             responseMap.put("status", 500);
             responseMap.put("message", "Please only upload jpg/jpeg images");
             return Utils.toMoshiJson(responseMap);
@@ -57,6 +58,7 @@ public class PostItemHandler implements Route {
               System.out.println("Price: " + field.getString());
               // if price is not a number,  throw an exception
               if (!field.getString().matches("\\d+(\\.\\d+)?")) {
+                response.status(500);
                 responseMap.put("status", 500);
                 responseMap.put("message", "Price must be a number/missing price field");
                 return Utils.toMoshiJson(responseMap);
