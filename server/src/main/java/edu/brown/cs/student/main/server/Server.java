@@ -3,6 +3,7 @@ package edu.brown.cs.student.main.server;
 import static spark.Spark.after;
 import static spark.Spark.options;
 
+import edu.brown.cs.student.main.server.handlers.DeleteItemHandler;
 import edu.brown.cs.student.main.server.handlers.GetClaimListHandler;
 import edu.brown.cs.student.main.server.handlers.GetItemsHandler;
 import edu.brown.cs.student.main.server.handlers.GetSellerProfileHandler;
@@ -63,6 +64,7 @@ public class Server {
       Spark.get("/modifyClaimList", new ModifyClaimListHandler(firebaseUtils));
       Spark.get("/getClaimList", new GetClaimListHandler(firebaseUtils));
       Spark.get("/searchItems", new SearchItemsHandler(firebaseUtils));
+      Spark.get("/deleteItem", new DeleteItemHandler(firebaseUtils));
       Spark.post("/postItem", new PostItemHandler(firebaseUtils));
       Spark.init();
       Spark.awaitInitialization();
