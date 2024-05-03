@@ -345,12 +345,14 @@ public class FirebaseUtilities implements StorageInterface {
   /**
    * Fetches the list of claimed item IDs associated with a specific user.
    *
-   * This method retrieves the claim list from the database. If the user does not exist or the claim list is empty,
-   * it returns an empty list. It also ensures that all item IDs in the claim list are valid and currently exist in the database.
-   * If an item ID in the claim list does not exist, it is removed from the user's claim list in the database.
+   * <p>This method retrieves the claim list from the database. If the user does not exist or the
+   * claim list is empty, it returns an empty list. It also ensures that all item IDs in the claim
+   * list are valid and currently exist in the database. If an item ID in the claim list does not
+   * exist, it is removed from the user's claim list in the database.
    *
    * @param userId The unique identifier of the user whose claim list is being retrieved.
-   * @return A List containing the item IDs in the user's claim list. Returns an empty list if the user or the claim list does not exist.
+   * @return A List containing the item IDs in the user's claim list. Returns an empty list if the
+   *     user or the claim list does not exist.
    * @throws ExecutionException If an error occurs during the database read operation.
    * @throws InterruptedException If the operation is interrupted during execution.
    */
@@ -388,13 +390,15 @@ public class FirebaseUtilities implements StorageInterface {
   }
 
   /**
-   * Modifies a user's watchlist by either adding or removing an item, depending on the specified operation.
-   * The method first verifies the existence of the item in the database. If the operation is 'add' and the item does not exist,
-   * the method terminates without altering the watchlist.
-   * 
+   * Modifies a user's watchlist by either adding or removing an item, depending on the specified
+   * operation. The method first verifies the existence of the item in the database. If the
+   * operation is 'add' and the item does not exist, the method terminates without altering the
+   * watchlist.
+   *
    * @param itemId The ID of the item to be added or removed.
    * @param userId The ID of the user whose watchlist is to be modified.
-   * @param operation Specifies the type of modification ('add' to include the item, 'del' to exclude the item).
+   * @param operation Specifies the type of modification ('add' to include the item, 'del' to
+   *     exclude the item).
    * @throws ExecutionException If a failure occurs during the database access.
    * @throws InterruptedException If the thread running the operation is interrupted.
    */
@@ -428,12 +432,13 @@ public class FirebaseUtilities implements StorageInterface {
   }
 
   /**
-   * Fetches the watchlist of a specified user using their unique user ID.
-   * This method checks the existence of the user and their watchlist, and ensures all items in the watchlist still exist.
+   * Fetches the watchlist of a specified user using their unique user ID. This method checks the
+   * existence of the user and their watchlist, and ensures all items in the watchlist still exist.
    * Items that no longer exist are removed from the watchlist.
    *
    * @param userId The unique identifier of the user whose watchlist is being retrieved.
-   * @return A List containing the item IDs currently in the user's watchlist. Returns an empty list if the watchlist is empty or the user does not exist.
+   * @return A List containing the item IDs currently in the user's watchlist. Returns an empty list
+   *     if the watchlist is empty or the user does not exist.
    * @throws ExecutionException If an error occurs during the database operation.
    * @throws InterruptedException If the operation is interrupted.
    */
@@ -472,10 +477,11 @@ public class FirebaseUtilities implements StorageInterface {
 
   /**
    * Updates the status of an item in the database.
-   * 
+   *
    * @param itemId The unique identifier of the item to update.
    * @param status The new status to set for the item.
-   * @throws InterruptedException If the thread is interrupted while waiting for the database operation to complete.
+   * @throws InterruptedException If the thread is interrupted while waiting for the database
+   *     operation to complete.
    * @throws ExecutionException If an error occurs during the database operation.
    */
   public void updateItemStatus(String itemId, String status)
@@ -501,7 +507,7 @@ public class FirebaseUtilities implements StorageInterface {
 
   /**
    * Searches for items by a keyword in their title.
-   * 
+   *
    * @param keyword The keyword to search for in item titles.
    * @return A list of maps, each representing an item that contains the keyword in its title.
    * @throws ExecutionException If an error occurs during the database operation.
