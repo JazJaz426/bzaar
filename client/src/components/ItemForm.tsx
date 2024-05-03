@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import '../styles/ItemForm.css';
 import { getLoginId, getUserId } from '../utils/cookie';
 import { collection, addDoc } from "firebase/firestore";
+import { error } from 'console';
+import { messagePopup, showErrorPopup } from '../utils/popups';
+import { postItem } from '../utils/api';
+import { Section } from "./MainPage";
+interface ListProps {
+    section: Section;
+    setSection: React.Dispatch<React.SetStateAction<Section>>
+}
 interface FormData {
     title: string;
     price: string;
@@ -60,31 +68,27 @@ const ItemForm = () => {
             formData.images.forEach((file, index) => {
                 submissionData.append(`images[${index}]`, file);
             });
+        }else{
+            showErrorPopup("Please upload item images.")
         }
-        // const PostItem = async () => {
-        let response;
-        try {
-            response = await fetch(`http://localhost:3232/postItem`, {
-                method: 'POST',
-                body: submissionData,
-            });
-            if (!response.ok) {
-                throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+
+        postItem(submissionData).then(()=>{
+            messagePopup("Item added successfully.");
+            const form = document.getElementById('post-form') as HTMLFormElement | null;
+            if (form) {
+                form.reset();
             }
-            const data = await response.json();
-            if (data.status === '500') {
-                console.error('Failed to fetch profile data:', data.message);
-                throw new Error(data.error);
-            }
-        } catch (error) {
-            console.error('Failed to fetch profile data:', error);
-            alert('Failed to fetch profile data.');
-        }
+        }).catch((error)=>{
+            showErrorPopup("Failed to add item."+ error);
+        })
         // };
     };
     return (
+        <div>
+        <h1 className="post-title">Post your items to sell </h1>
         <div className="form-container">
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+            <form id="post-form"onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Title" className="form-input" />
                 <select name="category" value={formData.category} onChange={handleChange} className="form-select">
                     <option value="Furniture">furniture</option>
@@ -98,6 +102,7 @@ const ItemForm = () => {
                 <input type="file" name="image" onChange={handleImageChange} className="form-input" multiple />
                 <button type="submit" className="form-button">Save</button>
             </form>
+        </div>
         </div>
     );
 };

@@ -5,11 +5,10 @@ import { Link } from 'react-router-dom';
 import { getItemsByUser, deleteItem } from "../utils/api";
 import { getUserId } from '../utils/cookie';
 import { Item } from "../utils/schemas";
-import { showErrorPopup, showDeleteSuccessPopup } from "../utils/popups";
+import { showErrorPopup, messagePopup } from "../utils/popups";
 import "../styles/items.css";
 import "../styles/main.css";
 import { ListProps } from "./Items";
-import { Section } from "./MainPage";
 
 export default function Selling(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
@@ -21,7 +20,7 @@ export default function Selling(props: ListProps) {
     }
     const deleteSellItem = (itemId: string) => {
         deleteItem(itemId,getUserId()).then(() => {
-            showDeleteSuccessPopup();
+            messagePopup("Item deleted successfully.");
             fetchData();
         }).catch((error) => {
             console.error(error);
@@ -58,7 +57,7 @@ export default function Selling(props: ListProps) {
                                     </div>
                                 </div>
                             </Link>
-                            <button onClick={() => deleteSellItem(item.id)} id="deleteButton" className="watchlist-button" 
+                            <button onClick={() => deleteSellItem(item.id)} id="deleteButton" className="watchlist-button"
                             style={{ background: 'none', border: 'none' }}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" viewBox="0 0 24 24">
                                     <line x1="6" y1="6" x2="18" y2="18" stroke="#666" strokeWidth="2"/>

@@ -1,5 +1,5 @@
 .profile-content {
-  width: auto;
+  width: 50vw;
   height: 60vh;
   padding: 8%;
   box-sizing: border-box;
@@ -7,13 +7,18 @@
   border-radius: 25px;
   margin-left: 20%;
   margin-top: 10%;
-  position: relative; 
+  position: relative;
 }
 
 /* Apply common styles to all sections */
 .profile-section {
-  margin-top: 10%;
-  font-size: 30px;
-  margin-bottom: 20%;
+  margin-bottom: 10%;
+  font-size: 40px;
   text-align: left;
+}
+.profile-name{
+  position: absolute;
+  top: -25%;
+  font-size: 70px;
+  font-weight: bold;
 }

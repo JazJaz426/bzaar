@@ -25,17 +25,18 @@ export default function Profile() {
     };
     fetchProfile();
   }, []);
-  
+
 return (
   <div className="profile-content">
+    <p className="profile-name">{name}</p>
       <div className="profile-section">  {/* Updated class name */}
         <strong>My Email: </strong>
         <span>{email}</span>
       </div>
-      <div className="profile-section">  {/* Updated class name */}
-        <strong>My Name: </strong>
-        <span>{name}</span>
-      </div>
+      {/*<div className="profile-section">  /!* Updated class name *!/*/}
+      {/*  <strong>My Name: </strong>*/}
+      {/*  <span>{name}</span>*/}
+      {/*</div>*/}
       <div className="profile-section">  {/* Updated class name */}
         <strong>My Address: </strong>
         <span>{address}</span>

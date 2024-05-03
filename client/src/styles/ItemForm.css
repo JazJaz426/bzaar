@@ -1,10 +1,11 @@
 .form-container {
-    background-color: #e09696;
+    background-color: rgba(194, 102, 57, 0.63);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     width: 50%; /* Adjust based on your layout */
     margin: auto;
+    margin-top: 5vh;
 }
 
 .form-input, .form-select, .form-textarea {
@@ -36,4 +37,11 @@
 
 .form-button:hover {
     background-color: #e69500;
+}
+.post-title{
+    font-size: 40px;
+    font-weight: bold;
+    color: #935218;
+    text-align: center;
+    margin-top: 8vh;
 }

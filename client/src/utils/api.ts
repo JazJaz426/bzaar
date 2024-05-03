@@ -24,7 +24,7 @@ export async function filtOver(keyword: String) {
   return await queryAPI("areaquery", {
     keyword: keyword.toString()
   });
-  
+
 }
 
 export async function addPin(pin: LatLong) {
@@ -137,13 +137,18 @@ export async function searchItems(keyword: string) {
 }
 
 export async function postItem(formData: FormData) {
-  return await fetch(`${HOST}/postItem`, {
+  const response =  await fetch(`${HOST}/postItem`, {
     method: "POST",
     body: formData,
   });
+  console.log('response is ', response);
+  if (!response.ok) {
+    console.error(response.status, response.statusText);
+  }
+  return response.json();
 }
 export async function deleteItem(itemId: string,userId: string) {
-  return await queryAPI("deleteItem", {
+  return await queryAPI("deleteItem(", {
     itemId: itemId,
     userId: userId
   });
