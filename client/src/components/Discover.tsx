@@ -91,6 +91,13 @@ export default function Discover(props: ListProps) {
                         </button>
                     </div>
                 ))}
+                {data.length === 0 && (
+                    // <Link to="#" className="link-style">
+                        <div className="centered-message">
+                            <p>No items to recommend as they are already in your watch list or claimed by you. </p>
+                        </div>
+                    // </Link>
+                )}
             </div>
         </div>
     );
