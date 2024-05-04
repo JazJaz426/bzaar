@@ -39,7 +39,7 @@ public class PostItemHandler implements Route {
           String fileName = field.getName();
           String fileExtension = fileName.substring(fileName.lastIndexOf("."));
           if (!fileExtension.equals(".jpg") && !fileExtension.equals(".jpeg")) {
-//            response.status(500);
+            //            response.status(500);
             responseMap.put("status", 500);
             responseMap.put("message", "Please only upload jpg/jpeg images");
             return Utils.toMoshiJson(responseMap);

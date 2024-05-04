@@ -13,11 +13,15 @@ async function queryAPI(
   const url = `${HOST}/${endpoint}?${paramsString}`;
   console.log('query api url is ', url);
   const response = await fetch(url);
+  if (!response.ok) {
+    console.log('Response body (text):', await response.text()); // Log response text for debugging
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
   const data = await response.json(); // Parse JSON from the response
   if (data.status && data.status !== 200) {
     throw new Error(` ${data.message}`);
   }
-  return response.json();
+  return data;
 }
 
 // Note: all functions here/below access server api in same format as described above for different endpoints
