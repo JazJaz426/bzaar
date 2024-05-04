@@ -5,7 +5,7 @@ import { doc, getDoc, getDocs, collection, query, where } from 'firebase/firesto
 import Layout from './Layout';
 import { Section } from './MainPage';
 import ImageCarousel from './ImageCarousel';
-import { getItemDetails, getSellerProfile, claimItem, logInteraction, getClaimList, modifyClaimList } from '../utils/api';
+import { getItemDetails, getSellerProfile, claimItem, recordUserActivity, getClaimList, modifyClaimList } from '../utils/api';
 import '../styles/itemDetails.css'; // Assuming CSS module usage
 import { getUserId } from '../utils/cookie.js';
 import Items from './Items';
@@ -110,6 +110,11 @@ const ItemDetail = () => {
                 setUserClaimList([...userClaimList, id]);
                 modifyClaimList(getUserId(), id, 'add').then(() => {
                     console.log(`Add item ${id} to claim list`); // Placeholder for actual implementation
+                recordUserActivity('claimed', id, getUserId()).then(() => {
+                    console.log(`Logged interaction: added item ${id} to watch list. interaction type: claimed`);
+                }).catch((error) => {
+                    console.error('Failed to log interaction:', error);
+                });
                 }).catch((error) => {
                     console.error(error);
                 });
@@ -118,7 +123,6 @@ const ItemDetail = () => {
             // Perform the claim operation
             try {
                 await claimItem(id);
-                await logInteraction(userId, id, operation);
                 const newStatus = userClaimList.includes(id) ? 'available' : 'claimed';
                 setStatus(newStatus);
                 // setIsClaimedByUser(!isClaimedByUser);

@@ -21,7 +21,9 @@ async function queryAPI(
   if (data.status && data.status !== 200) {
     throw new Error(` ${data.message}`);
   }
+
   return data;
+
 }
 
 // Note: all functions here/below access server api in same format as described above for different endpoints
@@ -98,15 +100,6 @@ export async function claimItem(itemId: string) {
 }
 
 
-export async function logInteraction(userId: string, itemId: string, interactionType: string) {
-  return await queryAPI("recordUserActivity", {
-    userId: userId,
-    itemId: itemId,
-    interactionType: interactionType
-  });
-}
-
-
 export async function getWatchList(userId: string) {
   return await queryAPI("getWatchList", {
     userId: userId,
@@ -158,3 +151,12 @@ export async function deleteItem(itemId: string,userId: string) {
     userId: userId
   });
 };
+
+export async function recordUserActivity(interactionType: string, itemId: string, userId: string) {
+  return await queryAPI("recordUserActivity", {
+    interactionType: interactionType,
+    itemId: itemId,
+    userId: userId
+  });
+}
+

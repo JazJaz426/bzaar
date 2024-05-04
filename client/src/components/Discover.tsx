@@ -3,7 +3,7 @@ import "../styles/main.css";
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Item } from "../utils/schemas";
-import {modifyWatchList, getWatchList, getAllItems} from "../utils/api";
+import {modifyWatchList, getWatchList, getAllItems, recordUserActivity} from "../utils/api";
 import { getUserId } from "../utils/cookie";
 import { Section } from "./MainPage";
 
@@ -44,6 +44,11 @@ export default function Discover(props: ListProps) {
             setWatchList([...watchList, itemId]);
             modifyWatchList(getUserId(), itemId, 'add').then(() => {
                 console.log(`Add item ${itemId} to watch list`); // Placeholder for actual implementation
+                recordUserActivity('liked', itemId, getUserId()).then(() => {
+                    console.log(`Logged interaction: added item ${itemId} to watch list. interaction type: liked`);
+                }).catch((error) => {
+                    console.error('Failed to log interaction:', error);
+                });
             }).catch((error) => {
                 console.error(error);
             });
@@ -55,7 +60,15 @@ export default function Discover(props: ListProps) {
             <div className="item-list">
                 {data.map((item: Item) => (
                     <div key={item.id} className="item-container">
-                        <Link to={`/item-details/${item.id}`} id = className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
+
+                        <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => {props.setSection(Section.VIEW_ITEM_DETAILS);
+                                                                                                        recordUserActivity('clicked', item.id, getUserId()).then(() => {
+                    console.log(`Logged interaction: added item ${item.id} to watch list. interaction type: claimed`);
+                }).catch((error) => {
+                    console.error('Failed to log interaction:', error);
+                });
+                                                                                                            }}>
+
                             <div className="item-box">
                                 <div className="item-image-box">
                                     <img src={item.images[0]} alt={item.title} />

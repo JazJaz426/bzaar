@@ -22,6 +22,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -292,14 +293,20 @@ public class FirebaseUtilities implements StorageInterface {
     }
   }
 
-  public void recordUserActivity(String interactionType, String itemId, String userId) {
+  public void recordUserActivity(String interactionType, String itemId, String userId)
+      throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
     CollectionReference collectionRef = db.collection("interactions");
     Map<String, Object> data = new HashMap<>();
     data.put("interactionType", interactionType);
     data.put("itemId", itemId);
     data.put("userId", userId);
-    collectionRef.document().set(data);
+    data.put( "timestamp", new Date());
+    DocumentReference addedDocRef = collectionRef.document();
+    ApiFuture<WriteResult> writeResult = addedDocRef.set(data);
+    writeResult.get(); // Ensure the write completes
+    System.out.println("Added document with ID: " + addedDocRef.getId());
+    
   }
 
   /**
