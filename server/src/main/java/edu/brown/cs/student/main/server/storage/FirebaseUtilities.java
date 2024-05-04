@@ -15,6 +15,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.cloud.StorageClient;
+import edu.brown.cs.student.main.server.recommendations.RecommendationUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -301,12 +302,8 @@ public class FirebaseUtilities implements StorageInterface {
     data.put("interactionType", interactionType);
     data.put("itemId", itemId);
     data.put("userId", userId);
-    data.put( "timestamp", new Date());
-    DocumentReference addedDocRef = collectionRef.document();
-    ApiFuture<WriteResult> writeResult = addedDocRef.set(data);
-    writeResult.get(); // Ensure the write completes
-    System.out.println("Added document with ID: " + addedDocRef.getId());
-    
+    data.put("timestamp", new Date());
+    collectionRef.document().set(data);
   }
 
   /**
@@ -427,6 +424,7 @@ public class FirebaseUtilities implements StorageInterface {
         System.out.println("Item with ID " + itemId + " does not exist.");
         return; // Exit if the item does not exist and the operation is 'add'
       } else {
+        recordUserActivity("liked", itemId, userId);
         future = userRef.update("watchList", FieldValue.arrayUnion(itemId));
       }
     } else if ("del".equalsIgnoreCase(operation)) {
@@ -545,5 +543,94 @@ public class FirebaseUtilities implements StorageInterface {
     userRef.update("watchList", FieldValue.arrayRemove(itemId));
     // update sell list
     userRef.update("sellList", FieldValue.arrayRemove(itemId));
+  }
+
+  public Map<String, Map<String, Map<String, Integer>>> getInteractionsBySplit(Date splitDate)
+      throws ExecutionException, InterruptedException {
+    Firestore db = FirestoreClient.getFirestore();
+    CollectionReference interactionsRef = db.collection("interactions");
+
+    // Fetch all data
+    ApiFuture<QuerySnapshot> allDataFuture = interactionsRef.get();
+    Map<String, Map<String, Integer>> allData =
+        RecommendationUtils.processInteractions(allDataFuture.get());
+    // Fetch training data
+    ApiFuture<QuerySnapshot> trainingSetFuture =
+        interactionsRef.whereLessThan("timestamp", splitDate).get();
+    Map<String, Map<String, Integer>> trainingData =
+        RecommendationUtils.processInteractions(trainingSetFuture.get());
+
+    // Fetch testing data
+    ApiFuture<QuerySnapshot> testingSetFuture =
+        interactionsRef.whereGreaterThanOrEqualTo("timestamp", splitDate).get();
+    Map<String, Map<String, Integer>> testingData =
+        RecommendationUtils.processInteractions(testingSetFuture.get());
+
+    // Organize data into a map
+    Map<String, Map<String, Map<String, Integer>>> result = new HashMap<>();
+    result.put("all", allData);
+    result.put("train", trainingData);
+    result.put("test", testingData);
+    return result;
+  }
+
+  public void saveRecommendations(Map<String, List<String>> allUserRecommendations)
+      throws ExecutionException, InterruptedException {
+    Firestore db = FirestoreClient.getFirestore();
+    for (Map.Entry<String, List<String>> entry : allUserRecommendations.entrySet()) {
+      String userId = entry.getKey();
+      List<String> recommendations = entry.getValue();
+      DocumentReference userRef = db.collection("users").document(userId);
+      userRef.update("recommendations", recommendations);
+    }
+  }
+
+  public List<String> getRecList(String userId) throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    DocumentReference userCheckRef = db.collection("users").document(userId);
+    ApiFuture<DocumentSnapshot> userCheckFuture = userCheckRef.get();
+    DocumentSnapshot userCheckSnapshot = userCheckFuture.get();
+    if (!userCheckSnapshot.exists()) {
+      throw new IllegalArgumentException("User with ID " + userId + " does not exist.");
+    }
+    DocumentReference userRef = db.collection("users").document(userId);
+    ApiFuture<DocumentSnapshot> future = userRef.get();
+    DocumentSnapshot document = future.get();
+    if (document.exists()) {
+      List<String> recList = (List<String>) document.get("recommendations");
+      if (recList != null) {
+        List<String> validItems = new ArrayList<>();
+        for (String itemId : recList) {
+          DocumentReference itemRef = db.collection("items").document(itemId);
+          DocumentSnapshot itemDoc = itemRef.get().get();
+          if (itemDoc.exists()) {
+            validItems.add(itemId);
+          } else {
+            userRef.update("watchList", FieldValue.arrayRemove(itemId));
+          }
+        }
+        return validItems;
+      } else {
+        return new ArrayList<>();
+      }
+    } else {
+      return new ArrayList<>();
+    }
+  }
+
+  public List<String> getSellingList(String userId)
+      throws InterruptedException, ExecutionException {
+    List<String> itemIds = new ArrayList<>();
+    try {
+      List<Map<String, Object>> items = getItemsByUser(userId);
+      for (Map<String, Object> item : items) {
+        if (item.containsKey("id")) {
+          itemIds.add(item.get("id").toString());
+        }
+      }
+    } catch (Exception e) {
+      System.err.println("Failed to get items by user: " + e.getMessage());
+    }
+    return itemIds;
   }
 }

@@ -1,6 +1,7 @@
 
 import "../styles/App.css";
 import MainPage from "./MainPage";
+import Discover from "./Discover";
 import ItemDetail from './ItemDetails';
 import WatchList from './WatchList';
 import ClaimList from './ClaimList';
@@ -12,6 +13,7 @@ import ItemForm from './ItemForm';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SearchPage from "./SearchPage";
+import firebase from 'firebase/compat/app';
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -22,7 +24,10 @@ const firebaseConfig = {
   appId: process.env.APP_ID,
 };
 
-
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 function App() {
   return (
@@ -30,7 +35,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<AuthRoute gatedContent={<MainPage/>}/>} />
-          <Route path="/discover" element={<MainPage />} />
+          <Route path="/discover" element={<Discover />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/item-details/:id" element={<ItemDetail />} />
           <Route path="/my-listings" element={<Selling />} />

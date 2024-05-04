@@ -3,7 +3,7 @@ import "../styles/main.css";
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Item } from "../utils/schemas";
-import {modifyWatchList, getWatchList, getAllItems, recordUserActivity} from "../utils/api";
+import {modifyWatchList, getWatchList, getAllItems, getRecList, recordUserActivity} from "../utils/api";
 import { getUserId } from "../utils/cookie";
 import { Section } from "./MainPage";
 
@@ -12,21 +12,21 @@ export interface ListProps {
     setSection: React.Dispatch<React.SetStateAction<Section>>
 }
 
-
 export default function Discover(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
     const [watchList, setWatchList] = useState<string[]>([]);
-
-    console.log('userId', getUserId());
-    const fetchData = () => {
-        getAllItems().then((data) => {
-            setData(data.items.map((doc: Item) => ({ id: doc.id, ...doc })));
-        });
-        getWatchList(getUserId()).then((data) => {
-            console.log('watchlist is', data.watchList);
-            setWatchList(data.watchList);
-        });
-    }
+    const [searchTerm, setSearchTerm] = useState('');
+    const userId = getUserId(); // This should be dynamically set based on the logged-in user
+    console.log('userId', userId);
+    const fetchData = async () => {
+        const allItemsData = await getAllItems();
+        const watchListData = await getWatchList(userId);
+        const RecListData = await getRecList(userId);
+        console.log('RecListData', RecListData);
+        // console.log('allItemsData', allItemsData);
+        setWatchList(watchListData.watchList);
+        setData(allItemsData.items.filter((item: Item) => RecListData.reclist.includes(item.id)));
+    };
 
     useEffect(() => {
         fetchData();
@@ -60,15 +60,13 @@ export default function Discover(props: ListProps) {
             <div className="item-list">
                 {data.map((item: Item) => (
                     <div key={item.id} className="item-container">
-
                         <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => {props.setSection(Section.VIEW_ITEM_DETAILS);
-                                                                                                        recordUserActivity('clicked', item.id, getUserId()).then(() => {
-                    console.log(`Logged interaction: added item ${item.id} to watch list. interaction type: claimed`);
-                }).catch((error) => {
-                    console.error('Failed to log interaction:', error);
-                });
-                                                                                                            }}>
-
+                            recordUserActivity('clicked', item.id, getUserId()).then(() => {
+                                console.log(`Logged interaction: added item ${item.id} to watch list. interaction type: claimed`);
+                            }).catch((error) => {
+                                console.error('Failed to log interaction:', error);
+                            });
+                        }}>
                             <div className="item-box">
                                 <div className="item-image-box">
                                     <img src={item.images[0]} alt={item.title} />
@@ -93,6 +91,13 @@ export default function Discover(props: ListProps) {
                         </button>
                     </div>
                 ))}
+                {data.length === 0 && (
+                    // <Link to="#" className="link-style">
+                        <div className="centered-message">
+                            <p>No items to recommend as they are already in your watch list or claimed by you. </p>
+                        </div>
+                    // </Link>
+                )}
             </div>
         </div>
     );
