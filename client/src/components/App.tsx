@@ -13,6 +13,7 @@ import ItemForm from './ItemForm';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SearchPage from "./SearchPage";
+import firebase from 'firebase/compat/app';
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -23,7 +24,10 @@ const firebaseConfig = {
   appId: process.env.APP_ID,
 };
 
-
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 function App() {
   return (
