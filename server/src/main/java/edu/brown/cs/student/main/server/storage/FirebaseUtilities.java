@@ -597,10 +597,10 @@ public class FirebaseUtilities implements StorageInterface {
     ApiFuture<DocumentSnapshot> future = userRef.get();
     DocumentSnapshot document = future.get();
     if (document.exists()) {
-      List<String> watchList = (List<String>) document.get("watchList");
-      if (watchList != null) {
+      List<String> recList = (List<String>) document.get("recommendations");
+      if (recList != null) {
         List<String> validItems = new ArrayList<>();
-        for (String itemId : watchList) {
+        for (String itemId : recList) {
           DocumentReference itemRef = db.collection("items").document(itemId);
           DocumentSnapshot itemDoc = itemRef.get().get();
           if (itemDoc.exists()) {
