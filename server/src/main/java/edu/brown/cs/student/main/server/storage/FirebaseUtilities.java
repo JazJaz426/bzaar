@@ -617,4 +617,20 @@ public class FirebaseUtilities implements StorageInterface {
       return new ArrayList<>();
     }
   }
+
+  public List<String> getSellingList(String userId)
+      throws InterruptedException, ExecutionException {
+    List<String> itemIds = new ArrayList<>();
+    try {
+      List<Map<String, Object>> items = getItemsByUser(userId);
+      for (Map<String, Object> item : items) {
+        if (item.containsKey("id")) {
+          itemIds.add(item.get("id").toString());
+        }
+      }
+    } catch (Exception e) {
+      System.err.println("Failed to get items by user: " + e.getMessage());
+    }
+    return itemIds;
+  }
 }
