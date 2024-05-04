@@ -150,13 +150,19 @@ export async function deleteItem(itemId: string,userId: string) {
     itemId: itemId,
     userId: userId
   });
-};
+}
 
 export async function recordUserActivity(interactionType: string, itemId: string, userId: string) {
   return await queryAPI("recordUserActivity", {
     interactionType: interactionType,
     itemId: itemId,
     userId: userId
+  });
+}
+
+export async function getRecList(userId: string) {
+  return await queryAPI("getRecList", {
+    userId: userId,
   });
 }
 

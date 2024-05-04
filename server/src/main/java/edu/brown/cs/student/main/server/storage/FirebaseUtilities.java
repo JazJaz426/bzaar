@@ -15,6 +15,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.cloud.StorageClient;
+import edu.brown.cs.student.main.server.recommendations.RecommendationUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -544,276 +545,76 @@ public class FirebaseUtilities implements StorageInterface {
     userRef.update("sellList", FieldValue.arrayRemove(itemId));
   }
 
-  // // recommendation page related utilities
-  // public Map<String, Map<String, Integer>> fetchUserItemInteractions()
-  //     throws ExecutionException, InterruptedException {
-  //   Firestore db = FirestoreClient.getFirestore();
-  //   ApiFuture<QuerySnapshot> future = db.collection("interactions").get();
-  //   List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-  //   Map<String, Map<String, Integer>> userItemMap = new HashMap<>();
-
-  //   for (QueryDocumentSnapshot document : documents) {
-  //     String userId = document.getString("userId");
-  //     String itemId = document.getString("itemId");
-  //     String interactionType = document.getString("interactionType");
-  //     int weight = getInteractionWeight(interactionType);
-
-  //     userItemMap.computeIfAbsent(userId, k -> new HashMap<>()).merge(itemId, weight,
-  // Integer::sum);
-  //   }
-  //   return userItemMap;
-  // }
-
-  // public int getInteractionWeight(String interactionType) {
-  //   switch (interactionType) {
-  //     case "clicked":
-  //       return 1;
-  //     case "liked":
-  //       return 2;
-  //     case "claimed":
-  //       return 3;
-  //     default:
-  //       return 0;
-  //   }
-  // }
-
-  // public void computeItemSimilarities(Map<String, Map<String, Integer>> userItemMap)
-  //     throws ExecutionException, InterruptedException {
-  //   Map<String, Map<String, Double>> itemSimilarities = new HashMap<>();
-
-  //   // Create item vectors
-  //   Map<String, Map<String, Integer>> itemVectors = new HashMap<>();
-  //   for (String user : userItemMap.keySet()) {
-  //     for (Map.Entry<String, Integer> entry : userItemMap.get(user).entrySet()) {
-  //       String item = entry.getKey();
-  //       Integer weight = entry.getValue();
-  //       itemVectors.computeIfAbsent(item, k -> new HashMap<>()).put(user, weight);
-  //     }
-  //   }
-
-  //   // Compute cosine similarities
-  //   for (String item1 : itemVectors.keySet()) {
-  //     for (String item2 : itemVectors.keySet()) {
-  //       if (!item1.equals(item2)) {
-  //         double similarity =
-  //             computeCosineSimilarity(itemVectors.get(item1), itemVectors.get(item2));
-  //         itemSimilarities.computeIfAbsent(item1, k -> new HashMap<>()).put(item2, similarity);
-  //       }
-  //     }
-  //   }
-
-  //   // Store the similarities in Firestore
-  //   Firestore db = FirestoreClient.getFirestore();
-  //   for (String item1 : itemSimilarities.keySet()) {
-  //     DocumentReference docRef = db.collection("itemSimilarities").document(item1);
-  //     docRef.set(itemSimilarities.get(item1));
-  //   }
-  // }
-
-  // public double computeCosineSimilarity(
-  //     Map<String, Integer> vectorA, Map<String, Integer> vectorB) {
-  //   double dotProduct = 0.0;
-  //   double normA = 0.0;
-  //   double normB = 0.0;
-  //   for (String key : vectorA.keySet()) {
-  //     dotProduct += vectorA.get(key) * vectorB.getOrDefault(key, 0);
-  //     normA += Math.pow(vectorA.get(key), 2);
-  //   }
-  //   for (Integer value : vectorB.values()) {
-  //     normB += Math.pow(value, 2);
-  //   }
-  //   return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
-  // }
-
-  // Recommendation related code
-
-  public void performTrainTestSplit(Date splitDate)
+  public Map<String, Map<String, Map<String, Integer>>> getInteractionsBySplit(Date splitDate)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
     CollectionReference interactionsRef = db.collection("interactions");
+
+    // Fetch all data
+    ApiFuture<QuerySnapshot> allDataFuture = interactionsRef.get();
+    Map<String, Map<String, Integer>> allData =
+        RecommendationUtils.processInteractions(allDataFuture.get());
+    // Fetch training data
     ApiFuture<QuerySnapshot> trainingSetFuture =
         interactionsRef.whereLessThan("timestamp", splitDate).get();
+    Map<String, Map<String, Integer>> trainingData =
+        RecommendationUtils.processInteractions(trainingSetFuture.get());
+
+    // Fetch testing data
     ApiFuture<QuerySnapshot> testingSetFuture =
         interactionsRef.whereGreaterThanOrEqualTo("timestamp", splitDate).get();
+    Map<String, Map<String, Integer>> testingData =
+        RecommendationUtils.processInteractions(testingSetFuture.get());
 
-    // Process these futures to handle training and testing data
-    Map<String, Map<String, Integer>> trainingData = processInteractions(trainingSetFuture.get());
-    Map<String, Map<String, Integer>> testingData = processInteractions(testingSetFuture.get());
-
-    // Now use trainingData to train the model
-    computeItemSimilarities(trainingData);
-
-    // Use testingData to evaluate the model
-    evaluateModel(testingData);
+    // Organize data into a map
+    Map<String, Map<String, Map<String, Integer>>> result = new HashMap<>();
+    result.put("all", allData);
+    result.put("train", trainingData);
+    result.put("test", testingData);
+    return result;
   }
 
-  // {userId, {itemId, weight}}
-  private Map<String, Map<String, Integer>> processInteractions(QuerySnapshot snapshot) {
-    Map<String, Map<String, Integer>> userItemInteractions = new HashMap<>();
-    for (DocumentSnapshot doc : snapshot.getDocuments()) {
-      String userId = doc.getString("userId");
-      String itemId = doc.getString("itemId");
-      String interactionType = doc.getString("interactionType");
-      int weight = getInteractionWeight(interactionType);
-
-      userItemInteractions
-          .computeIfAbsent(userId, k -> new HashMap<>())
-          .merge(itemId, weight, Integer::sum);
-    }
-    return userItemInteractions;
-  }
-
-  // convert
-  public int getInteractionWeight(String interactionType) {
-    switch (interactionType) {
-      case "clicked":
-        return 1;
-      case "liked":
-        return 2;
-      case "purchased":
-        return 3;
-      default:
-        return 0;
-    }
-  }
-
-  public void computeItemSimilarities(Map<String, Map<String, Integer>> userItemMap) {
-    Map<String, Map<String, Double>> itemSimilarities = new HashMap<>();
-
-    // Create item vectors
-    Map<String, Map<String, Integer>> itemVectors = new HashMap<>();
-    for (Map.Entry<String, Map<String, Integer>> userEntry : userItemMap.entrySet()) {
-      String user = userEntry.getKey();
-      Map<String, Integer> items = userEntry.getValue();
-      for (Map.Entry<String, Integer> itemEntry : items.entrySet()) {
-        String item = itemEntry.getKey();
-        Integer weight = itemEntry.getValue();
-        itemVectors.computeIfAbsent(item, k -> new HashMap<>()).put(user, weight);
-      }
-    }
-
-    // Compute cosine similarities
-    for (String item1 : itemVectors.keySet()) {
-      for (String item2 : itemVectors.keySet()) {
-        if (!item1.equals(item2)) {
-          double similarity =
-              computeCosineSimilarity(itemVectors.get(item1), itemVectors.get(item2));
-          itemSimilarities.computeIfAbsent(item1, k -> new HashMap<>()).put(item2, similarity);
-        }
-      }
-    }
-  }
-
-  public double computeCosineSimilarity(
-      Map<String, Integer> vectorA, Map<String, Integer> vectorB) {
-    double dotProduct = 0.0;
-    double normA = 0.0;
-    double normB = 0.0;
-    for (Map.Entry<String, Integer> entry : vectorA.entrySet()) {
-      int valueA = entry.getValue();
-      Integer valueB = vectorB.get(entry.getKey());
-      if (valueB != null) {
-        dotProduct += valueA * valueB;
-      }
-      normA += Math.pow(valueA, 2);
-    }
-    for (Integer value : vectorB.values()) {
-      normB += Math.pow(value, 2);
-    }
-    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
-  }
-
-  public void evaluateModel(Map<String, Map<String, Integer>> testData) {
-    // Assume recommendations are fetched and processed
-    Map<String, List<String>> recommendations =
-        getRecommendationsForAllUsers(); // This should be adapted to fetch based on testData
-
-    double precision = calculatePrecision(testData, recommendations);
-    double recall = calculateRecall(testData, recommendations);
-    double f1Score = 2 * (precision * recall) / (precision + recall);
-
-    System.out.println("Precision: " + precision);
-    System.out.println("Recall: " + recall);
-    System.out.println("F1 Score: " + f1Score);
-  }
-
-  private double calculatePrecision(
-      Map<String, Map<String, Integer>> testData, Map<String, List<String>> recommendations) {
-    int totalRelevantItems = 0;
-    int totalRecommendedItems = 0;
-    int totalCorrectRecommendations = 0;
-
-    for (Map.Entry<String, Map<String, Integer>> entry : testData.entrySet()) {
-      String userId = entry.getKey();
-      Map<String, Integer> userInteractions = entry.getValue();
-      List<String> userRecommendations = recommendations.getOrDefault(userId, new ArrayList<>());
-
-      Set<String> relevantItems = userInteractions.keySet();
-      Set<String> recommendedItems = new HashSet<>(userRecommendations);
-
-      totalRelevantItems += relevantItems.size();
-      totalRecommendedItems += recommendedItems.size();
-      for (String item : recommendedItems) {
-        if (relevantItems.contains(item)) {
-          totalCorrectRecommendations++;
-        }
-      }
-    }
-
-    double precision =
-        totalRecommendedItems == 0
-            ? 0
-            : (double) totalCorrectRecommendations / totalRecommendedItems;
-    return precision;
-  }
-
-  public double calculateRecall(
-      Map<String, Map<String, Integer>> testData, Map<String, List<String>> recommendations) {
-    int totalRelevantItems = 0;
-    int totalCorrectRecommendations = 0;
-
-    for (Map.Entry<String, Map<String, Integer>> entry : testData.entrySet()) {
-      String userId = entry.getKey();
-      Map<String, Integer> userInteractions = entry.getValue();
-      List<String> userRecommendations = recommendations.getOrDefault(userId, new ArrayList<>());
-
-      Set<String> relevantItems = userInteractions.keySet();
-      Set<String> recommendedItems = new HashSet<>(userRecommendations);
-
-      totalRelevantItems += relevantItems.size();
-      for (String item : recommendedItems) {
-        if (relevantItems.contains(item)) {
-          totalCorrectRecommendations++;
-        }
-      }
-    }
-
-    double recall =
-        totalRelevantItems == 0 ? 0 : (double) totalCorrectRecommendations / totalRelevantItems;
-    return recall;
-  }
-
-  public void saveRecommendations(String userId, List<String> recommendedItemIds)
+  public void saveRecommendations(Map<String, List<String>> allUserRecommendations)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
-    DocumentReference docRef = db.collection("recommendations").document(userId);
-    Map<String, Object> data = new HashMap<>();
-    data.put("recommendedItems", recommendedItemIds);
-    docRef.set(data);
+    for (Map.Entry<String, List<String>> entry : allUserRecommendations.entrySet()) {
+      String userId = entry.getKey();
+      List<String> recommendations = entry.getValue();
+      DocumentReference userRef = db.collection("users").document(userId);
+      userRef.update("recommendations", recommendations);
+    }
   }
 
-  public Map<String, List<String>> getRecommendationsForAllUsers()
-      throws ExecutionException, InterruptedException {
+  public List<String> getRecList(String userId) throws InterruptedException, ExecutionException {
     Firestore db = FirestoreClient.getFirestore();
-    ApiFuture<QuerySnapshot> future = db.collection("recommendations").get();
-    List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-
-    Map<String, List<String>> allRecommendations = new HashMap<>();
-    for (QueryDocumentSnapshot document : documents) {
-      String userId = document.getId();
-      List<String> recommendedItems = (List<String>) document.get("recommendedItems");
-      allRecommendations.put(userId, recommendedItems);
+    DocumentReference userCheckRef = db.collection("users").document(userId);
+    ApiFuture<DocumentSnapshot> userCheckFuture = userCheckRef.get();
+    DocumentSnapshot userCheckSnapshot = userCheckFuture.get();
+    if (!userCheckSnapshot.exists()) {
+      throw new IllegalArgumentException("User with ID " + userId + " does not exist.");
     }
-    return allRecommendations;
+    DocumentReference userRef = db.collection("users").document(userId);
+    ApiFuture<DocumentSnapshot> future = userRef.get();
+    DocumentSnapshot document = future.get();
+    if (document.exists()) {
+      List<String> watchList = (List<String>) document.get("watchList");
+      if (watchList != null) {
+        List<String> validItems = new ArrayList<>();
+        for (String itemId : watchList) {
+          DocumentReference itemRef = db.collection("items").document(itemId);
+          DocumentSnapshot itemDoc = itemRef.get().get();
+          if (itemDoc.exists()) {
+            validItems.add(itemId);
+          } else {
+            userRef.update("watchList", FieldValue.arrayRemove(itemId));
+          }
+        }
+        return validItems;
+      } else {
+        return new ArrayList<>();
+      }
+    } else {
+      return new ArrayList<>();
+    }
   }
 }

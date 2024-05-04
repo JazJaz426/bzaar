@@ -6,6 +6,7 @@ import static spark.Spark.options;
 import edu.brown.cs.student.main.server.handlers.DeleteItemHandler;
 import edu.brown.cs.student.main.server.handlers.GetClaimListHandler;
 import edu.brown.cs.student.main.server.handlers.GetItemsHandler;
+import edu.brown.cs.student.main.server.handlers.GetRecListHandler;
 import edu.brown.cs.student.main.server.handlers.GetSellerProfileHandler;
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
 import edu.brown.cs.student.main.server.handlers.GetWatchListHandler;
@@ -66,6 +67,7 @@ public class Server {
       Spark.get("/searchItems", new SearchItemsHandler(firebaseUtils));
       Spark.get("/deleteItem", new DeleteItemHandler(firebaseUtils));
       Spark.post("/postItem", new PostItemHandler(firebaseUtils));
+      Spark.post("/getRecList", new GetRecListHandler(firebaseUtils));
       Spark.init();
       Spark.awaitInitialization();
       System.out.println("Server started at http://localhost:" + port);

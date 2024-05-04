@@ -1,6 +1,7 @@
 
 import "../styles/App.css";
 import MainPage from "./MainPage";
+import Discover from "./Discover";
 import ItemDetail from './ItemDetails';
 import WatchList from './WatchList';
 import ClaimList from './ClaimList';
@@ -30,7 +31,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<AuthRoute gatedContent={<MainPage/>}/>} />
-          <Route path="/discover" element={<MainPage />} />
+          <Route path="/discover" element={<Discover />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/item-details/:id" element={<ItemDetail />} />
           <Route path="/my-listings" element={<Selling />} />

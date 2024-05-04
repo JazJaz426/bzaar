@@ -3,7 +3,7 @@ import "../styles/main.css";
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Item } from "../utils/schemas";
-import {modifyWatchList, getWatchList, getAllItems, recordUserActivity} from "../utils/api";
+import {modifyWatchList, getWatchList, getAllItems, getRecList} from "../utils/api";
 import { getUserId } from "../utils/cookie";
 import { Section } from "./MainPage";
 
@@ -12,21 +12,21 @@ export interface ListProps {
     setSection: React.Dispatch<React.SetStateAction<Section>>
 }
 
-
 export default function Discover(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
     const [watchList, setWatchList] = useState<string[]>([]);
-
-    console.log('userId', getUserId());
-    const fetchData = () => {
-        getAllItems().then((data) => {
-            setData(data.items.map((doc: Item) => ({ id: doc.id, ...doc })));
-        });
-        getWatchList(getUserId()).then((data) => {
-            console.log('watchlist is', data.watchList);
-            setWatchList(data.watchList);
-        });
-    }
+    const [searchTerm, setSearchTerm] = useState('');
+    const userId = getUserId(); // This should be dynamically set based on the logged-in user
+    console.log('userId', userId);
+    const fetchData = async () => {
+        const allItemsData = await getAllItems();
+        const watchListData = await getWatchList(userId);
+        const RecListData = await getRecList(userId);
+        console.log('RecListData', RecListData);
+        // console.log('allItemsData', allItemsData);
+        setWatchList(watchListData.watchList);
+        setData(allItemsData.items.filter((item: Item) => RecListData.reclist.includes(item.id)));
+    };
 
     useEffect(() => {
         fetchData();
@@ -44,11 +44,6 @@ export default function Discover(props: ListProps) {
             setWatchList([...watchList, itemId]);
             modifyWatchList(getUserId(), itemId, 'add').then(() => {
                 console.log(`Add item ${itemId} to watch list`); // Placeholder for actual implementation
-                recordUserActivity('liked', itemId, getUserId()).then(() => {
-                    console.log(`Logged interaction: added item ${itemId} to watch list. interaction type: liked`);
-                }).catch((error) => {
-                    console.error('Failed to log interaction:', error);
-                });
             }).catch((error) => {
                 console.error(error);
             });
@@ -61,13 +56,7 @@ export default function Discover(props: ListProps) {
                 {data.map((item: Item) => (
                     <div key={item.id} className="item-container">
 
-                        <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => {props.setSection(Section.VIEW_ITEM_DETAILS);
-                                                                                                        recordUserActivity('clicked', item.id, getUserId()).then(() => {
-                    console.log(`Logged interaction: added item ${item.id} to watch list. interaction type: claimed`);
-                }).catch((error) => {
-                    console.error('Failed to log interaction:', error);
-                });
-                                                                                                            }}>
+                        <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
 
                             <div className="item-box">
                                 <div className="item-image-box">
