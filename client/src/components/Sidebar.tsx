@@ -14,6 +14,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, listView, onNavClick 
   return (
     <div className="sidebar">
       <nav className="nav">
+      <img src="../assets/BZaar.png" alt="Bear Icon" className="bear-icon"/>
         <ul>
           <li className={currentSection === Section.DISCOVER && !listView ? 'active' : ''}>
             <a href="#" onClick={() => {
