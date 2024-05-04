@@ -67,7 +67,7 @@ public class Server {
       Spark.get("/searchItems", new SearchItemsHandler(firebaseUtils));
       Spark.get("/deleteItem", new DeleteItemHandler(firebaseUtils));
       Spark.post("/postItem", new PostItemHandler(firebaseUtils));
-      Spark.post("/getRecList", new GetRecListHandler(firebaseUtils));
+      Spark.get("/getRecList", new GetRecListHandler(firebaseUtils));
       Spark.init();
       Spark.awaitInitialization();
       System.out.println("Server started at http://localhost:" + port);
