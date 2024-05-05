@@ -139,6 +139,17 @@ public class FirebaseUtilities implements StorageInterface {
     return data;
   }
 
+  public List<String> getUniqueItemIds() throws InterruptedException, ExecutionException {
+    List<Map<String, Object>> items = getCollection("items");
+    List<String> uniqueItemIds = new ArrayList<>();
+    for (Map<String, Object> item : items) {
+      if (item.containsKey("id")) {
+        uniqueItemIds.add(item.get("id").toString());
+      }
+    }
+    return uniqueItemIds;
+  }
+
   public List<Map<String, Object>> getItemsByUser(String userId)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
