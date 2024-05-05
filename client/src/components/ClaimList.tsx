@@ -11,43 +11,52 @@ import { Section } from "./MainPage";
 export default function ClaimList(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
     const [claimList, setClaimList] = useState<string[]>([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const userId = getUserId(); // This should be dynamically set based on the logged-in user
+    const [isLoading, setIsLoading] = useState(true); 
+    const userId = getUserId();
 
     const fetchData = async () => {
-        const allItemsData = await getAllItems();
-        const claimListData = await getClaimList(userId);
-        // console.log('watchListData', watchListData);
-        // console.log('allItemsData', allItemsData);
-        setClaimList(claimListData.claimlist);
-        setData(allItemsData.items.filter((item: Item) => claimListData.claimlist.includes(item.id)));
+        setIsLoading(true);  
+        try {
+            const allItemsData = await getAllItems();
+            const claimListData = await getClaimList(userId);
+            setClaimList(claimListData.claimlist);
+            setData(allItemsData.items.filter((item: Item) => claimListData.claimlist.includes(item.id)));
+        } finally {
+            setIsLoading(false); 
+        }
     };
 
     useEffect(() => {
         fetchData();
-    }, [searchTerm]);
+    }, []);  
+
     return (
         <div className="item-page">
             <div className="item-list">
-                {data.map((item: Item) => (
-                    <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
-                        <div className="item-box">
-                            <div className="item-image-box">
-                                <img src={item.images[0]} alt={item.title} />
-                                                       </div>
-                            <div className="item-info">
-                                <div className="item-info-left">
-                                                                       <p className="item-name">{item.title}</p>
-                                    <p className="item-status" style={{ color: item.status === 'available' ? '#4CAF50' : '#FF5722' }}>
-                                        {item.status}
-                                    </p>
+                {isLoading ? (
+                    <div className="centered-message">
+                        <p>Loading your claim list...</p>
+                    </div>
+                ) : data.length > 0 ? (
+                    data.map((item: Item) => (
+                        <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
+                            <div className="item-box">
+                                <div className="item-image-box">
+                                    <img src={item.images[0]} alt={item.title} />
                                 </div>
-                                <p className="item-price">${item.price}</p>
+                                <div className="item-info">
+                                    <div className="item-info-left">
+                                        <p className="item-name">{item.title}</p>
+                                        <p className="item-status" style={{ color: item.status === 'available' ? '#4CAF50' : '#FF5722' }}>
+                                            {item.status}
+                                        </p>
+                                    </div>
+                                    <p className="item-price">${item.price}</p>
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                ))}
-                {data.length === 0 && (
+                        </Link>
+                    ))
+                ) : (
                     <div className="centered-message">
                         <p>No items in your claim list.</p>
                     </div>
@@ -56,4 +65,3 @@ export default function ClaimList(props: ListProps) {
         </div>
     );
 }
-
