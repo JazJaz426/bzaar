@@ -20,7 +20,7 @@ html, body {
 :root {
     --primary-color: #935218; /* Brown color, adjust as needed */
     --text-color: #333;
-    --background-color: #fff;
+    --background-color: #efd3b6;
     --accent-color: #4CAF50; /* Green for available items */
     --error-color: #FF5722; /* Red for sold or claimed items */
 }
@@ -29,29 +29,31 @@ html, body {
 .search-box {
     display: flex;
     justify-content: center;
-    align-items: center; /* Align items vertically */
-    margin: 20px 0;
+    align-items: center;
+    margin: 20px auto; /* Center horizontally and keep margin top and bottom */
     padding: 10px;
-    background-color: var(--background-color);
+    background-color: whitesmoke;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 40%; /* Adjust this value to control the width */
 }
 
 .search-box input[type="text"] {
-    flex-grow: 1;
+    flex-grow: 1; /* Adjust or remove this if necessary */
     padding: 8px 15px;
-    font-size: 16px;
+    font-size: 20px;
     border: 2px solid var(--primary-color);
     border-right: none; /* Remove right border to merge with button */
     border-radius: 8px 0 0 8px;
     outline: none;
     color: var(--text-color);
-    background-color: var(--background-color);
+    background-color: whitesmoke;
+    max-width: 100%; /* Ensure it does not overflow the parent container */
 }
 
 .search-box button {
     padding: 8px 15px;
-    font-size: 16px;
+    font-size: 20px;
     border: 2px solid var(--primary-color);
     border-left: none; /* Remove left border to merge with input */
     background-color: var(--primary-color);
@@ -68,8 +70,8 @@ html, body {
 .item-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 items per row */
-    gap: 20px; /* Increased gap for better spacing */
-    padding: 20px; /* Padding around the grid */
+    gap: 40px; /* Increased gap for better spacing */
+    padding: 80px; /* Padding around the grid */
     justify-content: center;
     background-color: var(--background-color);
 }
@@ -82,7 +84,7 @@ html, body {
 .item-box {
     display: flex;
     flex-direction: column;
-    background: var(--background-color); /* Light background for the item box */
+    background: whitesmoke; /* Light background for the item box */
     box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
     border-radius: 8px; /* Rounded corners */
     overflow: hidden; /* Ensures nothing spills out */
@@ -113,6 +115,7 @@ html, body {
     display: flex;
     flex-direction: column; /* Stack info vertically */
     justify-content: space-between; /* Space between price and details */
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .item-info-left, .item-price {
@@ -120,24 +123,9 @@ html, body {
 }
 
 .item-name, .item-status, .item-price {
-    font-size: 16px; /* Adjusted for better readability */
+    font-size: 25px; /* Adjusted for better readability */
     margin: 5px 0; /* Margin for spacing */
-    font-family: 'Arial', sans-serif; /* Consistent font family */
-}
-
-.item-name {
-    font-weight: bold; /* Make font bold */
-    color: var(--primary-color); /* Primary color for emphasis */
-}
-
-.item-status {
-    font-weight: bold;
-    color: var(--accent-color); /* Dynamic color based on status */
-}
-
-.item-price {
-    font-weight: bold;
-    color: var(--text-color); /* Consistent text color */
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .centered-message {
@@ -146,8 +134,13 @@ html, body {
     align-items: center;
     padding: 20px; /* Padding around the content */
     background-color: var(--background-color);
-    font-size: 20px;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    font-size: 30px;
+    font-weight: bold;
 }
+
 
 .watchlist-button {
     background: none;

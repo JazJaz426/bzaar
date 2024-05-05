@@ -39,13 +39,13 @@ const Login: React.FunctionComponent<ILoginPageProps> = (props) => {
 
   return (
     <div className="login-box">
-      <h1>Login Page</h1>
+      <img src="../assets/login_bear.png" className="login-bear"/>
       <button
         className="google-login-button"
         onClick={() => signInWithGoogle()}
         disabled={props.loggedIn}
       >
-        Sign in with Google
+        Sign in with Brown Gmail Account
       </button>
     </div>
   );

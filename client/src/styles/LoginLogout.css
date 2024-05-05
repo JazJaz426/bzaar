@@ -6,13 +6,13 @@
 }
 
 .SignOut{
-    padding: 10px;
+    padding: 20px;
     background-color: #935218;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
     text-decoration: none;
@@ -20,5 +20,34 @@
     transition: background-color 0.3s;
 }
 .SignOut:hover {
-    background-color: #E57C73;
+    background-color: #eeae72;
 }
+
+.login-bear {
+    width: 800px; /* Set the width as needed */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+.google-login-button {
+    background-color: #a66e3b; /* Button color */
+    color: white; /* Text color */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 35px;
+    margin-top: 20px; /* Space above the button */
+  }
+
+  body {
+    background-color: #efd3b6; /* Your chosen shade of brown */
+  }
+
+  .login-box {
+    display: flex;
+    flex-direction: column;  /* Stack children vertically */
+    justify-content: center; /* Center children vertically */
+    align-items: center;     /* Center children horizontally */
+    text-align: center;      /* Center text for all children, if needed */
+  }

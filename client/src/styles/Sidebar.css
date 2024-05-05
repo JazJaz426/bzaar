@@ -2,8 +2,9 @@
     display: block;
     padding: 8px 16px;
     margin: 10px auto; /* Center the button horizontally */
-    background-color: #f0a500; /* Example color, adjust as needed */
-    color: white;
+    background-color: #efd3b6; /* Example color, adjust as needed */
+    color: #a66e3b;
+    font-size: 15px;
     text-align: center;
     text-decoration: none;
     border-radius: 8px; /* Adjust for desired roundness */
@@ -14,5 +15,12 @@
   }
 
   #post-button:hover {
-    background-color: #e69500; /* Darker shade for hover effect */
+    color: #a66e3b;
+    background-color: #eeae72; /* Darker shade for hover effect */
   }
+
+  #post-button a {
+    color: #a66e3b; /* Ensures this color is applied */
+    text-decoration: none; /* Optional: Removes underline */
+  }
+

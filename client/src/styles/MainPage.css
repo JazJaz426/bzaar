@@ -52,7 +52,7 @@
 }
 
 .nav ul li.active a {
-  color: white;
+  color: whitesmoke;
 }
 .nav ul li:not(.active):after {
   opacity: 0.2;
@@ -73,4 +73,8 @@
   left: 0;
   bottom: 0;
   /* background-image: linear-gradient(to right, #ab5f0e, #461414); */
+}
+
+.nav ul li#post-button::after {
+  content: none;
 }
