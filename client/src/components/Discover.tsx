@@ -15,7 +15,6 @@ export interface ListProps {
 export default function Discover(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
     const [watchList, setWatchList] = useState<string[]>([]);
-    const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const userId = getUserId(); // This should be dynamically set based on the logged-in user
     console.log('userId', userId);
@@ -33,8 +32,10 @@ export default function Discover(props: ListProps) {
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (userId) {
+            fetchData();
+        }
+    }, [userId]);
 
     const toggleWatchList = (itemId: string) => {
         if (watchList.includes(itemId)) {
