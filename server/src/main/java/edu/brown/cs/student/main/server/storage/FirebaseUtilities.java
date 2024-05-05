@@ -186,7 +186,9 @@ public class FirebaseUtilities implements StorageInterface {
     public static void saveItem(Item item) {
       System.out.println("Saving item to Firestore");
       Firestore db = FirestoreClient.getFirestore();
-      db.collection("items").document().set(item);
+      DocumentReference docRef = db.collection("items").document();
+      ApiFuture<WriteResult> result = docRef.set(item);
+      System.out.println("Item saved with ID: " + docRef.getId());
     }
   }
 
