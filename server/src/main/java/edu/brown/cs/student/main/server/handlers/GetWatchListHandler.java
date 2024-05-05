@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.server.handlers;
 
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
+import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
 import spark.Request;
@@ -18,8 +19,8 @@ public class GetWatchListHandler implements Route {
   public Object handle(Request request, Response response) {
     String userId = request.queryParams("userId");
     if (userId == null || userId.trim().isEmpty()) {
-      response.status(400);
-      return Utils.toMoshiJson(Map.of("status", 400, "error", "User ID is required"));
+      response.status(HttpURLConnection.HTTP_BAD_REQUEST);
+      return Utils.toMoshiJson(Map.of("status", HttpURLConnection.HTTP_BAD_REQUEST, "error", "User ID is required"));
     }
     try {
       List<String> watchList = firebaseUtils.getWatchList(userId);
@@ -27,11 +28,13 @@ public class GetWatchListHandler implements Route {
         response.status(404);
         return Utils.toMoshiJson(Map.of("status", 500, "error", "Watch list not found"));
       }
-      return Utils.toMoshiJson(Map.of("status", 200, "watchList", watchList));
+      response.status(HttpURLConnection.HTTP_OK);
+      return Utils.toMoshiJson(Map.of("status", HttpURLConnection.HTTP_OK, "watchList", watchList));
     } catch (Exception e) {
-      response.status(500);
+      response.status(HttpURLConnection.HTTP_INTERNAL_ERROR);
       return Utils.toMoshiJson(
-          Map.of("status", 500, "error", "Internal server error: " + e.getMessage()));
+          Map.of("status", HttpURLConnection.HTTP_INTERNAL_ERROR, "error", "Internal server error: " + e.getMessage()));
     }
   }
+  
 }
