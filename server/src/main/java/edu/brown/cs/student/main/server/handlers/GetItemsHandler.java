@@ -47,6 +47,7 @@ public class GetItemsHandler implements Route {
       }
     } else if (userId != null) {
       try {
+
         List<Map<String, Object>> items = this.firebaseUtilities.getItemsByUser(userId);
         responseMap.put("status", 200);
         responseMap.put("items", items);

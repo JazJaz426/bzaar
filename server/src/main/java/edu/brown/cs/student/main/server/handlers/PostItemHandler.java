@@ -29,8 +29,6 @@ public class PostItemHandler implements Route {
     ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
     try {
       List<FileItem> formItems = upload.parseRequest(request.raw());
-      System.out.println("getting a post request");
-      System.out.println(formItems);
       Item item = new Item(); // Assuming Item class exists
       List<String> images = new ArrayList<>();
 
@@ -38,13 +36,17 @@ public class PostItemHandler implements Route {
         if (!field.isFormField()) {
           String fileName = field.getName();
           String fileExtension = fileName.substring(fileName.lastIndexOf("."));
-          if (!fileExtension.equals(".jpg") && !fileExtension.equals(".jpeg")) {
-            //            response.status(500);
-            responseMap.put("status", 500);
-            responseMap.put("message", "Please only upload jpg/jpeg images");
+          // Allow only JPEG and PNG file types
+          if (!fileExtension.equals(".jpg")
+              && !fileExtension.equals(".jpeg")
+              && !fileExtension.equals(".png")) {
+            responseMap.put("status", 415); // Using HTTP 415 Unsupported Media Type
+            responseMap.put(
+                "message", "Unsupported file type. Please upload only JPG, JPEG, or PNG images.");
             return Utils.toMoshiJson(responseMap);
           }
-          String imageUrl = FirebaseUploadHelper.uploadFile(field.getInputStream(), fileName);
+          String imageUrl =
+              FirebaseUploadHelper.uploadFile(field.getInputStream(), fileName, fileExtension);
           System.out.println("Image URL: " + imageUrl);
           images.add(imageUrl);
         } else {
@@ -56,11 +58,17 @@ public class PostItemHandler implements Route {
               break;
             case "price":
               System.out.println("Price: " + field.getString());
+              if (field.getString().isEmpty()) {
+                response.status(500);
+                responseMap.put("status", 500);
+                responseMap.put("message", "Please enter a price for the item.");
+                return Utils.toMoshiJson(responseMap);
+              }
               // if price is not a number,  throw an exception
               if (!field.getString().matches("\\d+(\\.\\d+)?")) {
                 response.status(500);
                 responseMap.put("status", 500);
-                responseMap.put("message", "Price must be a number/missing price field");
+                responseMap.put("message", "Price must be a number");
                 return Utils.toMoshiJson(responseMap);
               }
               item.setPrice(Double.parseDouble(field.getString()));
@@ -92,17 +100,19 @@ public class PostItemHandler implements Route {
       if (item.checkAnyEmpty()) {
         System.out.println("Missing parameters");
         responseMap.put("status", 500);
-        responseMap.put("message", "Fail to post item with missing parameters: ");
+        responseMap.put("message", "Please fill in every field.");
         return Utils.toMoshiJson(responseMap);
       }
-      FirestoreHelper.saveItem(item); // Save item details to Firestore
+      String itemId = FirestoreHelper.saveItem(item); // Save item details to Firestore
       responseMap.put("status", 200);
       responseMap.put("message", "Item posted successfully");
+      responseMap.put("itemId", itemId);
     } catch (Exception e) {
       // error likely occurred in the storage handler
       e.printStackTrace();
       responseMap.put("status", 500);
-      responseMap.put("message", "Fail to post item: " + e.getMessage());
+      responseMap.put("message", "Fail to post item due to some errors");
+      System.out.printf("Fail to post item", e.getMessage());
     }
     return Utils.toMoshiJson(responseMap);
   }
