@@ -54,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, listView, onNavClick 
           </li>
           <li id="post-button" className={currentSection === Section.POST && !listView ? 'active' : ''}>
             {/*<Link to="/post" className="post-button">Post</Link>*/}
-            <a href="#" onClick={() => onNavClick(Section.POST)}>POST</a>
+            <a href="#" onClick={() => onNavClick(Section.POST)}>📮 POST</a>
           </li> 
         </ul>
       </nav>

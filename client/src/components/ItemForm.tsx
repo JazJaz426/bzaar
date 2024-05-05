@@ -85,7 +85,7 @@ const ItemForm = () => {
     };
     return (
         <div>
-        <h1 className="post-title"> 🐻 ✍️ What item do you want to sell? </h1>
+        <h1 className="post-title"> 🐻📝 What item do you want to sell? </h1>
         <div className="form-container">
 
             <form id="post-form"onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
