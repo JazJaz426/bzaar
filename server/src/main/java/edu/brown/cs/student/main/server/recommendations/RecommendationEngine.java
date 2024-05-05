@@ -76,7 +76,7 @@ public class RecommendationEngine {
       try {
         // Fetch the claim list and watch list for the user
         claimList = firebaseUtilities.getClaimList(userId);
-        watchList = firebaseUtilities.getWatchList(userId);
+        // watchList = firebaseUtilities.getWatchList(userId);
         sellingList = firebaseUtilities.getSellingList(userId);
       } catch (InterruptedException | ExecutionException e) {
         // Handle the InterruptedException, e.g., log it or rethrow
@@ -86,7 +86,7 @@ public class RecommendationEngine {
 
       // Combine both lists into a single set for quick lookup
       Set<String> excludedItems = new HashSet<>(claimList);
-      excludedItems.addAll(watchList);
+      // excludedItems.addAll(watchList);
       excludedItems.addAll(sellingList);
 
       // This map will hold potential items to recommend with their cumulative similarity scores
