@@ -6,20 +6,22 @@ import { getItemsByUser, deleteItem } from "../utils/api";
 import { getUserId } from '../utils/cookie';
 import { Item } from "../utils/schemas";
 import { showErrorPopup, messagePopup } from "../utils/popups";
-import "../styles/items.css";
-import "../styles/main.css";
 import { ListProps } from "./Items";
 
 export default function Selling(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const fetchData =  () => {
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchData = () => {
+        setIsLoading(true);  
         getItemsByUser(getUserId()).then((data) => {
             setData(data.items.map((doc: Item) => ({ id: doc.id, ...doc })));
+            setIsLoading(false); 
         });
     }
+
     const deleteSellItem = (itemId: string) => {
-        deleteItem(itemId,getUserId()).then(() => {
+        deleteItem(itemId, getUserId()).then(() => {
             messagePopup("Item deleted successfully.");
             fetchData();
         }).catch((error) => {
@@ -27,14 +29,19 @@ export default function Selling(props: ListProps) {
             showErrorPopup('Failed to delete item. Please try again later.');
         });
     };
+
     useEffect(() => {
         fetchData();
-    }, [searchTerm]);
+    }, []);
 
     return (
         <div className="item-page">
             <div className="item-list">
-                {data.length === 0 ? (
+                {isLoading ? (
+                    <div className="centered-message">
+                        <p>Loading...</p>
+                    </div>
+                ) : data.length === 0 ? (
                     <div className="centered-message">
                         <p>No items to be sold yet. Please add some items to sell.</p>
                     </div>
@@ -72,4 +79,3 @@ export default function Selling(props: ListProps) {
         </div>
     );
 }
-

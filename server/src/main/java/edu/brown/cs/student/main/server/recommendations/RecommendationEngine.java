@@ -61,10 +61,13 @@ public class RecommendationEngine {
       Map<String, Map<String, Integer>> testData, Map<String, Map<String, Double>> itemSimilarities)
       throws ExecutionException, InterruptedException {
     Map<String, List<String>> predictions = new HashMap<>();
-
+    List<String> allItems = this.firebaseUtilities.getUniqueItemIds();
     // Iterate over each user in the test data
     for (Map.Entry<String, Map<String, Integer>> userEntry : testData.entrySet()) {
       String userId = userEntry.getKey();
+      if (userId == null || userId.isEmpty()) {
+        continue;
+      }
       Map<String, Integer> userItems = userEntry.getValue();
 
       List<String> claimList;
@@ -118,6 +121,12 @@ public class RecommendationEngine {
               .map(Map.Entry::getKey)
               .collect(Collectors.toList());
 
+      if (recommendedItems.isEmpty()) {
+        recommendedItems =
+            allItems.stream()
+                .filter(item -> !excludedItems.contains(item))
+                .collect(Collectors.toList());
+      }
       // Store the recommendations for this user
       predictions.put(userId, recommendedItems);
     }
