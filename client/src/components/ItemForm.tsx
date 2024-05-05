@@ -85,17 +85,20 @@ const ItemForm = () => {
     };
     return (
         <div>
-        <h1 className="post-title">Post your items to sell </h1>
+        <h1 className="post-title"> 🐻📝 What item do you want to sell? </h1>
         <div className="form-container">
 
             <form id="post-form"onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Title" className="form-input" />
+                <div className="form-group">
+                <label htmlFor="title">Category:</label>
                 <select name="category" value={formData.category} onChange={handleChange} className="form-select">
                     <option value="Furniture">furniture</option>
                     <option value="Clothing">clothing</option>
                     <option value="Kitchen">kitchen</option>
                     <option value="Others">others</option>
                 </select>
+                </div>
                 <input type="text" name="price" value={formData.price} onChange={handleChange} placeholder="Price" className="form-input" />
                 <input type="text" name="condition" value={formData.condition} onChange={handleChange} placeholder="Condition" className="form-input" />
                 <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="form-textarea"></textarea>

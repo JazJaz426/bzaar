@@ -18,7 +18,7 @@
   position: fixed;
   width: 25%;
   height: 100vh;
-  background: #935218;
+  background: #a66e3b;
   font-size: 0.65em;
 }
 
@@ -46,13 +46,13 @@
   text-transform: uppercase;
   text-decoration: none;
   letter-spacing: 0.4em;
-  color: rgba(255, 255, 255, 0.35);
+  color: #efd3b6;
   display: block;
   transition: all ease-out 300ms;
 }
 
 .nav ul li.active a {
-  color: white;
+  color: #eeae72;
 }
 .nav ul li:not(.active):after {
   opacity: 0.2;
@@ -61,6 +61,7 @@
 
 .nav ul li:hover a {
   color: rgba(255, 255, 255, 0.75);
+  transform: translateY(-5px); /* Slight lift effect on hover */
 }
 
 .nav ul li::after {
@@ -73,4 +74,8 @@
   left: 0;
   bottom: 0;
   /* background-image: linear-gradient(to right, #ab5f0e, #461414); */
+}
+
+.nav ul li#post-button::after {
+  content: none;
 }

@@ -28,6 +28,7 @@ export default function Profile() {
 
 return (
   <div className="profile-content">
+    
     <p className="profile-name">{name}</p>
       <div className="profile-section">  {/* Updated class name */}
         <strong>My Email: </strong>
@@ -38,7 +39,7 @@ return (
       {/*  <span>{name}</span>*/}
       {/*</div>*/}
       <div className="profile-section">  {/* Updated class name */}
-        <strong>My Address: </strong>
+        <strong>Pickup Address: </strong>
         <span>{address}</span>
       </div>
     </div>
