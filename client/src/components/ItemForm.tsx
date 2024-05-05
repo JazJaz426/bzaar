@@ -6,6 +6,7 @@ import { error } from 'console';
 import { messagePopup, showErrorPopup } from '../utils/popups';
 import { postItem } from '../utils/api';
 import { Section } from "./MainPage";
+import { useNavigate } from 'react-router-dom';
 interface ListProps {
     section: Section;
     setSection: React.Dispatch<React.SetStateAction<Section>>
@@ -22,6 +23,7 @@ interface FormData {
 
 }
 const ItemForm = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
         title: '',
         price: '',
@@ -50,6 +52,8 @@ const ItemForm = () => {
         e.preventDefault();
         console.log(formData);
         console.log(getLoginId())
+        const submitButton = document.getElementById('submitButton');
+        submitButton.disabled = true;
         const seller = getUserId();
         const submissionData = new FormData();
         submissionData.append('title', formData.title);
@@ -72,12 +76,12 @@ const ItemForm = () => {
             showErrorPopup("Please upload item images.")
         }
 
-        postItem(submissionData).then(()=>{
-            messagePopup("Item added successfully.");
-            const form = document.getElementById('post-form') as HTMLFormElement | null;
-            if (form) {
-                form.reset();
-            }
+        postItem(submissionData).then((data)=>{
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = false;
+            submitButton.textContent = 'Submit';
+            messagePopup("Item added successfully, now directing you to the detailed item page.");
+            navigate(`/item-details/${data.itemId}`);
         }).catch((error)=>{
             showErrorPopup("Failed to add item."+ error.message);
         })
@@ -89,7 +93,7 @@ const ItemForm = () => {
         <div className="form-container">
 
             <form id="post-form"onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Title" className="form-input" />
+                <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Title" className="form-input" autoComplete="off"/>
                 <div className="form-group">
                 <label htmlFor="title">Category:</label>
                 <select name="category" value={formData.category} onChange={handleChange} className="form-select">
@@ -99,11 +103,11 @@ const ItemForm = () => {
                     <option value="Others">others</option>
                 </select>
                 </div>
-                <input type="text" name="price" value={formData.price} onChange={handleChange} placeholder="Price" className="form-input" />
-                <input type="text" name="condition" value={formData.condition} onChange={handleChange} placeholder="Condition" className="form-input" />
-                <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="form-textarea"></textarea>
+                <input type="text" name="price" value={formData.price} onChange={handleChange} placeholder="Price" className="form-input" autoComplete="off"/>
+                <input type="text" name="condition" value={formData.condition} onChange={handleChange} placeholder="Condition" className="form-input" autoComplete="off"/>
+                <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="form-textarea"autoComplete="off"></textarea>
                 <input type="file" name="image" onChange={handleImageChange} className="form-input" multiple />
-                <button type="submit" className="form-button">Save</button>
+                <button type="submit" id = "submitButton" className="form-button">Save</button>
             </form>
         </div>
         </div>

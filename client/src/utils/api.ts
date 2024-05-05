@@ -143,10 +143,10 @@ export async function postItem(formData: FormData) {
   if (data.status && data.status !== 200) {
     throw new Error(` ${data.message}`);
   }
-  return response.json();
+  return data;
 }
 export async function deleteItem(itemId: string,userId: string) {
-  return await queryAPI("deleteItem(", {
+  return await queryAPI("deleteItem", {
     itemId: itemId,
     userId: userId
   });

@@ -31,7 +31,7 @@ public class DeleteItemHandler implements Route {
     } catch (Exception e) {
       System.out.println("Fail to delete item: " + e.getMessage());
       responseMap.put("status", 500);
-      responseMap.put("message", "Fail to delete item: " + e.getMessage());
+      responseMap.put("message", "Fail to delete item ");
       return Utils.toMoshiJson(responseMap);
     }
   }

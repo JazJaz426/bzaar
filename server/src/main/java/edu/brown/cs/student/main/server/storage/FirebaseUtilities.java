@@ -162,17 +162,46 @@ public class FirebaseUtilities implements StorageInterface {
       item.put("id", doc.getId());
       items.add(item);
     }
+    DocumentSnapshot userDoc = db.collection("users").document(userId).get().get();
+    List<String> sellList = (List<String>) userDoc.get("sellList");
+    for (Map<String, Object> item : items) {
+      if (item.containsKey("id")) {
+        String itemId = item.get("id").toString();
+        if (sellList == null || !sellList.contains(itemId)) {
+          if (sellList == null) {
+            sellList = new ArrayList<>();
+          }
+          sellList.add(itemId);
+          // Update Firestore user document with new sellList
+          db.collection("users").document(userId).update("sellList", sellList);
+        }
+      }
+    }
     return items;
   }
 
   public class FirebaseUploadHelper {
 
-    public static String uploadFile(InputStream fileStream, String fileName) throws Exception {
+    public static String uploadFile(InputStream fileStream, String fileName, String fileType)
+        throws Exception {
+      String mimeType;
+      switch (fileType) {
+        case ".jpg":
+        case ".jpeg":
+          mimeType = "image/jpeg";
+          break;
+        case ".png":
+          mimeType = "image/png";
+          break;
+        default:
+          throw new IllegalArgumentException("Unsupported file type: " + fileType);
+      }
+
+      // Upload the file to Firebase Storage with the correct MIME type
       Blob blob =
           StorageClient.getInstance()
               .bucket("term-project-fd27e.appspot.com")
-              .create(fileName, fileStream, "image/jpeg");
-
+              .create(fileName, fileStream, mimeType);
       // Retrieve the media link and clean it
       URL url = new URL(blob.getMediaLink());
       System.out.println("URL: " + url);
@@ -180,26 +209,23 @@ public class FirebaseUtilities implements StorageInterface {
       return url.toString();
       //      return cleanedUrl; // Return the cleaned URL
     }
-
-    // A method to clean or modify the URL as needed
-    private static String cleanUrl(URL url) {
-      String path = url.getPath();
-      path = path.replace("/download", ""); // Remove download if needed
-
-      // Remove query parameters or modify as needed
-      String cleanPath = path.split("\\?")[0];
-
-      return url.getProtocol() + "://" + url.getHost() + cleanPath;
-    }
   }
 
   public class FirestoreHelper {
-    public static void saveItem(Item item) {
-      System.out.println("Saving item to Firestore");
+    public static String saveItem(Item item) {
       Firestore db = FirestoreClient.getFirestore();
       DocumentReference docRef = db.collection("items").document();
       ApiFuture<WriteResult> result = docRef.set(item);
+      updateSellList(item.getSeller(), docRef.getId());
       System.out.println("Item saved with ID: " + docRef.getId());
+      return docRef.getId();
+    }
+
+    public static void updateSellList(String userId, String itemId) {
+      Firestore db = FirestoreClient.getFirestore();
+      DocumentReference userRef = db.collection("users").document(userId);
+      userRef.update("sellList", FieldValue.arrayUnion(itemId));
+      System.out.println("Sell list updated for user: " + userId);
     }
   }
 
@@ -636,9 +662,21 @@ public class FirebaseUtilities implements StorageInterface {
     List<String> itemIds = new ArrayList<>();
     try {
       List<Map<String, Object>> items = getItemsByUser(userId);
+      Firestore db = FirestoreClient.getFirestore();
+      DocumentSnapshot userDoc = db.collection("users").document(userId).get().get();
+      List<String> sellList = (List<String>) userDoc.get("sellList");
       for (Map<String, Object> item : items) {
         if (item.containsKey("id")) {
-          itemIds.add(item.get("id").toString());
+          String itemId = item.get("id").toString();
+          itemIds.add(itemId);
+          if (sellList == null || !sellList.contains(itemId)) {
+            if (sellList == null) {
+              sellList = new ArrayList<>();
+            }
+            sellList.add(itemId);
+            // Update Firestore user document with new sellList
+            db.collection("users").document(userId).update("sellList", sellList);
+          }
         }
       }
     } catch (Exception e) {
