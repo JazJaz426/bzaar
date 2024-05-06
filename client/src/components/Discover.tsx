@@ -72,7 +72,7 @@ export default function Discover(props: ListProps) {
                         <div key={item.id} className="item-container">
                             <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => {props.setSection(Section.VIEW_ITEM_DETAILS);
                                 recordUserActivity('clicked', item.id, getUserId()).then(() => {
-                                    console.log(`Logged interaction: added item ${item.id} to watch list. interaction type: claimed`);
+                                    console.log(`Logged interaction: clicked item ${item.id}. interaction type: clicked`);
                                 }).catch((error) => {
                                     console.error('Failed to log interaction:', error);
                                 });
