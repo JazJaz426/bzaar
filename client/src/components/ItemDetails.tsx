@@ -3,7 +3,7 @@ import { useParams,useNavigate } from 'react-router-dom';
 import { db } from './firebase.js';
 import { doc, getDoc, getDocs, collection, query, where } from 'firebase/firestore';
 import Layout from './Layout';
-import { Section } from './MainPage';
+import { Section } from '../utils/schemas';
 import ImageCarousel from './ImageCarousel';
 import { getItemDetails, getSellerProfile, claimItem, recordUserActivity, getClaimList, modifyClaimList } from '../utils/api';
 import '../styles/itemDetails.css'; // Assuming CSS module usage
@@ -15,7 +15,7 @@ import Profile from './Profile';
 import ClaimList from './ClaimList.js';
 import Discover from './Discover.js';
 import SearchPage from './SearchPage.js';
-import { showErrorPopup } from '../utils/popups';
+import { ListProps } from '../utils/schemas';
 
 interface Item {
     id: string;
@@ -37,14 +37,19 @@ interface User {
     user_id: string;
 }
 
-const ItemDetail = () => {
+const ItemDetail = (props: ListProps) => {
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<Item | null>(null);
     const [seller, setSeller] = useState<User | null>(null);
     // const [isClaimedByUser, setIsClaimedByUser] = useState(false);
     const [userClaimList, setUserClaimList] = useState<string[]>([]);
-    const [section, setSection] = useState<Section>(Section.VIEW_ITEM_DETAILS);
-    const [listView, setListView] = useState<boolean>(false);
+    // const [section, setSection] = useState<Section>(Section.VIEW_ITEM_DETAILS);
+    // const [listView, setListView] = useState<boolean>(false);
+    // const handleNavClick = (section: Section, listView: boolean = false) => {
+    //     console.log("Nav clicked:", section, listView);
+    //     setSection(section);
+    //     setListView(listView);
+    // };
     const userId = getUserId();
 
     const fetchUserClaimList = async () => {
@@ -82,7 +87,9 @@ const ItemDetail = () => {
     };
     const navigate = useNavigate();
     const handleReturn = () => {
-        navigate(-1); // This replaces history.goBack()
+        // navigate(-1); // This replaces history.goBack()
+        console.log("section history in item details is: ", props.sectionHistory)
+        props.setSection(props.sectionHistory[props.sectionHistory.length - 2]);
     };
 
     useEffect(() => {
@@ -144,20 +151,21 @@ const ItemDetail = () => {
         });
     };
 
-    const handleNavClick = (section: Section, listView: boolean = false) => {
-        console.log("Nav clicked:", section, listView);
-        setSection(section);
-        setListView(listView);
-    };
+    console.log("current section in item details is: ", props.section)
 
     if (!item) {
         return <div className="loading">Loading...</div>;
     }
     return (
-        <Layout currentSection={section} onNavClick={handleNavClick}>
-            <button onClick={handleReturn} className="returnButton">Return</button>
+        <Layout currentSection={props.section} onNavClick={(newSection) => {
+      props.setSection(newSection);
+      props.setSectionHistory([...props.sectionHistory, newSection]);
+    }}>
+            
 
-            {section === Section.VIEW_ITEM_DETAILS && (
+            {props.section === Section.VIEW_ITEM_DETAILS && (
+                <div>
+                    <button onClick={handleReturn} className="returnButton">Return</button>
                 <div className="itemDetailContainer">
                     <h1 className="title">{item.title}</h1>
                     <ImageCarousel images={item.images} />
@@ -181,13 +189,14 @@ const ItemDetail = () => {
                             </button>
                         ) : null}
                     </div>
+                    </div>
             )}
-            {section === Section.DISCOVER ? <Discover /> : null}
-            {section === Section.SEARCHPAGE ? <SearchPage /> : null}
-            {section === Section.SELLING ? <Selling /> : null}
-            {section === Section.WATCHLIST ? <WatchList /> : null}
-            {section === Section.CLAIMLIST ? <ClaimList /> : null}
-            {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
+            {props.section === Section.DISCOVER ? <Discover section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.SEARCHPAGE ? <SearchPage section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.SELLING ? <Selling section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
         </Layout>
     );
 };

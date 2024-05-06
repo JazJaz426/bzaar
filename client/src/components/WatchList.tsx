@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { getAllItems, getWatchList, modifyWatchList, recordUserActivity } from "../utils/api";
 import { Item } from "../utils/schemas";
 import { getUserId } from "../utils/cookie";
-import { ListProps } from "./Items";
-import { Section } from "./MainPage";
+import { ListProps } from "../utils/schemas";
+import { Section } from "../utils/schemas";
 
 export default function WatchList(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
@@ -63,7 +63,7 @@ export default function WatchList(props: ListProps) {
                 ) : data.length > 0 ? (
                     data.map((item: Item) => (
                         <div key={item.id} className="item-container">
-                            <Link to={`/item-details/${item.id}`} className="link-style">
+                            <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => {props.setSection(Section.VIEW_ITEM_DETAILS); props.setSectionHistory([...props.sectionHistory, Section.VIEW_ITEM_DETAILS])}}>
                                 <div className="item-box">
                                     <div className="item-image-box">
                                         <img src={item.images[0]} alt={item.title} />

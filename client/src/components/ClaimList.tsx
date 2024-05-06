@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { getAllItems, getClaimList } from "../utils/api";
 import { Item } from "../utils/schemas";
 import { getUserId } from "../utils/cookie";
-import { ListProps } from "./Items";
-import { Section } from "./MainPage";
+import { ListProps } from "../utils/schemas";
+import { Section } from "../utils/schemas";
 
 export default function ClaimList(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
@@ -39,7 +39,7 @@ export default function ClaimList(props: ListProps) {
                     </div>
                 ) : data.length > 0 ? (
                     data.map((item: Item) => (
-                        <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
+                        <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => {props.setSection(Section.VIEW_ITEM_DETAILS); props.setSectionHistory([...props.sectionHistory, Section.VIEW_ITEM_DETAILS])}}>
                             <div className="item-box">
                                 <div className="item-image-box">
                                     <img src={item.images[0]} alt={item.title} />

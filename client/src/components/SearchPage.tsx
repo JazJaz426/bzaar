@@ -5,12 +5,14 @@ import { Link } from 'react-router-dom';
 import { Item } from "../utils/schemas";
 import { modifyWatchList, getWatchList, searchItems, getAllItems, recordUserActivity } from "../utils/api"; // Updated import
 import { getUserId } from "../utils/cookie";
-import { Section } from "./MainPage";
-
-export interface ListProps {
-    section: Section;
-    setSection: React.Dispatch<React.SetStateAction<Section>>
-}
+import { Section } from "../utils/schemas";
+import { ListProps } from "../utils/schemas";
+import Layout from "./Layout";
+import Selling from './Selling';
+import WatchList from './WatchList';
+import Profile from './Profile';
+import ClaimList from './ClaimList.js';
+import Discover from './Discover.js';
 
 export default function SearchPage(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
@@ -18,6 +20,7 @@ export default function SearchPage(props: ListProps) {
     const [watchList, setWatchList] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const userId = getUserId();
+
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -94,6 +97,7 @@ export default function SearchPage(props: ListProps) {
                     <div key={item.id} className="item-container">
                         <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => {
                             props.setSection(Section.VIEW_ITEM_DETAILS)
+                            props.setSectionHistory([...props.sectionHistory, Section.VIEW_ITEM_DETAILS]);
                             recordUserActivity('clicked', item.id, getUserId()).then(() => {
                                 console.log(`Logged interaction: clicked item ${item.id}. interaction type: clicked`);
                             }).catch((error) => {
@@ -126,5 +130,6 @@ export default function SearchPage(props: ListProps) {
                 ))}
             </div>
         </div>
+
     );
 }

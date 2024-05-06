@@ -5,12 +5,10 @@ import { Link } from 'react-router-dom';
 import { Item } from "../utils/schemas";
 import {modifyWatchList, getWatchList, getAllItems, getRecList, recordUserActivity} from "../utils/api";
 import { getUserId } from "../utils/cookie";
-import { Section } from "./MainPage";
+import { Section } from "../utils/schemas";
+import { ListProps } from "../utils/schemas";
 
-export interface ListProps {
-    section: Section;
-    setSection: React.Dispatch<React.SetStateAction<Section>>
-}
+
 
 export default function Discover(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
@@ -71,6 +69,7 @@ export default function Discover(props: ListProps) {
                     data.map((item: Item) => (
                         <div key={item.id} className="item-container">
                             <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => {props.setSection(Section.VIEW_ITEM_DETAILS);
+                                props.setSectionHistory([...props.sectionHistory, Section.VIEW_ITEM_DETAILS]);
                                 recordUserActivity('clicked', item.id, getUserId()).then(() => {
                                     console.log(`Logged interaction: clicked item ${item.id}. interaction type: clicked`);
                                 }).catch((error) => {

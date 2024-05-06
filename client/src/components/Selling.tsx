@@ -6,7 +6,8 @@ import { getItemsByUser, deleteItem } from "../utils/api";
 import { getUserId } from '../utils/cookie';
 import { Item } from "../utils/schemas";
 import { showErrorPopup, messagePopup } from "../utils/popups";
-import { ListProps } from "./Items";
+import { ListProps } from "../utils/schemas";
+import { Section } from "../utils/schemas";
 
 export default function Selling(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
@@ -48,7 +49,7 @@ export default function Selling(props: ListProps) {
                 ) : (
                     data.map((item: Item) => (
                         <div key={item.id} className="item-container">
-                            <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
+                            <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => {props.setSection(Section.VIEW_ITEM_DETAILS); props.setSectionHistory([...props.sectionHistory, Section.VIEW_ITEM_DETAILS])}}>
                                 <div className="item-box">
                                     <div className="item-image-box">
                                         <img src={item.images[0]} alt={item.title} />
