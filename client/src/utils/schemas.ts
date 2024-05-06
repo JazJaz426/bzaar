@@ -5,3 +5,24 @@ export type Item = {
     price: string;
     images: string[];
 };
+export enum Section {
+    DISCOVER= "DISCOVER",
+    SEARCHPAGE="SEARCHPAGE",
+    SELLING= "SELLING",
+    PROFILE= "PROFILE",
+    CLAIMLIST= "CLAIMLIST",
+    WATCHLIST= "WATCHLIST",
+    VIEW_ITEM_DETAILS= "VIEW_ITEM_DETAILS",
+    POST= "POST"
+}
+
+export interface ListProps {
+    section: Section;
+    setSection: React.Dispatch<React.SetStateAction<Section>>
+}
+
+export interface SectionHistoryProps {
+    sectionHistory: Section[];
+    setSectionHistory: React.Dispatch<React.SetStateAction<Section[]>>
+}
+

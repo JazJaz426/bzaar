@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 import { getAllItems, getWatchList, modifyWatchList, recordUserActivity } from "../utils/api";
 import { Item } from "../utils/schemas";
 import { getUserId } from "../utils/cookie";
-import { ListProps } from "./Items";
-import { Section } from "./MainPage";
+import { ListProps } from "../utils/schemas";
 
 export default function WatchList(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);

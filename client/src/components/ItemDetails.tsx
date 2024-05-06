@@ -3,7 +3,7 @@ import { useParams,useNavigate } from 'react-router-dom';
 import { db } from './firebase.js';
 import { doc, getDoc, getDocs, collection, query, where } from 'firebase/firestore';
 import Layout from './Layout';
-import { Section } from './MainPage';
+import { Section } from '../utils/schemas';
 import ImageCarousel from './ImageCarousel';
 import { getItemDetails, getSellerProfile, claimItem, recordUserActivity, getClaimList, modifyClaimList } from '../utils/api';
 import '../styles/itemDetails.css'; // Assuming CSS module usage
@@ -15,7 +15,6 @@ import Profile from './Profile';
 import ClaimList from './ClaimList.js';
 import Discover from './Discover.js';
 import SearchPage from './SearchPage.js';
-import { showErrorPopup } from '../utils/popups';
 
 interface Item {
     id: string;
@@ -45,6 +44,11 @@ const ItemDetail = () => {
     const [userClaimList, setUserClaimList] = useState<string[]>([]);
     const [section, setSection] = useState<Section>(Section.VIEW_ITEM_DETAILS);
     const [listView, setListView] = useState<boolean>(false);
+    const handleNavClick = (section: Section, listView: boolean = false) => {
+        console.log("Nav clicked:", section, listView);
+        setSection(section);
+        setListView(listView);
+    };
     const userId = getUserId();
 
     const fetchUserClaimList = async () => {
@@ -144,11 +148,7 @@ const ItemDetail = () => {
         });
     };
 
-    const handleNavClick = (section: Section, listView: boolean = false) => {
-        console.log("Nav clicked:", section, listView);
-        setSection(section);
-        setListView(listView);
-    };
+
 
     if (!item) {
         return <div className="loading">Loading...</div>;
@@ -182,11 +182,11 @@ const ItemDetail = () => {
                         ) : null}
                     </div>
             )}
-            {section === Section.DISCOVER ? <Discover /> : null}
-            {section === Section.SEARCHPAGE ? <SearchPage /> : null}
-            {section === Section.SELLING ? <Selling /> : null}
-            {section === Section.WATCHLIST ? <WatchList /> : null}
-            {section === Section.CLAIMLIST ? <ClaimList /> : null}
+            {section === Section.DISCOVER ? <Discover section={section} setSection={setSection} /> : null}
+            {section === Section.SEARCHPAGE ? <SearchPage section={section} setSection={setSection} /> : null}
+            {section === Section.SELLING ? <Selling section={section} setSection={setSection} /> : null}
+            {section === Section.WATCHLIST ? <WatchList section={section} setSection={setSection} /> : null}
+            {section === Section.CLAIMLIST ? <ClaimList section={section} setSection={setSection} /> : null}
             {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
         </Layout>
     );

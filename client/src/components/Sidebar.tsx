@@ -1,5 +1,5 @@
 import React from 'react';
-import { Section } from './MainPage'; // Make sure to export Section from MainPage or better yet, move it to a common types file.
+import { Section } from '../utils/schemas';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Sidebar.css';
 

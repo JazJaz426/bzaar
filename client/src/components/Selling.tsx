@@ -6,7 +6,7 @@ import { getItemsByUser, deleteItem } from "../utils/api";
 import { getUserId } from '../utils/cookie';
 import { Item } from "../utils/schemas";
 import { showErrorPopup, messagePopup } from "../utils/popups";
-import { ListProps } from "./Items";
+import { ListProps } from "../utils/schemas";
 
 export default function Selling(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);

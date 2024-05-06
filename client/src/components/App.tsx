@@ -14,6 +14,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SearchPage from "./SearchPage";
 import firebase from 'firebase/compat/app';
+import { useState } from 'react';
+import { Section } from '../utils/schemas';
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -30,19 +32,20 @@ if (!firebase.apps.length) {
 }
 
 function App() {
+  const [sectionHistory, setSectionHistory] = useState<Section[]>([]);
   return (
     <div className="App">
       <Router>
         <Routes>
           <Route path="/" element={<AuthRoute gatedContent={<MainPage/>}/>} />
-          <Route path="/discover" element={<Discover />} />
+          {/* <Route path="/discover" element={<Discover />} /> */}
           <Route path="/search" element={<SearchPage />} />
           <Route path="/item-details/:id" element={<ItemDetail />} />
-          <Route path="/my-listings" element={<Selling />} />
+          {/* <Route path="/my-listings" element={<Selling />} />
           <Route path="/post" element={<ItemForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/watchlist" element={<WatchList />} />
-          <Route path="/claimlist" element={<ClaimList />} />
+          <Route path="/claimlist" element={<ClaimList />} /> */}
           {/* Add more routes as needed */}
         </Routes>
       </Router>

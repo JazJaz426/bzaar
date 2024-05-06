@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { getAllItems, getClaimList } from "../utils/api";
 import { Item } from "../utils/schemas";
 import { getUserId } from "../utils/cookie";
-import { ListProps } from "./Items";
-import { Section } from "./MainPage";
+import { ListProps } from "../utils/schemas";
+import { Section } from "../utils/schemas";
 
 export default function ClaimList(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);

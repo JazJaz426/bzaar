@@ -9,16 +9,8 @@ import Selling from "./Selling";
 import WatchList from "./WatchList";
 import ClaimList from "./ClaimList";
 import ItemForm from "./ItemForm";
-export enum Section {
-    DISCOVER= "DISCOVER",
-    SEARCHPAGE="SEARCHPAGE",
-    SELLING= "SELLING",
-    PROFILE= "PROFILE",
-    CLAIMLIST= "CLAIMLIST",
-    WATCHLIST= "WATCHLIST",
-    VIEW_ITEM_DETAILS= "VIEW_ITEM_DETAILS",
-    POST= "POST"
-}
+import { Section } from "../utils/schemas";
+import { SectionHistoryProps } from "../utils/schemas";
 
 export default function MainPage() {
   const [section, setSection] = useState<Section>(Section.DISCOVER);
