@@ -58,7 +58,7 @@ public class GetItemsHandler implements Route {
         responseMap.put("message", "Fail to get items by user: " + e.getMessage());
         return Utils.toMoshiJson(responseMap);
       }
-    } 
+    }
     return new NotImplementedException("not implemented");
   }
 }
