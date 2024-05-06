@@ -89,7 +89,9 @@ const ItemDetail = (props: ListProps) => {
     const handleReturn = () => {
         // navigate(-1); // This replaces history.goBack()
         console.log("section history in item details is: ", props.sectionHistory)
-        props.setSection(props.sectionHistory[props.sectionHistory.length - 2]);
+        const prevSect = props.sectionHistory[props.sectionHistory.length - 2]
+        props.setSection(prevSect);
+        props.setSectionHistory([...props.sectionHistory, prevSect]);
     };
 
     useEffect(() => {
@@ -191,12 +193,12 @@ const ItemDetail = (props: ListProps) => {
                     </div>
                     </div>
             )}
-            {props.section === Section.DISCOVER ? <Discover section={props.section} setSection={props.setSection} /> : null}
-            {props.section === Section.SEARCHPAGE ? <SearchPage section={props.section} setSection={props.setSection} /> : null}
-            {props.section === Section.SELLING ? <Selling section={props.section} setSection={props.setSection} /> : null}
-            {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} /> : null}
-            {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} /> : null}
-            {props.section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
+            {props.section === Section.DISCOVER ? <Discover section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+            {props.section === Section.SEARCHPAGE ? <SearchPage section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+            {props.section === Section.SELLING ? <Selling section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+            {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+            {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+            {props.section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
         </Layout>
     );
 };

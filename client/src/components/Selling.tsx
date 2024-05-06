@@ -16,6 +16,7 @@ export default function Selling(props: ListProps) {
     const fetchData = () => {
         setIsLoading(true);  
         getItemsByUser(getUserId()).then((data) => {
+            console.log('data in selling is: ', data)
             setData(data.items.map((doc: Item) => ({ id: doc.id, ...doc })));
             setIsLoading(false); 
         });

@@ -159,10 +159,11 @@ public class FirebaseUtilities implements StorageInterface {
     List<Map<String, Object>> items = new ArrayList<>();
     for (String itemId : sellList) {
       items.add(getItemDetails(itemId));
+
     }
     return items;
   }
-
+  
   public class FirebaseUploadHelper {
 
     public static String uploadFile(InputStream fileStream, String fileName, String fileType)
@@ -310,7 +311,9 @@ public class FirebaseUtilities implements StorageInterface {
     ApiFuture<DocumentSnapshot> future = docRef.get();
     DocumentSnapshot document = future.get();
     if (document.exists()) {
-      return document.getData();
+      Map<String, Object> item = document.getData();
+      item.put("id", document.getId());
+      return item;
     } else {
       return null;
     }
