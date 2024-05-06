@@ -20,7 +20,8 @@ public class GetWatchListHandler implements Route {
     String userId = request.queryParams("userId");
     if (userId == null || userId.trim().isEmpty()) {
       response.status(HttpURLConnection.HTTP_BAD_REQUEST);
-      return Utils.toMoshiJson(Map.of("status", HttpURLConnection.HTTP_BAD_REQUEST, "error", "User ID is required"));
+      return Utils.toMoshiJson(
+          Map.of("status", HttpURLConnection.HTTP_BAD_REQUEST, "error", "User ID is required"));
     }
     try {
       List<String> watchList = firebaseUtils.getWatchList(userId);
@@ -33,8 +34,11 @@ public class GetWatchListHandler implements Route {
     } catch (Exception e) {
       response.status(HttpURLConnection.HTTP_INTERNAL_ERROR);
       return Utils.toMoshiJson(
-          Map.of("status", HttpURLConnection.HTTP_INTERNAL_ERROR, "error", "Internal server error: " + e.getMessage()));
+          Map.of(
+              "status",
+              HttpURLConnection.HTTP_INTERNAL_ERROR,
+              "error",
+              "Internal server error: " + e.getMessage()));
     }
   }
-  
 }

@@ -154,28 +154,11 @@ public class FirebaseUtilities implements StorageInterface {
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
     CollectionReference itemsRef = db.collection("items");
-    com.google.cloud.firestore.Query query = itemsRef.whereEqualTo("seller", userId);
-    ApiFuture<QuerySnapshot> querySnapshot = query.get();
-    List<Map<String, Object>> items = new ArrayList<>();
-    for (QueryDocumentSnapshot doc : querySnapshot.get().getDocuments()) {
-      Map<String, Object> item = doc.getData();
-      item.put("id", doc.getId());
-      items.add(item);
-    }
     DocumentSnapshot userDoc = db.collection("users").document(userId).get().get();
     List<String> sellList = (List<String>) userDoc.get("sellList");
-    for (Map<String, Object> item : items) {
-      if (item.containsKey("id")) {
-        String itemId = item.get("id").toString();
-        if (sellList == null || !sellList.contains(itemId)) {
-          if (sellList == null) {
-            sellList = new ArrayList<>();
-          }
-          sellList.add(itemId);
-          // Update Firestore user document with new sellList
-          db.collection("users").document(userId).update("sellList", sellList);
-        }
-      }
+    List<Map<String, Object>> items = new ArrayList<>();
+    for (String itemId : sellList) {
+      items.add(getItemDetails(itemId));
     }
     return items;
   }
