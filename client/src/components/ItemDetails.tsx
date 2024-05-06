@@ -15,6 +15,7 @@ import Profile from './Profile';
 import ClaimList from './ClaimList.js';
 import Discover from './Discover.js';
 import SearchPage from './SearchPage.js';
+import { ListProps } from '../utils/schemas';
 
 interface Item {
     id: string;
@@ -36,19 +37,19 @@ interface User {
     user_id: string;
 }
 
-const ItemDetail = () => {
+const ItemDetail = (props: ListProps) => {
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<Item | null>(null);
     const [seller, setSeller] = useState<User | null>(null);
     // const [isClaimedByUser, setIsClaimedByUser] = useState(false);
     const [userClaimList, setUserClaimList] = useState<string[]>([]);
-    const [section, setSection] = useState<Section>(Section.VIEW_ITEM_DETAILS);
-    const [listView, setListView] = useState<boolean>(false);
-    const handleNavClick = (section: Section, listView: boolean = false) => {
-        console.log("Nav clicked:", section, listView);
-        setSection(section);
-        setListView(listView);
-    };
+    // const [section, setSection] = useState<Section>(Section.VIEW_ITEM_DETAILS);
+    // const [listView, setListView] = useState<boolean>(false);
+    // const handleNavClick = (section: Section, listView: boolean = false) => {
+    //     console.log("Nav clicked:", section, listView);
+    //     setSection(section);
+    //     setListView(listView);
+    // };
     const userId = getUserId();
 
     const fetchUserClaimList = async () => {
@@ -148,16 +149,18 @@ const ItemDetail = () => {
         });
     };
 
-
+    console.log("current section in item details is: ", props.section)
 
     if (!item) {
         return <div className="loading">Loading...</div>;
     }
     return (
-        <Layout currentSection={section} onNavClick={handleNavClick}>
-            <button onClick={handleReturn} className="returnButton">Return</button>
+        <Layout currentSection={props.section} onNavClick={props.setSection}>
+            
 
-            {section === Section.VIEW_ITEM_DETAILS && (
+            {props.section === Section.VIEW_ITEM_DETAILS && (
+                <div>
+                    <button onClick={handleReturn} className="returnButton">Return</button>
                 <div className="itemDetailContainer">
                     <h1 className="title">{item.title}</h1>
                     <ImageCarousel images={item.images} />
@@ -181,13 +184,14 @@ const ItemDetail = () => {
                             </button>
                         ) : null}
                     </div>
+                    </div>
             )}
-            {section === Section.DISCOVER ? <Discover section={section} setSection={setSection} /> : null}
-            {section === Section.SEARCHPAGE ? <SearchPage section={section} setSection={setSection} /> : null}
-            {section === Section.SELLING ? <Selling section={section} setSection={setSection} /> : null}
-            {section === Section.WATCHLIST ? <WatchList section={section} setSection={setSection} /> : null}
-            {section === Section.CLAIMLIST ? <ClaimList section={section} setSection={setSection} /> : null}
-            {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
+            {props.section === Section.DISCOVER ? <Discover section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.SEARCHPAGE ? <SearchPage section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.SELLING ? <Selling section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} /> : null}
+            {props.section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
         </Layout>
     );
 };

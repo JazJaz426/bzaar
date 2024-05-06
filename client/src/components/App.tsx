@@ -30,17 +30,25 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
+export const handleNavClick = (section: Section, setSection: (section: Section) => void) => {
+    console.log("Nav clicked:", section);
+    setSection(section);
+};
 
 function App() {
   const [sectionHistory, setSectionHistory] = useState<Section[]>([]);
+  const [section, setSection] = useState<Section>(Section.DISCOVER);
+  const [listView, setListView] = useState<boolean>(false);
+
+
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<AuthRoute gatedContent={<MainPage/>}/>} />
+          <Route path="/" element={<AuthRoute gatedContent={<MainPage section={section} setSection={setSection}/>}/>} />
           {/* <Route path="/discover" element={<Discover />} /> */}
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/item-details/:id" element={<ItemDetail />} />
+          {/* <Route path="/search" element={<SearchPage />} /> */}
+          <Route path="/item-details/:id" element={<ItemDetail section={section} setSection={setSection}/>} />
           {/* <Route path="/my-listings" element={<Selling />} />
           <Route path="/post" element={<ItemForm />} />
           <Route path="/profile" element={<Profile />} />

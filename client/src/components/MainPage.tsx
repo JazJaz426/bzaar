@@ -9,27 +9,20 @@ import Selling from "./Selling";
 import WatchList from "./WatchList";
 import ClaimList from "./ClaimList";
 import ItemForm from "./ItemForm";
-import { Section } from "../utils/schemas";
+import { Section, ListProps } from "../utils/schemas";
 import { SectionHistoryProps } from "../utils/schemas";
 
-export default function MainPage() {
-  const [section, setSection] = useState<Section>(Section.DISCOVER);
-  const [listView, setListView] = useState<boolean>(false);
+export default function MainPage(props: ListProps) {
 
-  const handleNavClick = (section: Section, listView: boolean = false) => {
-    console.log("Nav clicked:", section, listView);
-    setSection(section);
-    setListView(listView);
-  };
   return (
-    <Layout currentSection={section} onNavClick={handleNavClick}>
-      {section === Section.DISCOVER ? <Discover section={section} setSection={setSection} /> : null}
-      {section === Section.SEARCHPAGE ? <SearchPage section={section} setSection={setSection} /> : null}
-      {section === Section.SELLING ? <Selling section={section} setSection={setSection}/> : null}
-      {section === Section.WATCHLIST ? <WatchList section={section} setSection={setSection} /> : null}
-      {section === Section.CLAIMLIST ? <ClaimList section={section} setSection={setSection} /> : null}
-      {section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
-      {section === Section.POST ? <ItemForm /> : null}
+    <Layout currentSection={props.section} onNavClick={props.setSection}>
+      {props.section === Section.DISCOVER ? <Discover section={props.section} setSection={props.setSection} /> : null}
+      {props.section === Section.SEARCHPAGE ? <SearchPage section={props.section} setSection={props.setSection} /> : null}
+      {props.section === Section.SELLING ? <Selling section={props.section} setSection={props.setSection}/> : null}
+      {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} /> : null}
+      {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} /> : null}
+      {props.section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
+      {props.section === Section.POST ? <ItemForm /> : null}
     </Layout>
   );
 }
