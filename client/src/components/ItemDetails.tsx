@@ -16,6 +16,7 @@ import ClaimList from './ClaimList.js';
 import Discover from './Discover.js';
 import SearchPage from './SearchPage.js';
 import { ListProps } from '../utils/schemas';
+import ItemForm from './ItemForm.js';
 
 interface Item {
     id: string;
@@ -199,6 +200,7 @@ const ItemDetail = (props: ListProps) => {
             {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
             {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
             {props.section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+            {props.section === Section.POST ? <ItemForm /> : null}
         </Layout>
     );
 };
