@@ -92,7 +92,14 @@ export default function SearchPage(props: ListProps) {
             <div className="item-list">
                 {data.map((item: Item) => (
                     <div key={item.id} className="item-container">
-                        <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
+                        <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => {
+                            props.setSection(Section.VIEW_ITEM_DETAILS)
+                            recordUserActivity('clicked', item.id, getUserId()).then(() => {
+                                console.log(`Logged interaction: clicked item ${item.id}. interaction type: clicked`);
+                            }).catch((error) => {
+                                console.error('Failed to log interaction:', error);
+                            });
+                        }}>
                             <div className="item-box">
                                 <div className="item-image-box">
                                     <img src={item.images[0]} alt={item.title} />
