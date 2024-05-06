@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.server.handlers;
 
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,22 +27,22 @@ public class GetItemsHandler implements Route {
     if (itemId == null && userId == null) {
       try {
         List<Map<String, Object>> items = this.firebaseUtilities.getCollection("items");
-        responseMap.put("status", 200);
+        responseMap.put("status", HttpURLConnection.HTTP_OK);
         responseMap.put("items", items);
         return Utils.toMoshiJson(responseMap);
       } catch (Exception e) {
-        responseMap.put("status", 500);
+        responseMap.put("status", HttpURLConnection.HTTP_INTERNAL_ERROR);
         responseMap.put("message", "Fail to get all items: " + e.getMessage());
         return Utils.toMoshiJson(responseMap);
       }
     } else if (itemId != null) {
       try {
         Map<String, Object> item = this.firebaseUtilities.getItemDetails(itemId);
-        responseMap.put("status", 200);
+        responseMap.put("status", HttpURLConnection.HTTP_OK);
         responseMap.put("data", item);
         return Utils.toMoshiJson(responseMap);
       } catch (Exception e) {
-        responseMap.put("status", 500);
+        responseMap.put("status", HttpURLConnection.HTTP_INTERNAL_ERROR);
         responseMap.put("message", "Fail to get item: " + e.getMessage());
         return Utils.toMoshiJson(responseMap);
       }
@@ -49,15 +50,15 @@ public class GetItemsHandler implements Route {
       try {
 
         List<Map<String, Object>> items = this.firebaseUtilities.getItemsByUser(userId);
-        responseMap.put("status", 200);
+        responseMap.put("status", HttpURLConnection.HTTP_OK);
         responseMap.put("items", items);
         return Utils.toMoshiJson(responseMap);
       } catch (Exception e) {
-        responseMap.put("status", 500);
+        responseMap.put("status", HttpURLConnection.HTTP_OK);
         responseMap.put("message", "Fail to get items by user: " + e.getMessage());
         return Utils.toMoshiJson(responseMap);
       }
-    }
+    } 
     return new NotImplementedException("not implemented");
   }
 }
