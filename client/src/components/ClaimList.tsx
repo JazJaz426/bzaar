@@ -39,7 +39,7 @@ export default function ClaimList(props: ListProps) {
                     </div>
                 ) : data.length > 0 ? (
                     data.map((item: Item) => (
-                        <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => props.setSection(Section.VIEW_ITEM_DETAILS)}>
+                        <Link to={`/item-details/${item.id}`} key={item.id} className="link-style" onClick={() => {props.setSection(Section.VIEW_ITEM_DETAILS); props.setSectionHistory([...props.sectionHistory, Section.VIEW_ITEM_DETAILS])}}>
                             <div className="item-box">
                                 <div className="item-image-box">
                                     <img src={item.images[0]} alt={item.title} />

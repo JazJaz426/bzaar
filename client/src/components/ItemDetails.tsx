@@ -87,7 +87,9 @@ const ItemDetail = (props: ListProps) => {
     };
     const navigate = useNavigate();
     const handleReturn = () => {
-        navigate(-1); // This replaces history.goBack()
+        // navigate(-1); // This replaces history.goBack()
+        console.log("section history in item details is: ", props.sectionHistory)
+        props.setSection(props.sectionHistory[props.sectionHistory.length - 2]);
     };
 
     useEffect(() => {
@@ -155,7 +157,10 @@ const ItemDetail = (props: ListProps) => {
         return <div className="loading">Loading...</div>;
     }
     return (
-        <Layout currentSection={props.section} onNavClick={props.setSection}>
+        <Layout currentSection={props.section} onNavClick={(newSection) => {
+      props.setSection(newSection);
+      props.setSectionHistory([...props.sectionHistory, newSection]);
+    }}>
             
 
             {props.section === Section.VIEW_ITEM_DETAILS && (

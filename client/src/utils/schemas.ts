@@ -19,10 +19,11 @@ export enum Section {
 export interface ListProps {
     section: Section;
     setSection: React.Dispatch<React.SetStateAction<Section>>
+    sectionHistory: Section[];
+    setSectionHistory: React.Dispatch<React.SetStateAction<Section[]>>
 }
 
 export interface SectionHistoryProps {
-    sectionHistory: Section[];
-    setSectionHistory: React.Dispatch<React.SetStateAction<Section[]>>
+
 }
 

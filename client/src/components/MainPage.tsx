@@ -15,12 +15,15 @@ import { SectionHistoryProps } from "../utils/schemas";
 export default function MainPage(props: ListProps) {
 
   return (
-    <Layout currentSection={props.section} onNavClick={props.setSection}>
-      {props.section === Section.DISCOVER ? <Discover section={props.section} setSection={props.setSection} /> : null}
-      {props.section === Section.SEARCHPAGE ? <SearchPage section={props.section} setSection={props.setSection} /> : null}
-      {props.section === Section.SELLING ? <Selling section={props.section} setSection={props.setSection}/> : null}
-      {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} /> : null}
-      {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} /> : null}
+    <Layout currentSection={props.section} onNavClick={(newSection) => {
+      props.setSection(newSection);
+      props.setSectionHistory([...props.sectionHistory, newSection]);
+    }}>
+      {props.section === Section.DISCOVER ? <Discover section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+      {props.section === Section.SEARCHPAGE ? <SearchPage section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+      {props.section === Section.SELLING ? <Selling section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+      {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
+      {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
       {props.section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
       {props.section === Section.POST ? <ItemForm /> : null}
     </Layout>

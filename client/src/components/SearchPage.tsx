@@ -97,6 +97,7 @@ export default function SearchPage(props: ListProps) {
                     <div key={item.id} className="item-container">
                         <Link to={`/item-details/${item.id}`} className="link-style" onClick={() => {
                             props.setSection(Section.VIEW_ITEM_DETAILS)
+                            props.setSectionHistory([...props.sectionHistory, Section.VIEW_ITEM_DETAILS]);
                             recordUserActivity('clicked', item.id, getUserId()).then(() => {
                                 console.log(`Logged interaction: clicked item ${item.id}. interaction type: clicked`);
                             }).catch((error) => {

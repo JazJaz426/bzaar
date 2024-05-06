@@ -45,10 +45,10 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<AuthRoute gatedContent={<MainPage section={section} setSection={setSection}/>}/>} />
+          <Route path="/" element={<AuthRoute gatedContent={<MainPage section={section} setSection={setSection} sectionHistory={sectionHistory} setSectionHistory={setSectionHistory}/>}/>} />
           {/* <Route path="/discover" element={<Discover />} /> */}
           {/* <Route path="/search" element={<SearchPage />} /> */}
-          <Route path="/item-details/:id" element={<ItemDetail section={section} setSection={setSection}/>} />
+          <Route path="/item-details/:id" element={<ItemDetail section={section} setSection={setSection} sectionHistory={sectionHistory} setSectionHistory={setSectionHistory}/>} />
           {/* <Route path="/my-listings" element={<Selling />} />
           <Route path="/post" element={<ItemForm />} />
           <Route path="/profile" element={<Profile />} />
