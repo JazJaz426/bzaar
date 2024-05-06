@@ -22,8 +22,3 @@ export interface ListProps {
     sectionHistory: Section[];
     setSectionHistory: React.Dispatch<React.SetStateAction<Section[]>>
 }
-
-export interface SectionHistoryProps {
-
-}
-
