@@ -3,7 +3,7 @@ import "../styles/main.css";
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Item } from "../utils/schemas";
-import { modifyWatchList, getWatchList, searchItems, getAllItems } from "../utils/api"; // Updated import
+import { modifyWatchList, getWatchList, searchItems, getAllItems, recordUserActivity } from "../utils/api"; // Updated import
 import { getUserId } from "../utils/cookie";
 import { Section } from "./MainPage";
 
@@ -16,8 +16,22 @@ export default function SearchPage(props: ListProps) {
     const [data, setData] = useState<Item[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [watchList, setWatchList] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const userId = getUserId();
+
+    const fetchData = async () => {
+        setIsLoading(true);
+        try {
+            const allItemsData = await getAllItems();
+            const watchListData = await getWatchList(userId);
+            setWatchList(watchListData.watchList);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
+        fetchData();
         if (searchTerm.trim()) {
             searchItems(searchTerm).then((response) => {
                 if (response.status === 200) {
@@ -39,19 +53,29 @@ export default function SearchPage(props: ListProps) {
                 console.error('Error fetching items:', error);
             });
         }
-    }, [searchTerm]); 
+    }, [searchTerm, userId]); 
 
     const toggleWatchList = (itemId: string) => {
-        const operation = watchList.includes(itemId) ? 'del' : 'add';
-        modifyWatchList(getUserId(), itemId, operation).then(() => {
-            if (operation === 'add') {
-                setWatchList([...watchList, itemId]);
-            } else {
-                setWatchList(watchList.filter(id => id !== itemId));
-            }
-        }).catch((error) => {
-            console.error('Error modifying watch list:', error);
-        });
+        if (watchList.includes(itemId)) {
+            setWatchList(watchList.filter(id => id !== itemId));
+            modifyWatchList(getUserId(), itemId, 'del').then(() => {
+                console.log(`Remove item ${itemId} from watch list`); // Placeholder for actual implementation
+            }).catch((error) => {
+                console.error(error);
+            });
+        } else {
+            setWatchList([...watchList, itemId]);
+            modifyWatchList(getUserId(), itemId, 'add').then(() => {
+                console.log(`Add item ${itemId} to watch list`); // Placeholder for actual implementation
+                recordUserActivity('liked', itemId, getUserId()).then(() => {
+                    console.log(`Logged interaction: added item ${itemId} to watch list. interaction type: liked`);
+                }).catch((error) => {
+                    console.error('Failed to log interaction:', error);
+                });
+            }).catch((error) => {
+                console.error(error);
+            });
+        }
     };
 
     return (
