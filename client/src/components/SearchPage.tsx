@@ -48,6 +48,7 @@ export default function SearchPage(props: ListProps) {
         } else {
             getAllItems().then((response) => {
                 if (response.status === 200) {
+                    console.log(response.items);
                     setData(response.items);
                 } else {
                     console.error('Failed to fetch items:', response.error);
