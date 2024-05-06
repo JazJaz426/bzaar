@@ -22,9 +22,11 @@ const Login: React.FunctionComponent<ILoginPageProps> = (props) => {
         addLoginEmail(userEmail);
         props.setLogin(true);
 
-        // Fetch user profile and store userId
+        // // Fetch user profile and store userId
         const userProfile = await getUserProfile(userEmail);
+        console.log("User profile:", userProfile);
         if (userProfile && userProfile.data && userProfile.data.userId) {
+          console.log("User profile found. User ID:", userProfile.data.userId);
           addUserId(userProfile.data.userId);
         }
       } else {
@@ -42,7 +44,11 @@ const Login: React.FunctionComponent<ILoginPageProps> = (props) => {
       <img src="../assets/login_bear.png" className="login-bear"/>
       <button
         className="google-login-button"
-        onClick={() => signInWithGoogle()}
+        onClick={() => signInWithGoogle().then(
+          () => {
+            window.location.reload();
+          }
+        )}
         disabled={props.loggedIn}
       >
         Sign in with Brown Gmail Account
