@@ -10,7 +10,6 @@ import WatchList from "./WatchList";
 import ClaimList from "./ClaimList";
 import ItemForm from "./ItemForm";
 import { Section, ListProps } from "../utils/schemas";
-import { SectionHistoryProps } from "../utils/schemas";
 
 export default function MainPage(props: ListProps) {
 
