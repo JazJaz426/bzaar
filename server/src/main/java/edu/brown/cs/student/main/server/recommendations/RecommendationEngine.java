@@ -6,6 +6,14 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+/**
+ * The RecommendationEngine class is responsible for generating personalized item recommendations
+ * for users based on their past interactions. It utilizes collaborative filtering techniques to
+ * predict user preferences and suggest new items they might be interested in.
+ *
+ * @author [author name]
+ * @version 1.0
+ */
 public class RecommendationEngine {
 
   private final FirebaseUtilities firebaseUtilities;
@@ -15,6 +23,14 @@ public class RecommendationEngine {
   double[] thresholds;
   double bestThreshold;
 
+  /**
+   * Constructs a RecommendationEngine with necessary dependencies and initializes data structures
+   * based on a provided split date for training and testing datasets.
+   *
+   * @param firebaseUtilities utility class for Firebase operations
+   * @param splitDate the date used to split data into training and testing sets
+   * @param thresholds array of possible thresholds for similarity scoring
+   */
   public RecommendationEngine(
       FirebaseUtilities firebaseUtilities, Date splitDate, double[] thresholds) {
     this.firebaseUtilities = firebaseUtilities;
@@ -32,6 +48,18 @@ public class RecommendationEngine {
     }
   }
 
+  /**
+   * Trains the recommendation model and evaluates its performance using the provided training and
+   * testing data. It calculates precision, recall, and F1 score to assess the quality of
+   * recommendations.
+   *
+   * @param trainingData map of user interactions used for training
+   * @param testingData map of user interactions used for testing
+   * @param similarityThreshold threshold for considering items as similar
+   * @return a map of performance metrics including precision, recall, and F1 score
+   * @throws ExecutionException if a computation error occurs
+   * @throws InterruptedException if the operation is interrupted
+   */
   public Map<String, Double> trainAndEvaluate(
       Map<String, Map<String, Integer>> trainingData,
       Map<String, Map<String, Integer>> testingData,
@@ -57,6 +85,17 @@ public class RecommendationEngine {
     return performanceMetrics;
   }
 
+  /**
+   * Generates predictions for each user in the testing dataset based on item similarities. It
+   * filters out items that the user has already interacted with or are on their claim or selling
+   * list.
+   *
+   * @param testData map of user interactions used for testing
+   * @param itemSimilarities map of item-to-item similarities
+   * @return a map of user IDs to a list of recommended item IDs
+   * @throws ExecutionException if a computation error occurs
+   * @throws InterruptedException if the operation is interrupted
+   */
   public Map<String, List<String>> generatePredictions(
       Map<String, Map<String, Integer>> testData, Map<String, Map<String, Double>> itemSimilarities)
       throws ExecutionException, InterruptedException {
@@ -134,6 +173,14 @@ public class RecommendationEngine {
     return predictions;
   }
 
+  /**
+   * Finds the best threshold value for item similarity that maximizes the F1 score of the
+   * recommendation system.
+   *
+   * @return the best threshold value as a double
+   * @throws ExecutionException if a computation error occurs
+   * @throws InterruptedException if the operation is interrupted
+   */
   public double findBestThreshold() throws ExecutionException, InterruptedException {
     double bestF1Score = 0;
     double bestThreshold = 0;
@@ -148,7 +195,14 @@ public class RecommendationEngine {
     return bestThreshold;
   }
 
-  // Method to retrain the model using the best threshold
+  /**
+   * Retrains the recommendation model using the best threshold found and saves the recommendations
+   * for all users.
+   *
+   * @param bestThreshold the best threshold value for item similarity
+   * @throws ExecutionException if a computation error occurs
+   * @throws InterruptedException if the operation is interrupted
+   */
   public void retrainAndSave(double bestThreshold) throws ExecutionException, InterruptedException {
     Map<String, Map<String, Double>> itemSimilarities =
         RecommendationUtils.computeItemSimilarities(allData, bestThreshold);
