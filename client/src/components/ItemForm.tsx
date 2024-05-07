@@ -5,12 +5,12 @@ import { collection, addDoc } from "firebase/firestore";
 import { error } from 'console';
 import { messagePopup, showErrorPopup } from '../utils/popups';
 import { postItem } from '../utils/api';
-import { Section } from '../utils/schemas';
+import { Section,ListProps } from '../utils/schemas';
 import { useNavigate } from 'react-router-dom';
-interface ListProps {
-    section: Section;
-    setSection: React.Dispatch<React.SetStateAction<Section>>
-}
+// interface ListProps {
+//     section: Section;
+//     setSection: React.Dispatch<React.SetStateAction<Section>>
+// }
 interface FormData {
     title: string;
     price: string;
@@ -51,7 +51,8 @@ const ItemForm = (props: ListProps) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(formData);
-        console.log(getLoginId())
+        console.log(getLoginId());
+        console.log(props.setSection);
         const submitButton = document.getElementById('submitButton');
         submitButton.disabled = true;
         const seller = getUserId();
