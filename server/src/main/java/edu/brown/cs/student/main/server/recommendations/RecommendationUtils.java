@@ -9,8 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Utility class providing static methods to compute similarities and process data for
+ * recommendations.
+ */
 public class RecommendationUtils {
 
+  /**
+   * Computes the cosine similarity between two item vectors.
+   *
+   * @param vectorA the first vector, represented as a map of item to integer values
+   * @param vectorB the second vector, represented as a map of item to integer values
+   * @return the cosine similarity as a double
+   */
   public static double computeCosineSimilarity(
       Map<String, Integer> vectorA, Map<String, Integer> vectorB) {
     double dotProduct = 0.0;
@@ -30,6 +41,13 @@ public class RecommendationUtils {
     return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
   }
 
+  /**
+   * Processes user interactions from a database snapshot and organizes them into a map.
+   *
+   * @param snapshot the QuerySnapshot from Firestore
+   * @return a map where the key is a user ID and the value is another map of item IDs to
+   *     interaction weights
+   */
   public static Map<String, Map<String, Integer>> processInteractions(QuerySnapshot snapshot) {
     Map<String, Map<String, Integer>> userItemInteractions = new HashMap<>();
     for (DocumentSnapshot doc : snapshot.getDocuments()) {
@@ -45,7 +63,12 @@ public class RecommendationUtils {
     return userItemInteractions;
   }
 
-  // convert
+  /**
+   * Converts interaction types into numerical weights.
+   *
+   * @param interactionType the type of interaction as a string
+   * @return the weight of the interaction as an integer
+   */
   public static int getInteractionWeight(String interactionType) {
     switch (interactionType) {
       case "clicked":
@@ -59,6 +82,13 @@ public class RecommendationUtils {
     }
   }
 
+  /**
+   * Computes item similarities above a certain threshold.
+   *
+   * @param userItemMap a map of user IDs to their item interactions
+   * @param similarityThreshold the minimum similarity score to consider
+   * @return a map of item IDs to other item IDs and their similarity scores
+   */
   public static Map<String, Map<String, Double>> computeItemSimilarities(
       Map<String, Map<String, Integer>> userItemMap, double similarityThreshold) {
     Map<String, Map<String, Double>> itemSimilarities = new HashMap<>();
@@ -90,6 +120,13 @@ public class RecommendationUtils {
     return itemSimilarities;
   }
 
+  /**
+   * Calculates the precision of recommendations based on test data and predictions.
+   *
+   * @param testData a map of user IDs to their actual interactions
+   * @param predictions a map of user IDs to lists of recommended item IDs
+   * @return the precision as a double
+   */
   public static double calculatePrecision(
       Map<String, Map<String, Integer>> testData, Map<String, List<String>> predictions) {
     int totalRelevantItems = 0;
@@ -118,6 +155,13 @@ public class RecommendationUtils {
         : (double) totalCorrectRecommendations / totalRecommendedItems;
   }
 
+  /**
+   * Calculates the recall of recommendations based on test data and predictions.
+   *
+   * @param testData a map of user IDs to their actual interactions
+   * @param predictions a map of user IDs to lists of recommended item IDs
+   * @return the recall as a double
+   */
   public static double calculateRecall(
       Map<String, Map<String, Integer>> testData, Map<String, List<String>> predictions) {
     int totalRelevantItems = 0;
