@@ -1,7 +1,7 @@
 package edu.brown.cs.student.main.server.handlers;
 
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
-import java.net.HttpURLConnection;
+import edu.brown.cs.student.main.server.storage.StorageInterface;
 import java.util.List;
 import java.util.Map;
 import spark.Request;
@@ -9,9 +9,9 @@ import spark.Response;
 import spark.Route;
 
 public class GetClaimListHandler implements Route {
-  private final FirebaseUtilities firebaseUtils;
+  private final StorageInterface firebaseUtils;
 
-  public GetClaimListHandler(FirebaseUtilities firebaseUtils) {
+  public GetClaimListHandler(StorageInterface firebaseUtils) {
     this.firebaseUtils = firebaseUtils;
   }
 
@@ -28,11 +28,10 @@ public class GetClaimListHandler implements Route {
         response.status(404);
         return Utils.toMoshiJson(Map.of("status", 500, "error", "Claim list not found"));
       }
-      return Utils.toMoshiJson(Map.of("status", HttpURLConnection.HTTP_OK, "claimlist", claimList));
+      return Utils.toMoshiJson(Map.of("status", 200, "claimlist", claimList));
     } catch (Exception e) {
       response.status(500);
-      return Utils.toMoshiJson(
-          Map.of("status", 500, "error", "Internal server error: " + e.getMessage()));
+      return Utils.toMoshiJson(Map.of("status", 500, "error", "Internal server error"));
     }
   }
 }

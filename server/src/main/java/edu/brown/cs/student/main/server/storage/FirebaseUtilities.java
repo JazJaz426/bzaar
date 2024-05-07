@@ -49,52 +49,6 @@ public class FirebaseUtilities implements StorageInterface {
     FirebaseApp.initializeApp(options);
   }
 
-  @Override
-  public void addDocument(String uid, String collection_id, String doc_id, Map<String, Object> data)
-      throws IllegalArgumentException {
-    if (uid == null || collection_id == null || doc_id == null || data == null) {
-      throw new IllegalArgumentException(
-          "addDocument: uid, collection_id, doc_id, or data cannot be null");
-    }
-    // adds a new document 'doc_name' to colleciton 'collection_id' for user 'uid'
-    // with data payload 'data'.
-
-    // TODO: FIRESTORE PART 2:
-    // use the guide below to implement this handler
-    // - https://firebase.google.com/docs/firestore/quickstart#add_data
-
-    Firestore db = FirestoreClient.getFirestore();
-    // 1: Get a ref to the collection that you created
-    CollectionReference docRef = db.collection("users").document(uid).collection(collection_id);
-    // 2: Write data to the collection ref
-    docRef.document(doc_id).set(data);
-  }
-
-  /**
-   * Inverse of addDocument, used for removing specific entries rather than whole pins collection
-   *
-   * <p>Note: used stackOverflow + LLM to develop this component
-   */
-  @Override
-  public void removeDocument(String uid, String collectionId, Map<String, Object> query)
-      throws InterruptedException, ExecutionException {
-    Firestore db = FirestoreClient.getFirestore();
-    CollectionReference collectionRef =
-        db.collection("users").document(uid).collection(collectionId);
-
-    // Find entries that match given lat/long
-    com.google.cloud.firestore.Query dbQuery =
-        collectionRef
-            .whereEqualTo("latitude", query.get("latitude"))
-            .whereEqualTo("longitude", query.get("longitude"));
-    ApiFuture<QuerySnapshot> querySnapshot = dbQuery.get();
-
-    // Given query, remove entries that match (e.g. remove specific pins)
-    for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
-      document.getReference().delete();
-    }
-  }
-
   /** Gather all pins for a given usba ser */
   @Override
   public List<Map<String, Object>> getCollection(String uid, String collection_id)
@@ -119,7 +73,7 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
-
+  @Override
   public List<Map<String, Object>> getCollection(String collection_id)
       throws InterruptedException, ExecutionException, IllegalArgumentException {
     if (collection_id == null) {
@@ -138,7 +92,6 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
-
   public List<String> getUniqueItemIds() throws InterruptedException, ExecutionException {
     List<Map<String, Object>> items = getCollection("items");
     List<String> uniqueItemIds = new ArrayList<>();
@@ -149,7 +102,7 @@ public class FirebaseUtilities implements StorageInterface {
     }
     return uniqueItemIds;
   }
-
+  @Override
   public List<Map<String, Object>> getItemsByUser(String userId)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
@@ -384,6 +337,7 @@ public class FirebaseUtilities implements StorageInterface {
    * @throws ExecutionException If an error occurs during the database read operation.
    * @throws InterruptedException If the operation is interrupted during execution.
    */
+  @Override
   public List<String> getClaimList(String userId) throws InterruptedException, ExecutionException {
     Firestore db = FirestoreClient.getFirestore();
     DocumentReference userCheckRef = db.collection("users").document(userId);
@@ -430,6 +384,7 @@ public class FirebaseUtilities implements StorageInterface {
    * @throws ExecutionException If a failure occurs during the database access.
    * @throws InterruptedException If the thread running the operation is interrupted.
    */
+  @Override
   public void modifyWatchList(String itemId, String userId, String operation)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
@@ -471,6 +426,7 @@ public class FirebaseUtilities implements StorageInterface {
    * @throws ExecutionException If an error occurs during the database operation.
    * @throws InterruptedException If the operation is interrupted.
    */
+  @Override
   public List<String> getWatchList(String userId) throws InterruptedException, ExecutionException {
     Firestore db = FirestoreClient.getFirestore();
     DocumentReference userCheckRef = db.collection("users").document(userId);
@@ -513,6 +469,7 @@ public class FirebaseUtilities implements StorageInterface {
    *     operation to complete.
    * @throws ExecutionException If an error occurs during the database operation.
    */
+  @Override
   public void updateItemStatus(String itemId, String status)
       throws InterruptedException, ExecutionException {
     Firestore db = FirestoreClient.getFirestore();
@@ -542,6 +499,7 @@ public class FirebaseUtilities implements StorageInterface {
    * @throws ExecutionException If an error occurs during the database operation.
    * @throws InterruptedException If the operation is interrupted.
    */
+  @Override
   public List<Map<String, Object>> searchItemsByKeyword(String keyword)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
@@ -554,7 +512,7 @@ public class FirebaseUtilities implements StorageInterface {
     }
     return items;
   }
-
+  @Override
   public void deleteItem(String itemId, String userId)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();
@@ -568,7 +526,7 @@ public class FirebaseUtilities implements StorageInterface {
     // update sell list
     userRef.update("sellList", FieldValue.arrayRemove(itemId));
   }
-
+  @Override
   public Map<String, Map<String, Map<String, Integer>>> getInteractionsBySplit(Date splitDate)
       throws ExecutionException, InterruptedException {
     Firestore db = FirestoreClient.getFirestore();

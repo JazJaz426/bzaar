@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.server.handlers;
 
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
+import edu.brown.cs.student.main.server.storage.StorageInterface;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,9 @@ import spark.Route;
 
 public class RecordUserActivityHandler implements Route {
 
-  private final FirebaseUtilities firebaseUtilities;
+  private final StorageInterface firebaseUtilities;
 
-  public RecordUserActivityHandler(FirebaseUtilities firebaseUtilities) {
+  public RecordUserActivityHandler(StorageInterface firebaseUtilities) {
     this.firebaseUtilities = firebaseUtilities;
   }
 

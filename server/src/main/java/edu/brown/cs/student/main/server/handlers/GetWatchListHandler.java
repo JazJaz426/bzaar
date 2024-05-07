@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.server.handlers;
 
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
+import edu.brown.cs.student.main.server.storage.StorageInterface;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +10,9 @@ import spark.Response;
 import spark.Route;
 
 public class GetWatchListHandler implements Route {
-  private final FirebaseUtilities firebaseUtils;
+  private final StorageInterface firebaseUtils;
 
-  public GetWatchListHandler(FirebaseUtilities firebaseUtils) {
+  public GetWatchListHandler(StorageInterface firebaseUtils) {
     this.firebaseUtils = firebaseUtils;
   }
 
