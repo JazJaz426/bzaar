@@ -1,15 +1,16 @@
 package edu.brown.cs.student.main.server.handlers;
 
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
+import edu.brown.cs.student.main.server.storage.StorageInterface;
 import java.util.Map;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 public class ModifyClaimListHandler implements Route {
-  private final FirebaseUtilities firebaseUtilities;
+  private final StorageInterface firebaseUtilities;
 
-  public ModifyClaimListHandler(FirebaseUtilities firebaseUtilities) {
+  public ModifyClaimListHandler(StorageInterface firebaseUtilities) {
     this.firebaseUtilities = firebaseUtilities;
   }
 

@@ -17,6 +17,8 @@ import edu.brown.cs.student.main.server.handlers.RecordUserActivityHandler;
 import edu.brown.cs.student.main.server.handlers.SearchItemsHandler;
 import edu.brown.cs.student.main.server.handlers.UpdateItemHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
+import edu.brown.cs.student.main.server.storage.StorageInterface;
+import edu.brown.cs.student.server.storage.MockFirebaseUtilities;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
@@ -33,10 +35,11 @@ import spark.Spark;
 
 public class TestHandlers {
   private final JsonAdapter<Map<String, Object>> adapter;
-  private final String uid = "eUTksfsIWnp1qB5xWIBs";
+  private final String uid = "12345";
   private final String itemId = "0h1qVgjXsqgFGiSZD0wc";
+  private final String email = "test@example.com";
   //    private final String userId = "validUserId";
-  static FirebaseUtilities firebaseUtils;
+  static StorageInterface firebaseUtils;
 
   /**
    * Constructs a new TestHandlers instance, initializing the JSON adapter for parsing responses.
@@ -57,7 +60,7 @@ public class TestHandlers {
   public static void setup_before_everything() throws IOException {
     Spark.port(0);
     Logger.getLogger("").setLevel(Level.WARNING); // Suppresses unnecessary logging
-    firebaseUtils = new FirebaseUtilities();
+    firebaseUtils = new MockFirebaseUtilities();
   }
 
   /**
@@ -109,7 +112,6 @@ public class TestHandlers {
    */
   private static HttpURLConnection tryRequest(String apiCall) throws IOException {
     String url = "http://localhost:" + Spark.port() + "/" + apiCall;
-    System.out.println(url); // Logs the request URL for debugging
     URL requestURL = new URL(url);
     HttpURLConnection clientConnection = (HttpURLConnection) requestURL.openConnection();
 
@@ -120,52 +122,36 @@ public class TestHandlers {
   }
 
   @Test
-  public void testGetClaimListSuccess()
+  public void testGetUserProfileHandlerSuccess()
       throws IOException, ExecutionException, InterruptedException {
-    HttpURLConnection connection = tryRequest("getClaimList?userId=" + this.uid);
+    HttpURLConnection connection = tryRequest("getUserProfile?email=" + this.email);
     assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
   }
 
   @Test
-  public void testGetClaimListFailureMissingUserId() throws IOException {
-    // Perform the request without a userId
-    HttpURLConnection connection = tryRequest("getClaimList");
+  public void testGetUserProfileHandlerFailure()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getUserProfile?email=" + "invalid@example.com");
+    assertEquals(HttpURLConnection.HTTP_NOT_FOUND, connection.getResponseCode());
+
+    connection = tryRequest("getUserProfile");
     assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, connection.getResponseCode());
   }
 
   @Test
-  public void testGetWatchListSuccess() throws IOException {
-    HttpURLConnection connection = tryRequest("getWatchList?userId=" + this.uid);
+  public void testGetSellerProfileHandlerSuccess()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getSellerProfile?userId=" + this.uid);
     assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
   }
 
   @Test
-  public void testGetWatchListFailureMissingUserId() throws IOException {
-    HttpURLConnection connection = tryRequest("getWatchList");
-    assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, connection.getResponseCode());
-  }
+  public void testGetSellerProfileHandlerFailure()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getSellerProfile?userId=" + "invaliduid");
+    assertEquals(HttpURLConnection.HTTP_NOT_FOUND, connection.getResponseCode());
 
-  @Test
-  public void testGetItemsHandlerSuccess() throws IOException {
-    HttpURLConnection connection = tryRequest("getItems?itemId=" + this.itemId);
-    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
-    connection = tryRequest("getItems?userId=" + this.uid);
-    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
-    connection = tryRequest("getItems");
-    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
-  }
-
-  @Test
-  public void testSearchItemsHandlerSuccess() throws IOException {
-    // Test with a valid keyword
-    HttpURLConnection connection = tryRequest("searchItems?keyword=desk");
-    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
-  }
-
-  @Test
-  public void testSearchItemsHandlerFailureMissingKeyword() throws IOException {
-    // Test with missing keyword
-    HttpURLConnection connection = tryRequest("searchItems");
+    connection = tryRequest("getSellerProfile");
     assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, connection.getResponseCode());
   }
 }

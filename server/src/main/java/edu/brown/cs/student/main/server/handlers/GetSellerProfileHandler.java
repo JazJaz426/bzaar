@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.server.handlers;
 
 import edu.brown.cs.student.main.server.storage.StorageInterface;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import spark.Request;
@@ -19,19 +20,22 @@ public class GetSellerProfileHandler implements Route {
     String userId = request.queryParams("userId");
     Map<String, Object> responseMap = new HashMap<>();
     if (userId == null) {
-      responseMap.put("status", 400);
+      response.status(HttpURLConnection.HTTP_BAD_REQUEST);
+      responseMap.put("status", HttpURLConnection.HTTP_BAD_REQUEST);
       responseMap.put("message", "User ID is required");
       return Utils.toMoshiJson(responseMap);
     }
 
     Map<String, Object> userProfile = storage.getUserDocumentById(userId);
     if (userProfile == null) {
-      responseMap.put("status", 404);
+      response.status(HttpURLConnection.HTTP_NOT_FOUND);
+      responseMap.put("status", HttpURLConnection.HTTP_NOT_FOUND);
       responseMap.put("message", "User not found");
       return Utils.toMoshiJson(responseMap);
     }
 
-    responseMap.put("status", 200);
+    response.status(HttpURLConnection.HTTP_OK);
+    responseMap.put("status", HttpURLConnection.HTTP_OK);
     responseMap.put("data", userProfile);
     return Utils.toMoshiJson(responseMap);
   }
