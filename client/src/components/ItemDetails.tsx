@@ -12,9 +12,9 @@ import Items from './Items';
 import Selling from './Selling';
 import WatchList from './WatchList';
 import Profile from './Profile';
-import ClaimList from './ClaimList.js';
-import Discover from './Discover.js';
-import SearchPage from './SearchPage.js';
+import ClaimList from './ClaimList';
+import Discover from './Discover';
+import SearchPage from './SearchPage';
 import { ListProps } from '../utils/schemas';
 import ItemForm from './ItemForm.js';
 
@@ -154,7 +154,7 @@ const ItemDetail = (props: ListProps) => {
         });
     };
 
-    console.log("current section in item details is: ", props.section)
+    console.log("current section in item details is: ", props.section, props.sectionHistory)
 
     if (!item) {
         return <div className="loading">Loading...</div>;
@@ -177,11 +177,22 @@ const ItemDetail = (props: ListProps) => {
                     <p className="price">Price: ${item.price}</p >
                     <p className="status">Status: {item.status}</p >
                     <p>Condition: {item.condition}</p >
-                    <div className="sellerInfo">
+                    
+                        {item.status === 'available' ? (
+                        <div className="sellerInfo">
+                            <p>Address: {seller ? seller.address : 'Address not available'}</p > {/* only show address if item is available */}
+                        </div>
+                        
+                        ) : userClaimList.includes(id) ? ( 
+                        <div className="sellerInfo">
+                        <p>Address: {seller ? seller.address : 'Address not available'}</p > {/* only show full seller info if item is claimed by others */}
                         <p>Seller: {seller ? seller.name : 'Seller name not available'}</p >
                         <p>Email: {seller ? seller.email : 'Email not available'}</p >
-                        <p>Address: {seller ? seller.address : 'Address not available'}</p >
-                    </div>
+                        </div>
+                        ) : <div className="sellerInfo">
+                            <p>Address: {seller ? seller.address : 'Address not available'}</p > {/* only show address if item is claimed by others */}
+                        </div>}
+                         
                         {item.status === 'available' ? (
                             <button onClick={handleClaimItem} className="claimButton">
                                 Claim
@@ -200,7 +211,7 @@ const ItemDetail = (props: ListProps) => {
             {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
             {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
             {props.section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
-            {props.section === Section.POST ? <ItemForm /> : null}
+            {props.section === Section.POST ? <ItemForm section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
         </Layout>
     );
 };
