@@ -1,6 +1,7 @@
 package edu.brown.cs.student.server.storage;
 
 import edu.brown.cs.student.main.server.storage.StorageInterface;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -75,13 +76,40 @@ public class MockFirebaseUtilities implements StorageInterface {
     @Override
     public List<Map<String, Object>> getCollection(String collection_id)
         throws InterruptedException, ExecutionException, IllegalArgumentException {
-        return null;
+        if (collection_id == null || collection_id.isEmpty()) {
+            return null; // Simulate collection not found
+        } else if (collection_id.equals("items")) {
+            List<Map<String, Object>> items = new ArrayList<>();
+            Map<String, Object> itemDetails = new HashMap<>();
+            itemDetails.put("title", "Mock Item 1");
+            itemDetails.put("description", "Description for Mock Item 1");
+            itemDetails.put("price", 25.00);
+            itemDetails.put("category", "Mock Category 1");
+            items.add(itemDetails);
+
+            itemDetails = new HashMap<>();
+            itemDetails.put("title", "Mock Item 2");
+            itemDetails.put("description", "Description for Mock Item 2");
+            itemDetails.put("price", 15.75);
+            itemDetails.put("category", "Mock Category 2");
+            items.add(itemDetails);
+
+            return items;
+        } else {
+            return null; // Simulate collection not found for other IDs
+        }
     }
 
     @Override
     public List<String> getClaimList(String userId)
         throws InterruptedException, ExecutionException {
-        return null;
+        if (userId == null || userId.trim().isEmpty()) {
+            return null;
+        } else if (userId.equals("12345")) {
+            return List.of("claim1", "claim2", "claim3");
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -93,7 +121,28 @@ public class MockFirebaseUtilities implements StorageInterface {
     @Override
     public List<Map<String, Object>> getItemsByUser(String userId)
         throws ExecutionException, InterruptedException {
-        return null;
+        if (userId == null || userId.isEmpty()) {
+            return null;
+        } else if (userId.equals("12345")) {
+            List<Map<String, Object>> items = new ArrayList<>();
+            Map<String, Object> itemDetails = new HashMap<>();
+            itemDetails.put("title", "Mock Item 1");
+            itemDetails.put("description", "Description for Mock Item 1");
+            itemDetails.put("price", 25.00);
+            itemDetails.put("category", "Mock Category 1");
+            items.add(itemDetails);
+
+            itemDetails = new HashMap<>();
+            itemDetails.put("title", "Mock Item 2");
+            itemDetails.put("description", "Description for Mock Item 2");
+            itemDetails.put("price", 15.75);
+            itemDetails.put("category", "Mock Category 2");
+            items.add(itemDetails);
+
+            return items;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -110,13 +159,26 @@ public class MockFirebaseUtilities implements StorageInterface {
 
     @Override
     public List<String> getRecList(String userId) throws InterruptedException, ExecutionException {
-        return null;
+        if (userId == null || userId.trim().isEmpty()) {
+            return null;
+        } else if (userId.equals("12345")) {
+            return List.of("Item1", "Item2", "Item3");
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public List<String> getSellingList(String userId)
         throws InterruptedException, ExecutionException {
-        return null;
+        // Assuming similar logic for selling list for consistency in mock behavior
+        if (userId == null || userId.trim().isEmpty()) {
+            return null;
+        } else if (userId.equals("12345")) {
+            return List.of("Item4", "Item5", "Item6");
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -128,7 +190,13 @@ public class MockFirebaseUtilities implements StorageInterface {
     @Override
     public List<String> getWatchList(String userId)
         throws InterruptedException, ExecutionException {
-        return null;
+        if (userId == null || userId.trim().isEmpty()) {
+            return null;
+        } else if (userId.equals("12345")) {
+            return List.of("WatchItem1", "WatchItem2", "WatchItem3");
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override

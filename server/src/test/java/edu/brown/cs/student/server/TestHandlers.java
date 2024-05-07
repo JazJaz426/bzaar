@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.server.handlers.GetClaimListHandler;
 import edu.brown.cs.student.main.server.handlers.GetItemsHandler;
+import edu.brown.cs.student.main.server.handlers.GetRecListHandler;
 import edu.brown.cs.student.main.server.handlers.GetSellerProfileHandler;
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
 import edu.brown.cs.student.main.server.handlers.GetWatchListHandler;
@@ -36,7 +37,7 @@ import spark.Spark;
 public class TestHandlers {
   private final JsonAdapter<Map<String, Object>> adapter;
   private final String uid = "12345";
-  private final String itemId = "0h1qVgjXsqgFGiSZD0wc";
+  private final String itemId = "item123";
   private final String email = "test@example.com";
   //    private final String userId = "validUserId";
   static StorageInterface firebaseUtils;
@@ -81,6 +82,7 @@ public class TestHandlers {
     Spark.get("/getClaimList", new GetClaimListHandler(firebaseUtils));
     Spark.get("/searchItems", new SearchItemsHandler(firebaseUtils));
     Spark.post("/postItem", new PostItemHandler(firebaseUtils));
+    Spark.get("/getRecList", new GetRecListHandler(firebaseUtils));
     // Mock the FirebaseUtilities to return a valid claim list
     Spark.init();
     Spark.awaitInitialization(); // Ensures server is ready before proceeding
@@ -100,6 +102,7 @@ public class TestHandlers {
     Spark.unmap("/getClaimList");
     Spark.unmap("/searchItems");
     Spark.unmap("/postItem");
+    Spark.unmap("/getRecList");
     Spark.awaitStop(); // Ensures server has stopped before proceeding
   }
 
@@ -152,6 +155,68 @@ public class TestHandlers {
     assertEquals(HttpURLConnection.HTTP_NOT_FOUND, connection.getResponseCode());
 
     connection = tryRequest("getSellerProfile");
+    assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, connection.getResponseCode());
+  }
+
+  @Test
+  public void testGetItemsHandlerByItemIdSuccess()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getItems?itemId=" + this.itemId);
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
+  }
+
+  @Test
+  public void testGetItemsHandlerByUserIdSuccess()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getItems?userId=" + this.uid);
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
+  }
+
+  @Test
+  public void testGetItemsHandlerSuccess() throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getItems");
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
+  }
+
+  @Test
+  public void testGetClaimListHandlerSuccess()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getClaimList?userId=" + this.uid);
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
+  }
+
+  @Test
+  public void testGetClaimListHandlerFailure()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getClaimList?userId=" + "invaliduid");
+    assertEquals(HttpURLConnection.HTTP_NOT_FOUND, connection.getResponseCode());
+  }
+
+  @Test
+  public void testGetRecommendationsHandlerSuccess()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getRecList?userId=" + this.uid);
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
+  }
+
+  @Test
+  public void testGetRecommendationsHandlerFailure()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getRecList");
+    assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, connection.getResponseCode());
+  }
+
+  @Test
+  public void testGetWatchListHandlerSuccess()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getWatchList?userId=" + this.uid);
+    assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
+  }
+
+  @Test
+  public void testGetWatchListHandlerFailure()
+      throws IOException, ExecutionException, InterruptedException {
+    HttpURLConnection connection = tryRequest("getWatchList");
     assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, connection.getResponseCode());
   }
 }
