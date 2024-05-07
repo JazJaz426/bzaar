@@ -159,11 +159,10 @@ public class FirebaseUtilities implements StorageInterface {
     List<Map<String, Object>> items = new ArrayList<>();
     for (String itemId : sellList) {
       items.add(getItemDetails(itemId));
-
     }
     return items;
   }
-  
+
   public class FirebaseUploadHelper {
 
     public static String uploadFile(InputStream fileStream, String fileName, String fileType)

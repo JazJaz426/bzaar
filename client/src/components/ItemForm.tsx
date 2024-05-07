@@ -5,7 +5,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { error } from 'console';
 import { messagePopup, showErrorPopup } from '../utils/popups';
 import { postItem } from '../utils/api';
-import { Section } from "./MainPage";
+import { Section } from '../utils/schemas';
 import { useNavigate } from 'react-router-dom';
 interface ListProps {
     section: Section;
@@ -22,7 +22,7 @@ interface FormData {
     category: string;
 
 }
-const ItemForm = () => {
+const ItemForm = (props: ListProps) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
         title: '',
@@ -81,6 +81,8 @@ const ItemForm = () => {
             submitButton.disabled = false;
             submitButton.textContent = 'Submit';
             messagePopup("Item added successfully, now directing you to the detailed item page.");
+            props.setSection(Section.VIEW_ITEM_DETAILS)
+            props.setSectionHistory([...props.sectionHistory, Section.VIEW_ITEM_DETAILS]);
             navigate(`/item-details/${data.itemId}`);
         }).catch((error)=>{
             showErrorPopup("Failed to add item."+ error.message);

@@ -24,7 +24,7 @@ export default function MainPage(props: ListProps) {
       {props.section === Section.WATCHLIST ? <WatchList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
       {props.section === Section.CLAIMLIST ? <ClaimList section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
       {props.section === Section.PROFILE ? <Profile email_address={""} pick_up_location={""} /> : null}
-      {props.section === Section.POST ? <ItemForm /> : null}
+      {props.section === Section.POST ? <ItemForm section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
     </Layout>
   );
 }
