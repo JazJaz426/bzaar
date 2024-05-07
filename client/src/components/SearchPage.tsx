@@ -32,33 +32,62 @@ export default function SearchPage(props: ListProps) {
             setIsLoading(false);
         }
     };
-
     useEffect(() => {
-        fetchData();
-        if (searchTerm.trim()) {
-            searchItems(searchTerm).then((response) => {
-                if (response.status === 200) {
-                    setData(response.items);
-                } else {
-                    console.error('Search failed:', response.error);
-                }
-            }).catch((error) => {
-                console.error('Error fetching search results:', error);
-            });
-        } else {
-            getAllItems().then((response) => {
-                if (response.status === 200) {
-                    console.log(response.items);
-                    setData(response.items);
-                } else {
-                    console.error('Failed to fetch items:', response.error);
-                }
-            }).catch((error) => {
-                console.error('Error fetching items:', error);
-            });
-        }
-    }, [searchTerm, userId]); 
+        const fetchData = async () => {
+            try {
+                const allItemsData = await getAllItems();
+                setData(allItemsData.items); // Assuming 'getAllItems' returns { items: [] }
+                const watchListData = await getWatchList(userId);
+                setWatchList(watchListData.watchList); // Assuming 'getWatchList' returns { watchList: [] }
+            } catch (error) {
+                console.error('Failed to fetch initial data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
+        fetchData();
+    }, [userId]); 
+    
+    //     fetchData();
+    //     if (searchTerm.trim()) {
+    //         searchItems(searchTerm).then((response) => {
+    //             if (response.status === 200) {
+    //                 setData(response.items);
+    //             } else {
+    //                 console.error('Search failed:', response.error);
+    //             }
+    //         }).catch((error) => {
+    //             console.error('Error fetching search results:', error);
+    //         });
+    //     } else {
+    //         getAllItems().then((response) => {
+    //             if (response.status === 200) {
+    //                 console.log(response.items);
+    //                 setData(response.items);
+    //             } else {
+    //                 console.error('Failed to fetch items:', response.error);
+    //             }
+    //         }).catch((error) => {
+    //             console.error('Error fetching items:', error);
+    //         });
+    //     }
+    // }, [searchTerm, userId]); 
+    const handleSearch = async () => {
+        setIsLoading(true);
+        try {
+            const response = await searchItems(searchTerm);
+            if (response.status === 200) {
+                setData(response.items);
+            } else {
+                console.error('Search failed:', response.error);
+            }
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     const toggleWatchList = (itemId: string) => {
         if (watchList.includes(itemId)) {
             setWatchList(watchList.filter(id => id !== itemId));
@@ -89,9 +118,10 @@ export default function SearchPage(props: ListProps) {
                     type="text"
                     placeholder="Search for items..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => setSearchTerm(e.target.value)
+                    }
                 />
-                <button onClick={() => setSearchTerm('')}>Clear</button>
+                <button onClick={handleSearch}>Search</button>
             </div>
             <div className="item-list">
                 {data.map((item: Item) => (
