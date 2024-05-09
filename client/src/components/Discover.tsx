@@ -15,7 +15,6 @@ export default function Discover(props: ListProps) {
     const [watchList, setWatchList] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const userId = getUserId(); // This should be dynamically set based on the logged-in user
-    console.log('userId', userId);
     const fetchData = async () => {
         setIsLoading(true);
         try {

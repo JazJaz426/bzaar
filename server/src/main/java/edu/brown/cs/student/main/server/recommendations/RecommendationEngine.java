@@ -81,7 +81,7 @@ public class RecommendationEngine {
     performanceMetrics.put("Precision", precision);
     performanceMetrics.put("Recall", recall);
     performanceMetrics.put("F1Score", f1Score);
-
+    System.out.println("F1 score is: " + f1Score);
     return performanceMetrics;
   }
 
@@ -187,6 +187,8 @@ public class RecommendationEngine {
     for (double threshold : this.thresholds) {
       Map<String, Double> metrics = trainAndEvaluate(trainingData, testingData, threshold);
       double currentF1Score = metrics.get("F1Score");
+      System.out.println(
+          "Current Threshold: " + threshold + " and current F1 score: " + currentF1Score);
       if (currentF1Score > bestF1Score) {
         bestF1Score = currentF1Score;
         bestThreshold = threshold;

@@ -14,19 +14,22 @@ public interface StorageInterface {
   Map<String, Object> getUserDocumentById(String userId)
       throws InterruptedException, ExecutionException;
 
-  Map<String, Object> getItemDetails(String itemId)
-      throws InterruptedException, ExecutionException;
+  Map<String, Object> getItemDetails(String itemId) throws InterruptedException, ExecutionException;
 
   List<Map<String, Object>> getCollection(String uid, String collection_id)
       throws InterruptedException, ExecutionException, IllegalArgumentException;
+
   List<Map<String, Object>> getCollection(String collection_id)
       throws InterruptedException, ExecutionException, IllegalArgumentException;
+
   List<String> getClaimList(String userId) throws InterruptedException, ExecutionException;
 
   void recordUserActivity(String interactionType, String itemId, String userId)
       throws ExecutionException, InterruptedException;
 
-  List<Map<String, Object>> getItemsByUser(String userId) throws ExecutionException, InterruptedException;
+  List<Map<String, Object>> getItemsByUser(String userId)
+      throws ExecutionException, InterruptedException;
+
   void modifyClaimList(String itemId, String userId, String operation)
       throws ExecutionException, InterruptedException;
 
@@ -35,8 +38,7 @@ public interface StorageInterface {
 
   List<String> getRecList(String userId) throws InterruptedException, ExecutionException;
 
-  List<String> getSellingList(String userId)
-      throws InterruptedException, ExecutionException;
+  List<String> getSellingList(String userId) throws InterruptedException, ExecutionException;
 
   void modifyWatchList(String itemId, String userId, String operation)
       throws ExecutionException, InterruptedException;
@@ -49,8 +51,7 @@ public interface StorageInterface {
   List<Map<String, Object>> searchItemsByKeyword(String keyword)
       throws ExecutionException, InterruptedException;
 
-  void deleteItem(String itemId, String userId)
-      throws ExecutionException, InterruptedException;
+  void deleteItem(String itemId, String userId) throws ExecutionException, InterruptedException;
 
   Map<String, Map<String, Map<String, Integer>>> getInteractionsBySplit(java.util.Date splitDate)
       throws ExecutionException, InterruptedException;

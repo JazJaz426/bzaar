@@ -73,6 +73,7 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
+
   @Override
   public List<Map<String, Object>> getCollection(String collection_id)
       throws InterruptedException, ExecutionException, IllegalArgumentException {
@@ -92,6 +93,7 @@ public class FirebaseUtilities implements StorageInterface {
 
     return data;
   }
+
   public List<String> getUniqueItemIds() throws InterruptedException, ExecutionException {
     List<Map<String, Object>> items = getCollection("items");
     List<String> uniqueItemIds = new ArrayList<>();
@@ -102,6 +104,7 @@ public class FirebaseUtilities implements StorageInterface {
     }
     return uniqueItemIds;
   }
+
   @Override
   public List<Map<String, Object>> getItemsByUser(String userId)
       throws ExecutionException, InterruptedException {
@@ -512,6 +515,7 @@ public class FirebaseUtilities implements StorageInterface {
     }
     return items;
   }
+
   @Override
   public void deleteItem(String itemId, String userId)
       throws ExecutionException, InterruptedException {
@@ -526,6 +530,7 @@ public class FirebaseUtilities implements StorageInterface {
     // update sell list
     userRef.update("sellList", FieldValue.arrayRemove(itemId));
   }
+
   @Override
   public Map<String, Map<String, Map<String, Integer>>> getInteractionsBySplit(Date splitDate)
       throws ExecutionException, InterruptedException {

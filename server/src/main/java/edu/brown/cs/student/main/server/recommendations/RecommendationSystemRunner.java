@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.server.recommendations;
 
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -24,9 +25,12 @@ public class RecommendationSystemRunner {
       FirebaseUtilities firebaseUtilities = new FirebaseUtilities();
 
       // Establish the date used to split the data into training and testing sets
-      Date splitDate = new Date();
+      Calendar calendar = Calendar.getInstance();
+      calendar.add(Calendar.DATE, -1);
+      Date splitDate = calendar.getTime(); // 2024-05-06
+
       // Define thresholds for similarity scoring in the recommendation engine
-      double[] thresholds = new double[] {0.0, 0.1, 0.2, 0.3, 0.4, 0.5};
+      double[] thresholds = new double[] {0.1, 0.2, 0.3, 0.4, 0.5};
 
       // Instantiate the RecommendationEngine with the initialized utilities and parameters
       RecommendationEngine recommendationEngine =

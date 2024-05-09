@@ -17,7 +17,6 @@ import edu.brown.cs.student.main.server.handlers.PostItemHandler;
 import edu.brown.cs.student.main.server.handlers.RecordUserActivityHandler;
 import edu.brown.cs.student.main.server.handlers.SearchItemsHandler;
 import edu.brown.cs.student.main.server.handlers.UpdateItemHandler;
-import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import edu.brown.cs.student.main.server.storage.StorageInterface;
 import edu.brown.cs.student.server.storage.MockFirebaseUtilities;
 import java.io.IOException;
@@ -173,7 +172,8 @@ public class TestHandlers {
   }
 
   @Test
-  public void testGetItemsHandlerSuccess() throws IOException, ExecutionException, InterruptedException {
+  public void testGetItemsHandlerSuccess()
+      throws IOException, ExecutionException, InterruptedException {
     HttpURLConnection connection = tryRequest("getItems");
     assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
   }

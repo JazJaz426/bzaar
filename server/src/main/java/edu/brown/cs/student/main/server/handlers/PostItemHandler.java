@@ -1,6 +1,5 @@
 package edu.brown.cs.student.main.server.handlers;
 
-import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities.FirebaseUploadHelper;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities.FirestoreHelper;
 import edu.brown.cs.student.main.server.storage.Item;
@@ -18,7 +17,7 @@ import spark.Route;
 
 public class PostItemHandler implements Route {
 
-  final private StorageInterface firebaseUtilities;
+  private final StorageInterface firebaseUtilities;
 
   public PostItemHandler(StorageInterface firebaseUtilities) {
     this.firebaseUtilities = firebaseUtilities;
