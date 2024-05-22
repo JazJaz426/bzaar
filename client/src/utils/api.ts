@@ -145,6 +145,7 @@ export async function postItem(formData: FormData) {
   }
   return data;
 }
+
 export async function deleteItem(itemId: string,userId: string) {
   return await queryAPI("deleteItem", {
     itemId: itemId,
@@ -164,5 +165,26 @@ export async function getRecList(userId: string) {
   return await queryAPI("getRecList", {
     userId: userId,
   });
+}
+
+export async function updateUserProfile(name: string, email: string, address: string) {
+  const response = await fetch(`${HOST}/updateUserProfile`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({name, email, address})
+  });
+
+  if (response.status != 200) {
+    // Handle HTTP errors
+    throw new Error(`HTTP error, status = ${response.status}`);
+  }
+
+  const data = await response.json(); // Parse JSON from the response
+  if (data.status && data.status !== 200) {
+    throw new Error(` ${data.message}`);
+  }
+  return data;
 }
 

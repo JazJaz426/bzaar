@@ -55,4 +55,7 @@ public interface StorageInterface {
 
   Map<String, Map<String, Map<String, Integer>>> getInteractionsBySplit(java.util.Date splitDate)
       throws ExecutionException, InterruptedException;
+
+  public void updateUserProfile(String userEmail, String name, String address)
+      throws InterruptedException, ExecutionException;
 }

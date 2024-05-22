@@ -1,6 +1,6 @@
 package edu.brown.cs.student.main.server;
 
-import static spark.Spark.after;
+import static spark.Spark.*;
 import static spark.Spark.options;
 
 import edu.brown.cs.student.main.server.handlers.DeleteItemHandler;
@@ -16,6 +16,7 @@ import edu.brown.cs.student.main.server.handlers.PostItemHandler;
 import edu.brown.cs.student.main.server.handlers.RecordUserActivityHandler;
 import edu.brown.cs.student.main.server.handlers.SearchItemsHandler;
 import edu.brown.cs.student.main.server.handlers.UpdateItemHandler;
+import edu.brown.cs.student.main.server.handlers.UpdateUserProfileHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import spark.Spark;
 
@@ -43,15 +44,22 @@ public class Server {
           return "OK";
         });
 
-    after(
+    before(
         (request, response) -> {
-          response.header("Access-Control-Allow-Origin", "*");
-          response.header("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
-          response.header(
-              "Access-Control-Allow-Headers",
-              "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+          response.header("Access-Control-Allow-Origin", "http://localhost:8000");
+          response.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+          response.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
           response.header("Access-Control-Allow-Credentials", "true");
         });
+    // after(
+    //     (request, response) -> {
+    //       response.header("Access-Control-Allow-Origin", "*");
+    //       response.header("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
+    //       response.header(
+    //           "Access-Control-Allow-Headers",
+    //           "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+    //       response.header("Access-Control-Allow-Credentials", "true");
+    //     });
 
     try {
       FirebaseUtilities firebaseUtils = new FirebaseUtilities();
@@ -68,6 +76,7 @@ public class Server {
       Spark.get("/deleteItem", new DeleteItemHandler(firebaseUtils));
       Spark.post("/postItem", new PostItemHandler(firebaseUtils));
       Spark.get("/getRecList", new GetRecListHandler(firebaseUtils));
+      Spark.post("/updateUserProfile", new UpdateUserProfileHandler(firebaseUtils));
       Spark.init();
       Spark.awaitInitialization();
       System.out.println("Server started at http://localhost:" + port);
