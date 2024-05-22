@@ -632,4 +632,19 @@ public class FirebaseUtilities implements StorageInterface {
     }
     return itemIds;
   }
+
+  public void updateUserProfile(String userEmail, String name, String address)
+      throws InterruptedException, ExecutionException {
+    Firestore db = FirestoreClient.getFirestore();
+    ApiFuture<QuerySnapshot> future = db.collection("users").whereEqualTo("email", userEmail).get();
+    String userId = "";
+    for (DocumentSnapshot document : future.get().getDocuments()) {
+      userId = document.getId();
+    }
+    DocumentReference docRef = db.collection("users").document(userId);
+    Map<String, Object> updates = new HashMap<>();
+    updates.put("name", name);
+    updates.put("address", address);
+    docRef.update(updates);
+  }
 }
