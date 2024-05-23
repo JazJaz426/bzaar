@@ -28,6 +28,7 @@ interface Item {
     condition: string,
     status: string;
     seller: string;
+    claimer: string;
 }
 
 interface User {
@@ -42,6 +43,7 @@ const ItemDetail = (props: ListProps) => {
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<Item | null>(null);
     const [seller, setSeller] = useState<User | null>(null);
+    const [claimer, setClaimer] = useState<User | null>(null);
     const [userClaimList, setUserClaimList] = useState<string[]>([]);
     const userId = getUserId();
 
@@ -60,6 +62,16 @@ const ItemDetail = (props: ListProps) => {
         }
     };
 
+    const fetchClaimerDetails = async (claimerId: string) => {
+        try {
+            const claimerResponseMap = await getSellerProfile(claimerId);
+            const claimerData = claimerResponseMap.data;
+            setClaimer(claimerData);
+        } catch (error) {
+            console.error("Error fetching claimer details:", error);
+        }
+    };
+
     const fetchItemDetails = async () => {
         if (!id) {
             console.log("Document ID is undefined.");
@@ -71,6 +83,9 @@ const ItemDetail = (props: ListProps) => {
             setItem(itemData);
             if (itemData.seller) {
                 fetchSellerDetails(itemData.seller);
+            }
+            if (itemData.claimer) {
+                fetchClaimerDetails(itemData.claimer);
             }
         } catch (error) {
             console.error("Error fetching item details:", error);
@@ -122,7 +137,7 @@ const ItemDetail = (props: ListProps) => {
 
             // Perform the claim operation
             try {
-                await claimItem(id);
+                await claimItem(id, userId);
                 const newStatus = userClaimList.includes(id) ? 'available' : 'claimed';
                 setStatus(newStatus);
                 // setIsClaimedByUser(!isClaimedByUser);
@@ -148,7 +163,7 @@ const ItemDetail = (props: ListProps) => {
         if (!seller) {
             return (
                 <div className="sellerInfo">
-                    <p>Address: Address not available</p>
+                    <p>Seller's Address: Not available</p>
                 </div>
             );
         }
@@ -157,7 +172,7 @@ const ItemDetail = (props: ListProps) => {
         if (userClaimList.includes(id)) {
             return (
                 <div className="sellerInfo">
-                    <p>Address: {seller.address}</p>
+                    <p>Seller's Address: {seller.address}</p>
                     <p>Seller: {seller.name}</p>
                     <p>Email: {seller.email}</p>
                 </div>
@@ -167,7 +182,25 @@ const ItemDetail = (props: ListProps) => {
         // Otherwise, only show the address
         return (
             <div className="sellerInfo">
-                <p>Address: {seller.address}</p>
+                <p> Seller's Address: {seller.address}</p>
+            </div>
+        );
+    };
+
+    const renderClaimerInfo = () => {
+        if (!claimer) {
+            return (
+                <div className="sellerInfo">
+                    <p> Claimer's Address: Not available</p>
+                </div>
+            );
+        }
+    
+        return (
+            <div className="sellerInfo">
+                <p>Claimer's Address: {claimer.address}</p>
+                <p>Claimer: {claimer.name}</p>
+                <p>Email: {claimer.email}</p>
             </div>
         );
     };
@@ -195,7 +228,12 @@ const ItemDetail = (props: ListProps) => {
                         <p>Condition: {item.condition}</p >
                         <div>
                             {renderSellerInfo()}
-                        </div>         
+                        </div>  
+                        {(item.seller === userId && item.status==='claimed') ? 
+                            <div>
+                                {renderClaimerInfo()}
+                            </div> : null
+                        }       
                         {item.seller == userId ? null :
                             userClaimList.includes(id) ? (
                             <button onClick={handleClaimItem} className="unclaimButton"> Unclaim </button>
