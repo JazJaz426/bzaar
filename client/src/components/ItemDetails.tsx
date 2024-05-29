@@ -28,6 +28,7 @@ interface Item {
     condition: string,
     status: string;
     seller: string;
+    claimer: string;
 }
 
 interface User {
@@ -42,15 +43,8 @@ const ItemDetail = (props: ListProps) => {
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<Item | null>(null);
     const [seller, setSeller] = useState<User | null>(null);
-    // const [isClaimedByUser, setIsClaimedByUser] = useState(false);
+    const [claimer, setClaimer] = useState<User | null>(null);
     const [userClaimList, setUserClaimList] = useState<string[]>([]);
-    // const [section, setSection] = useState<Section>(Section.VIEW_ITEM_DETAILS);
-    // const [listView, setListView] = useState<boolean>(false);
-    // const handleNavClick = (section: Section, listView: boolean = false) => {
-    //     console.log("Nav clicked:", section, listView);
-    //     setSection(section);
-    //     setListView(listView);
-    // };
     const userId = getUserId();
 
     const fetchUserClaimList = async () => {
@@ -68,6 +62,16 @@ const ItemDetail = (props: ListProps) => {
         }
     };
 
+    const fetchClaimerDetails = async (claimerId: string) => {
+        try {
+            const claimerResponseMap = await getSellerProfile(claimerId);
+            const claimerData = claimerResponseMap.data;
+            setClaimer(claimerData);
+        } catch (error) {
+            console.error("Error fetching claimer details:", error);
+        }
+    };
+
     const fetchItemDetails = async () => {
         if (!id) {
             console.log("Document ID is undefined.");
@@ -77,10 +81,11 @@ const ItemDetail = (props: ListProps) => {
             const itemResponseMap = await getItemDetails(id);
             const itemData = itemResponseMap.data;
             setItem(itemData);
-            // console.log('userClaimList: ', userClaimList, id)
-            // setIsClaimedByUser(userClaimList.includes(id));
             if (itemData.seller) {
                 fetchSellerDetails(itemData.seller);
+            }
+            if (itemData.claimer) {
+                fetchClaimerDetails(itemData.claimer);
             }
         } catch (error) {
             console.error("Error fetching item details:", error);
@@ -132,7 +137,7 @@ const ItemDetail = (props: ListProps) => {
 
             // Perform the claim operation
             try {
-                await claimItem(id);
+                await claimItem(id, userId);
                 const newStatus = userClaimList.includes(id) ? 'available' : 'claimed';
                 setStatus(newStatus);
                 // setIsClaimedByUser(!isClaimedByUser);
@@ -154,6 +159,52 @@ const ItemDetail = (props: ListProps) => {
         });
     };
 
+    const renderSellerInfo = () => {
+        if (!seller) {
+            return (
+                <div className="sellerInfo">
+                    <p>Seller's Address: Not available</p>
+                </div>
+            );
+        }
+    
+        // If the item is claimed, show full seller info
+        if (userClaimList.includes(id)) {
+            return (
+                <div className="sellerInfo">
+                    <p>Seller's Address: {seller.address}</p>
+                    <p>Seller: {seller.name}</p>
+                    <p>Email: {seller.email}</p>
+                </div>
+            );
+        }
+    
+        // Otherwise, only show the address
+        return (
+            <div className="sellerInfo">
+                <p> Seller's Address: {seller.address}</p>
+            </div>
+        );
+    };
+
+    const renderClaimerInfo = () => {
+        if (!claimer) {
+            return (
+                <div className="sellerInfo">
+                    <p> Claimer's Address: Not available</p>
+                </div>
+            );
+        }
+    
+        return (
+            <div className="sellerInfo">
+                <p>Claimer's Address: {claimer.address}</p>
+                <p>Claimer: {claimer.name}</p>
+                <p>Email: {claimer.email}</p>
+            </div>
+        );
+    };
+
     console.log("current section in item details is: ", props.section, props.sectionHistory)
 
     if (!item) {
@@ -164,46 +215,34 @@ const ItemDetail = (props: ListProps) => {
       props.setSection(newSection);
       props.setSectionHistory([...props.sectionHistory, newSection]);
     }}>
-            
-
             {props.section === Section.VIEW_ITEM_DETAILS && (
                 <div>
                     <button onClick={handleReturn} className="returnButton">Return</button>
-                <div className="itemDetailContainer">
-                    <h1 className="title">{item.title}</h1>
-                    <ImageCarousel images={item.images} />
-                    <p className="description">Description: {item.description}</p >
-                    <p className="category">Category: {item.category}</p >
-                    <p className="price">Price: ${item.price}</p >
-                    <p className="status">Status: {item.status}</p >
-                    <p>Condition: {item.condition}</p >
-                    
-                        {item.status === 'available' ? (
-                        <div className="sellerInfo">
-                            <p>Address: {seller ? seller.address : 'Address not available'}</p > {/* only show address if item is available */}
-                        </div>
-                        
-                        ) : userClaimList.includes(id) ? ( 
-                        <div className="sellerInfo">
-                        <p>Address: {seller ? seller.address : 'Address not available'}</p > {/* only show full seller info if item is claimed by others */}
-                        <p>Seller: {seller ? seller.name : 'Seller name not available'}</p >
-                        <p>Email: {seller ? seller.email : 'Email not available'}</p >
-                        </div>
-                        ) : <div className="sellerInfo">
-                            <p>Address: {seller ? seller.address : 'Address not available'}</p > {/* only show address if item is claimed by others */}
-                        </div>}
-                         
-                        {item.status === 'available' ? (
-                            <button onClick={handleClaimItem} className="claimButton">
-                                Claim
-                            </button>
-                        ) : userClaimList.includes(id) ? (
-                            <button onClick={handleClaimItem} className="unclaimButton">
-                                Unclaim
-                            </button>
-                        ) : null}
+                    <div className="itemDetailContainer">
+                        <h1 className="title">{item.title}</h1>
+                        <ImageCarousel images={item.images} />
+                        <p className="description">Description: {item.description}</p >
+                        <p className="category">Category: {item.category}</p >
+                        <p className="price">Price: ${item.price}</p >
+                        <p className="status">Status: {item.status}</p >
+                        <p>Condition: {item.condition}</p >
+                        <div>
+                            {renderSellerInfo()}
+                        </div>  
+                        {(item.seller === userId && item.status==='claimed') ? 
+                            <div>
+                                {renderClaimerInfo()}
+                            </div> : null
+                        }       
+                        {item.seller == userId ? null :
+                            userClaimList.includes(id) ? (
+                            <button onClick={handleClaimItem} className="unclaimButton"> Unclaim </button>
+                            ) : (
+                            <button onClick={handleClaimItem} className="claimButton"> Claim </button>
+                            )
+                        }
                     </div>
-                    </div>
+                </div>
             )}
             {props.section === Section.DISCOVER ? <Discover section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}
             {props.section === Section.SEARCHPAGE ? <SearchPage section={props.section} setSection={props.setSection} sectionHistory={props.sectionHistory} setSectionHistory={props.setSectionHistory}/> : null}

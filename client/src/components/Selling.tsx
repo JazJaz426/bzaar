@@ -71,7 +71,7 @@ export default function Selling(props: ListProps) {
                                     <line x1="6" y1="6" x2="18" y2="18" stroke="#666" strokeWidth="2"/>
                                     <line x1="6" y1="18" x2="18" y2="6" stroke="#666" strokeWidth="2"/>
                                 </svg>
-                                <span className="tooltip">I want to delete this.</span>
+                                <span className="tooltip"> Delete or mark as sold </span>
                             </button>
                         </div>
                     ))
