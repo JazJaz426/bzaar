@@ -1,8 +1,7 @@
-> **GETTING STARTED:** You should likely integrate your work from mock for the `/client` folder and server for the `/server` folder, while keeping some of the new features from the gearup (firebase, fetch, etc.)
 
 ## Project Details
 
-- **Project name:** REPL
+- **Project name:** Br-Zaar
 - **Team Members:**
   - Jiaming Lin (jlin223)
   - Xinyang Cai (cxinyang)
