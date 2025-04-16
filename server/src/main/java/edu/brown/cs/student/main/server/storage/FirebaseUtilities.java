@@ -312,14 +312,14 @@ public class FirebaseUtilities implements StorageInterface {
       if (itemSnapshot.exists()) {
         future = userRef.update("claimList", FieldValue.arrayUnion(itemId));
         future.get();
-        updateItemStatus(itemId, "claimed");
+        updateItemStatus(itemId, userId, "claimed");
       } else {
         System.out.println("Item with ID " + itemId + " does not exist.");
       }
     } else if ("del".equalsIgnoreCase(operation)) {
       future = userRef.update("claimList", FieldValue.arrayRemove(itemId));
       future.get();
-      updateItemStatus(itemId, "available");
+      updateItemStatus(itemId, userId, "available");
     } else {
       throw new IllegalArgumentException(
           "Invalid operation: " + operation + ". Use 'add' or 'del'.");
@@ -473,14 +473,22 @@ public class FirebaseUtilities implements StorageInterface {
    * @throws ExecutionException If an error occurs during the database operation.
    */
   @Override
-  public void updateItemStatus(String itemId, String status)
+  public void updateItemStatus(String itemId, String claimerId, String status)
       throws InterruptedException, ExecutionException {
     Firestore db = FirestoreClient.getFirestore();
     DocumentReference itemRef = db.collection("items").document(itemId);
     DocumentSnapshot itemSnapshot = itemRef.get().get();
     if (itemSnapshot.exists()) {
       try {
-        ApiFuture<WriteResult> writeResult = itemRef.update("status", status);
+        ApiFuture<WriteResult> writeResult;
+        if (status == "claimed") {
+          writeResult =
+              itemRef.update(
+                  "status", status,
+                  "claimerId", claimerId);
+        } else {
+          writeResult = itemRef.update("status", status, "claimerId", null);
+        }
         // Wait for the future to complete and get the result
         WriteResult result = writeResult.get();
         // Optionally, log the update time for confirmation

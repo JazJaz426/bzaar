@@ -93,9 +93,10 @@ export async function getItemsByUser(userId: string) {
     userId: userId,
   });
 }
-export async function claimItem(itemId: string) {
+export async function claimItem(itemId: string, claimerId: string) {
   return await queryAPI("claimItem", {
-    itemId: itemId
+    itemId: itemId,
+    claimerId: claimerId
   });
 }
 

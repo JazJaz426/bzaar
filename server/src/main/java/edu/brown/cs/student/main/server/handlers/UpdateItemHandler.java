@@ -19,12 +19,18 @@ public class UpdateItemHandler implements Route {
     Map<String, Object> responseMap = new HashMap<>();
     try {
       String itemId = request.queryParams("itemId");
+      String claimerId = request.queryParams("claimerId");
       if (itemId == null) {
         responseMap.put("status", 400);
         responseMap.put("message", "Item ID is required.");
         return Utils.toMoshiJson(responseMap);
       }
-      firebaseUtilities.updateItemStatus(itemId, "claimed");
+      firebaseUtilities.updateItemStatus(itemId, claimerId, "claimed");
+      if (claimerId == null) {
+        responseMap.put("status", 400);
+        responseMap.put("message", "Claimer ID is required.");
+        return Utils.toMoshiJson(responseMap);
+      }
       responseMap.put("status", 200);
       responseMap.put("message", "Item status updated successfully.");
     } catch (Exception e) {

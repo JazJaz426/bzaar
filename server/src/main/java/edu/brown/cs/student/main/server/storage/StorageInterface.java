@@ -45,7 +45,7 @@ public interface StorageInterface {
 
   List<String> getWatchList(String userId) throws InterruptedException, ExecutionException;
 
-  void updateItemStatus(String itemId, String status)
+  void updateItemStatus(String itemId, String claimerId, String status)
       throws InterruptedException, ExecutionException;
 
   List<Map<String, Object>> searchItemsByKeyword(String keyword)
